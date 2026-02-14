@@ -185,12 +185,34 @@ function GiftRitualistTab() {
   const [persona, setPersona] = useState("");
   const [budget, setBudget] = useState("");
   const [occasion, setOccasion] = useState("");
+  const [catalogLoading, setCatalogLoading] = useState(false);
   const { result, loading, error, run, reset } = useLabStream();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!persona.trim() || !budget.trim()) return;
-    const input = `Recipient: ${persona.trim()}\nBudget: ${budget.trim()} JOD${occasion.trim() ? `\nOccasion: ${occasion.trim()}` : ""}`;
+
+    // Fetch real products from Shopify to pass as catalog context
+    setCatalogLoading(true);
+    let catalogText = "";
+    try {
+      const { fetchProducts } = await import("@/lib/shopify");
+      const { products } = await fetchProducts(100);
+      catalogText = products
+        .map((p) => {
+          const n = p.node;
+          const price = parseFloat(n.priceRange.minVariantPrice.amount).toFixed(2);
+          const currency = n.priceRange.minVariantPrice.currencyCode;
+          return `- ${n.title} | Brand: ${n.vendor || "N/A"} | Type: ${n.productType || "N/A"} | Price: ${price} ${currency} | Handle: ${n.handle}`;
+        })
+        .join("\n");
+    } catch {
+      catalogText = "(Could not load product catalog — use your best judgment for product suggestions)";
+    } finally {
+      setCatalogLoading(false);
+    }
+
+    const input = `Recipient: ${persona.trim()}\nBudget: ${budget.trim()} JOD${occasion.trim() ? `\nOccasion: ${occasion.trim()}` : ""}\n\n--- PRODUCT CATALOG (use ONLY these) ---\n${catalogText}`;
     run("gift-ritualist", input);
   };
 
@@ -233,9 +255,9 @@ function GiftRitualistTab() {
           />
         </div>
         <div className="flex gap-2">
-          <Button type="submit" disabled={loading || !persona.trim() || !budget.trim()}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Gift className="h-4 w-4 mr-2" />}
-            Create Ritual Bundle
+          <Button type="submit" disabled={loading || catalogLoading || !persona.trim() || !budget.trim()}>
+            {loading || catalogLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Gift className="h-4 w-4 mr-2" />}
+            {catalogLoading ? "Loading Products…" : "Create Ritual Bundle"}
           </Button>
           {result && (
             <Button type="button" variant="ghost" onClick={() => { reset(); setPersona(""); setBudget(""); setOccasion(""); }}>
