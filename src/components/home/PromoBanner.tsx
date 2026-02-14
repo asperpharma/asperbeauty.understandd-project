@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import AsperLogo from "@/components/brand/AsperLogo";
 
 import promoTexture from "@/assets/promo-texture-cream.jpg";
 import promoSunscreen from "@/assets/promo-sunscreen.jpg";
@@ -166,16 +167,13 @@ export default function PromoBanner({
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 className="absolute inset-0 bg-background flex flex-col items-center justify-center gap-6 p-8"
               >
-                {/* Golden Lotus mark */}
+                {/* Brand logo */}
                 <motion.div
-                  initial={{ opacity: 0, rotate: -90 }}
-                  animate={{ opacity: 1, rotate: 0 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.2, duration: 0.6, type: "spring" }}
-                  className="w-20 h-20 rounded-full border-2 border-accent flex items-center justify-center shadow-lg shadow-accent/20"
                 >
-                  <span className="font-heading text-3xl font-bold text-accent">
-                    A
-                  </span>
+                  <AsperLogo size={80} />
                 </motion.div>
 
                 <motion.div
