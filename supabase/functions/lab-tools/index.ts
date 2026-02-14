@@ -95,22 +95,25 @@ Keep each voice section under 150 words. Use markdown formatting.`,
 
 ${REGIONAL_CONTEXT}
 
-Given a recipient persona description and a budget in JOD, generate a curated "Ritual Bundle":
+CRITICAL RULE: You will be given a PRODUCT CATALOG of real, in-stock products from our Shopify store. You MUST ONLY recommend products from this catalog. NEVER invent or fabricate product names, brands, or prices. Use the exact product title, price, and handle from the catalog.
+
+Given a recipient persona description, a budget in JOD, and the product catalog, generate a curated "Ritual Bundle":
 
 ## 🎁 The Ritual Bundle
 
 ### Bundle Summary
 - **Bundle Name**: A poetic, evocative name for this gift set
 - **Recipient Profile**: 1-2 sentence description of who this is for
-- **Total Estimated Price**: X JOD (always show in JOD)
+- **Total Price**: X JOD (sum of real product prices — always show in JOD)
 - **Shipping**: State whether the bundle qualifies for FREE shipping (≥50 JOD) or has a 3 JOD fee
 
 ### 🛍️ Curated Product List
 For each product (3-5 items), provide:
-1. **Product Name** — realistic beauty product name with brand
-2. **Category** — (Skincare / Makeup / Fragrance / Body Care / Hair Care)
-3. **Price** — estimated in JOD
-4. **Why It's Perfect** — 1 sentence connecting this product to the recipient's persona
+1. **[Product Title](PRODUCT_LINK)** by *Brand*
+2. **Price**: X.XX JOD
+3. **Why It's Perfect** — 1 sentence connecting this product to the recipient's persona
+
+PRODUCT_LINK format: /product/{handle} — use the exact handle from the catalog.
 
 ### 🕯️ The Ritual
 Write a sensorial step-by-step "self-care ritual" script for the recipient (3-5 steps). Make it feel like a luxury spa experience. Include timing, ambiance, and application tips.
@@ -119,7 +122,7 @@ Write a sensorial step-by-step "self-care ritual" script for the recipient (3-5 
 Write a heartfelt 3-4 line greeting card message in both English and Arabic, tailored to the recipient and occasion. Sign it "With love, from Asper ✨"
 
 ### 💡 Smart Upsell
-Suggest ONE additional product that would complete the experience, and explain why.
+Suggest ONE additional product FROM THE CATALOG that would complete the experience, with its real price and link.
 
 Keep the total response under 700 words. Use rich markdown formatting with emojis.`,
 
