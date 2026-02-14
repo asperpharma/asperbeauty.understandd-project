@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Shield } from "lucide-react";
+import { ArrowRight, Shield, Sparkles } from "lucide-react";
+import heroImage from "@/assets/hero-sanctuary.jpg";
 
 export default function Hero() {
   return (
@@ -20,20 +21,32 @@ export default function Hero() {
                 className="mb-4 border-accent text-accent font-body text-xs tracking-[0.2em] px-4 py-1.5"
               >
                 <Shield className="h-3 w-3 mr-2" />
-                CLINICAL LUXURY SKINCARE
+                100% AUTHENTIC · PHARMACIST CURATED
               </Badge>
 
               <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-primary leading-tight tracking-tight">
-                Nature Contained
+                Science meets
                 <br />
-                <span className="text-foreground">by Science.</span>
+                <span className="text-foreground">Soul.</span>
               </h1>
             </div>
 
             <p className="font-body text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed">
-              Formulations sealed with the Golden Lotus. We blend potent organic
-              botanicals with clinical precision to deliver verifiable radiance.
+              From clinical care to daily essentials — one trusted roof.
+              Sealed with the Golden Lotus for verifiable radiance.
             </p>
+
+            {/* Trust micro-badges */}
+            <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+              <span className="inline-flex items-center gap-1.5 text-xs font-body text-muted-foreground border border-border rounded-full px-3 py-1">
+                <Sparkles className="h-3 w-3 text-accent" />
+                Pharmacist-Led
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-xs font-body text-muted-foreground border border-border rounded-full px-3 py-1">
+                <Shield className="h-3 w-3 text-primary" />
+                5,000+ SKUs
+              </span>
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link to="/products">
@@ -48,16 +61,35 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Image Placeholder */}
-          <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] rounded-lg overflow-hidden shadow-xl lg:translate-x-8 bg-muted">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-muted-foreground font-body text-sm tracking-wider uppercase">
-                Hero Image
-              </p>
+          {/* Hero Image with Gold Stitch Frame */}
+          <div className="relative h-[400px] sm:h-[500px] lg:h-[600px] lg:translate-x-8 group">
+            {/* Gold Stitch animated border */}
+            <div className="absolute -inset-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+              <div className="absolute inset-0 rounded-lg border-2 border-accent/60 animate-[fade-in_0.6s_ease-out_forwards]" />
+              <div className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-accent rounded-full shadow-lg shadow-accent/40" />
+              <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-accent rounded-full shadow-lg shadow-accent/40" />
+              <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-accent rounded-full shadow-lg shadow-accent/40" />
+              <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-accent rounded-full shadow-lg shadow-accent/40" />
             </div>
-            {/* Double-frame border effect */}
-            <div className="absolute inset-0 border-[6px] border-card/50 pointer-events-none" />
-            <div className="absolute inset-4 border border-accent/30 pointer-events-none rounded-sm" />
+
+            {/* Image */}
+            <div className="relative h-full rounded-lg overflow-hidden shadow-xl">
+              <img
+                src={heroImage}
+                alt="Luxury skincare serum on white marble surface with morning sunlight"
+                className="h-full w-full object-cover"
+                loading="eager"
+              />
+              {/* Inner gold frame */}
+              <div className="absolute inset-4 border border-accent/30 pointer-events-none rounded-sm" />
+
+              {/* Bottom overlay caption */}
+              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-foreground/60 to-transparent px-6 py-5">
+                <p className="text-primary-foreground/90 font-body text-xs uppercase tracking-[0.2em]">
+                  The Sanctuary of Science
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
