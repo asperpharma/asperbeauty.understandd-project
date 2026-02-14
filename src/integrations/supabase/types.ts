@@ -1,0 +1,498 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.1"
+  }
+  public: {
+    Tables: {
+      ai_message_audit: {
+        Row: {
+          completion_tokens: number | null
+          created_at: string
+          force_persona: string | null
+          id: number
+          inventory_guard: string | null
+          persona: string
+          prompt_tokens: number | null
+          request_snippet: string | null
+          triggers: string[]
+          user_id: string | null
+        }
+        Insert: {
+          completion_tokens?: number | null
+          created_at?: string
+          force_persona?: string | null
+          id?: number
+          inventory_guard?: string | null
+          persona: string
+          prompt_tokens?: number | null
+          request_snippet?: string | null
+          triggers?: string[]
+          user_id?: string | null
+        }
+        Update: {
+          completion_tokens?: number | null
+          created_at?: string
+          force_persona?: string | null
+          id?: number
+          inventory_guard?: string | null
+          persona?: string
+          prompt_tokens?: number | null
+          request_snippet?: string | null
+          triggers?: string[]
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      chat_logs: {
+        Row: {
+          created_at: string | null
+          id: string
+          message: string
+          persona_used: string
+          recommended_skus: Json | null
+          response: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message: string
+          persona_used: string
+          recommended_skus?: Json | null
+          response?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message?: string
+          persona_used?: string
+          recommended_skus?: Json | null
+          response?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      concierge_profiles: {
+        Row: {
+          created_at: string
+          id: string
+          recommended_routine: Json
+          skin_concern: string
+          skin_type: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          recommended_routine?: Json
+          skin_concern: string
+          skin_type?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          recommended_routine?: Json
+          skin_concern?: string
+          skin_type?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      digital_tray_products: {
+        Row: {
+          bestseller_rank: number | null
+          created_at: string
+          id: string
+          inventory_total: number
+          is_bestseller: boolean
+          is_hero: boolean
+          primary_concern: Database["public"]["Enums"]["skin_concern"]
+          regimen_step: Database["public"]["Enums"]["regimen_step"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          bestseller_rank?: number | null
+          created_at?: string
+          id: string
+          inventory_total?: number
+          is_bestseller?: boolean
+          is_hero?: boolean
+          primary_concern: Database["public"]["Enums"]["skin_concern"]
+          regimen_step: Database["public"]["Enums"]["regimen_step"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          bestseller_rank?: number | null
+          created_at?: string
+          id?: string
+          inventory_total?: number
+          is_bestseller?: boolean
+          is_hero?: boolean
+          primary_concern?: Database["public"]["Enums"]["skin_concern"]
+          regimen_step?: Database["public"]["Enums"]["regimen_step"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      notes: {
+        Row: {
+          id: number
+          title: string
+        }
+        Insert: {
+          id?: never
+          title: string
+        }
+        Update: {
+          id?: never
+          title?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          bestseller_rank: number | null
+          brand: string | null
+          created_at: string
+          handle: string
+          id: string
+          image_url: string | null
+          inventory_total: number
+          is_hero: boolean
+          price: number | null
+          primary_concern: Database["public"]["Enums"]["skin_concern"]
+          regimen_step: Database["public"]["Enums"]["regimen_step"]
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          bestseller_rank?: number | null
+          brand?: string | null
+          created_at?: string
+          handle: string
+          id?: string
+          image_url?: string | null
+          inventory_total?: number
+          is_hero?: boolean
+          price?: number | null
+          primary_concern: Database["public"]["Enums"]["skin_concern"]
+          regimen_step: Database["public"]["Enums"]["regimen_step"]
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          bestseller_rank?: number | null
+          brand?: string | null
+          created_at?: string
+          handle?: string
+          id?: string
+          image_url?: string | null
+          inventory_total?: number
+          is_hero?: boolean
+          price?: number | null
+          primary_concern?: Database["public"]["Enums"]["skin_concern"]
+          regimen_step?: Database["public"]["Enums"]["regimen_step"]
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          display_name: string | null
+          phone: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          display_name?: string | null
+          phone?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          display_name?: string | null
+          phone?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      "Shopify pub": {
+        Row: {
+          created_at: string | null
+          id: string
+          tenant_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          tenant_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      telemetry_events: {
+        Row: {
+          correlation_id: string | null
+          event: string
+          id: number
+          occurred_at: string
+          payload: Json
+          source: string
+          user_id: string | null
+        }
+        Insert: {
+          correlation_id?: string | null
+          event: string
+          id?: number
+          occurred_at?: string
+          payload?: Json
+          source: string
+          user_id?: string | null
+        }
+        Update: {
+          correlation_id?: string | null
+          event?: string
+          id?: number
+          occurred_at?: string
+          payload?: Json
+          source?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_tenants: {
+        Row: {
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      generate_prescription: { Args: { payload: Json }; Returns: Json }
+      get_tray_by_concern: {
+        Args: { p_concern: Database["public"]["Enums"]["skin_concern"] }
+        Returns: {
+          bestseller_rank: number
+          id: string
+          inventory_total: number
+          is_bestseller: boolean
+          is_hero: boolean
+          regimen_step: Database["public"]["Enums"]["regimen_step"]
+          title: string
+        }[]
+      }
+      sync_tray_product: {
+        Args: {
+          p_bestseller_rank: number
+          p_concern: Database["public"]["Enums"]["skin_concern"]
+          p_id: string
+          p_inventory: number
+          p_is_bestseller: boolean
+          p_is_hero: boolean
+          p_step: Database["public"]["Enums"]["regimen_step"]
+          p_title: string
+        }
+        Returns: undefined
+      }
+    }
+    Enums: {
+      regimen_step: "Step_1_Cleanser" | "Step_2_Treatment" | "Step_3_Protection"
+      shopify: "public"
+      skin_concern:
+        | "Concern_Acne"
+        | "Concern_Hydration"
+        | "Concern_Aging"
+        | "Concern_Sensitivity"
+        | "Concern_Pigmentation"
+        | "Concern_Redness"
+        | "Concern_Oiliness"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      regimen_step: [
+        "Step_1_Cleanser",
+        "Step_2_Treatment",
+        "Step_3_Protection",
+      ],
+      shopify: ["public"],
+      skin_concern: [
+        "Concern_Acne",
+        "Concern_Hydration",
+        "Concern_Aging",
+        "Concern_Sensitivity",
+        "Concern_Pigmentation",
+        "Concern_Redness",
+        "Concern_Oiliness",
+      ],
+    },
+  },
+} as const
