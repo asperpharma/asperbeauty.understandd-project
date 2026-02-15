@@ -1,5 +1,5 @@
 import { SKIN_CONCERNS } from "@/hooks/useProducts";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface ConcernFilterProps {
   selected: string | null;
@@ -9,25 +9,45 @@ interface ConcernFilterProps {
 export function ConcernFilter({ selected, onSelect }: ConcernFilterProps) {
   return (
     <div className="flex flex-wrap gap-2">
-      <Button
-        variant={selected === null ? "default" : "outline"}
-        size="sm"
+      <FilterChip
+        label="All"
+        isSelected={selected === null}
         onClick={() => onSelect(null)}
-        className="rounded-full text-xs"
-      >
-        All
-      </Button>
+      />
       {SKIN_CONCERNS.map((c) => (
-        <Button
+        <FilterChip
           key={c.value}
-          variant={selected === c.value ? "default" : "outline"}
-          size="sm"
+          label={c.label}
+          isSelected={selected === c.value}
           onClick={() => onSelect(selected === c.value ? null : c.value)}
-          className="rounded-full text-xs"
-        >
-          {c.label}
-        </Button>
+        />
       ))}
     </div>
+  );
+}
+
+/** Tactile filter chip with bounce animation */
+function FilterChip({
+  label,
+  isSelected,
+  onClick,
+}: {
+  label: string;
+  isSelected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "rounded-full px-3.5 py-1.5 text-xs font-body font-medium tracking-wide border transition-all duration-200",
+        "active:scale-95 hover:shadow-maroon-glow",
+        isSelected
+          ? "bg-primary text-primary-foreground border-primary scale-100 shadow-maroon-glow"
+          : "bg-transparent text-foreground border-primary/30 hover:border-primary/60"
+      )}
+    >
+      {label}
+    </button>
   );
 }
