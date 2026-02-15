@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Package, ShoppingCart, Loader2, Shield, CheckCircle2 } from "lucide-react";
+import { Package, ShoppingCart, Loader2, Shield, CheckCircle2, Leaf, Stethoscope, Droplets, Ban } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import type { ShopifyProduct } from "@/lib/shopify";
@@ -116,16 +116,23 @@ export function ShopifyProductCard({ product, enrichment }: Props) {
             </p>
           )}
 
-          {/* Product Highlights */}
           {enrichment?.product_highlights && enrichment.product_highlights.length > 0 && (
-            <ul className="space-y-0.5">
-              {enrichment.product_highlights.slice(0, 2).map((h, i) => (
-                <li key={i} className="text-[10px] text-muted-foreground flex items-start gap-1">
-                  <span className="text-accent mt-px">✦</span>
-                  <span className="line-clamp-1">{h}</span>
-                </li>
-              ))}
-            </ul>
+            <div className="flex flex-wrap gap-1.5">
+              {enrichment.product_highlights.slice(0, 3).map((h, i) => {
+                const lh = h.toLowerCase();
+                const Icon = lh.includes("paraben") || lh.includes("free") ? Ban
+                  : lh.includes("vegan") || lh.includes("organic") || lh.includes("natural") ? Leaf
+                  : lh.includes("doctor") || lh.includes("clinical") || lh.includes("dermat") ? Stethoscope
+                  : lh.includes("hydrat") || lh.includes("moistur") ? Droplets
+                  : CheckCircle2;
+                return (
+                  <span key={i} className="inline-flex items-center gap-1 text-[10px] rounded-full bg-secondary px-2 py-0.5 text-secondary-foreground border border-border/50">
+                    <Icon className="h-2.5 w-2.5 text-accent shrink-0" />
+                    <span className="line-clamp-1">{h}</span>
+                  </span>
+                );
+              })}
+            </div>
           )}
 
           <div className="flex items-center justify-between">
