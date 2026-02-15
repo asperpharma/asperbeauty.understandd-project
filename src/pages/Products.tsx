@@ -8,6 +8,7 @@ import { ConcernFilter } from "@/components/ConcernFilter";
 import { VendorFilter, buildVendorQuery } from "@/components/VendorFilter";
 import { CartDrawer } from "@/components/CartDrawer";
 import { ProductGridSkeleton } from "@/components/skeletons/ProductSkeletons";
+import MobileFilterButton from "@/components/MobileFilterButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Package, ArrowLeft, Search, SlidersHorizontal, X } from "lucide-react";
@@ -161,26 +162,25 @@ const Products = () => {
               <p className="text-xs font-body font-medium text-muted-foreground uppercase tracking-wider mb-2">Shop by Concern</p>
               <ConcernFilter selected={selectedConcern} onSelect={setSelectedConcern} />
             </div>
-            {/* Mobile: Floating sticky filter pill at bottom center */}
+            {/* Mobile: Floating sticky filter pill with scroll-hide */}
             {isMobile && (
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button
-                    className="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 rounded-full shadow-maroon-deep bg-primary text-primary-foreground hover:bg-primary/90 px-5 h-11 gap-2 text-sm font-body"
-                  >
-                    <SlidersHorizontal className="h-4 w-4" />
-                    Filter & Sort
-                    {totalFilters > 0 && (
-                      <span className="ml-1 rounded-full bg-accent text-accent-foreground text-[10px] px-1.5 py-0.5 font-bold">
-                        {totalFilters}
-                      </span>
-                    )}
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="left" className="w-72 overflow-y-auto">
-                  <div className="pt-6">{filterSidebar}</div>
-                </SheetContent>
-              </Sheet>
+              <>
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <span id="mobile-filter-trigger" className="hidden" />
+                  </SheetTrigger>
+                  <SheetContent side="left" className="w-72 overflow-y-auto">
+                    <div className="pt-6">{filterSidebar}</div>
+                  </SheetContent>
+                </Sheet>
+                <MobileFilterButton
+                  activeFilterCount={totalFilters}
+                  onClick={() => {
+                    const trigger = document.getElementById("mobile-filter-trigger");
+                    if (trigger) trigger.click();
+                  }}
+                />
+              </>
             )}
 
             {error && (
