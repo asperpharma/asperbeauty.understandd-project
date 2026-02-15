@@ -157,12 +157,24 @@ export default function AIConcierge() {
   const [pendingImage, setPendingImage] = useState<{ file: File; preview: string } | null>(null);
   const [safetyFlags, setSafetyFlags] = useState<string[]>([]);
   const [userProfile, setUserProfile] = useState<{ skin_type: string | null; skin_concern: string; tags: string[] } | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Check auth state
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
   // Fetch concierge_profiles on open
   useEffect(() => {
-    if (!open) return;
+    if (!open || !isAuthenticated) return;
     (async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -179,7 +191,7 @@ export default function AIConcierge() {
         // Not logged in or no profile — proceed without context
       }
     })();
-  }, [open]);
+  }, [open, isAuthenticated]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -358,8 +370,33 @@ export default function AIConcierge() {
 
           {/* Messages */}
           <ScrollArea className="flex-1 bg-background px-4 py-3" ref={scrollRef}>
+            {/* Sign-in prompt for unauthenticated users */}
+            {isAuthenticated === false && (
+              <div className="flex flex-col items-center justify-center h-full space-y-4 py-8">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                  <Shield className="h-8 w-8 text-primary" />
+                </div>
+                <div className="text-center space-y-2">
+                  <h3 className="font-heading text-lg font-semibold text-foreground">Welcome to Asper AI</h3>
+                  <p className="text-sm text-muted-foreground font-body max-w-[260px]">
+                    Sign in to access personalized skincare advice from Dr. Sami & Ms. Zain ✨
+                  </p>
+                </div>
+                <a href="/auth">
+                  <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+                    <svg className="h-4 w-4" viewBox="0 0 24 24">
+                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="currentColor" fillOpacity="0.7" />
+                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="currentColor" fillOpacity="0.8" />
+                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="currentColor" fillOpacity="0.6" />
+                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="currentColor" fillOpacity="0.9" />
+                    </svg>
+                    Sign in with Google
+                  </button>
+                </a>
+              </div>
+            )}
             {/* Safety Interlock Banner */}
-            {safetyFlags.length > 0 && (
+            {isAuthenticated && safetyFlags.length > 0 && (
               <div className="mb-3 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs font-body text-destructive flex items-start gap-2">
                 <Shield className="h-3.5 w-3.5 shrink-0 mt-0.5" />
                 <div>
@@ -368,7 +405,7 @@ export default function AIConcierge() {
                 </div>
               </div>
             )}
-            {messages.length === 0 && (
+            {isAuthenticated && messages.length === 0 && (
               <div className="space-y-3">
                 <p className="text-center text-sm text-muted-foreground font-body">
                   Ask me anything about skincare, beauty, or upload a photo for a skin diagnostic 📸
@@ -468,7 +505,7 @@ export default function AIConcierge() {
           </ScrollArea>
 
           {/* Pending image preview */}
-          {pendingImage && (
+          {isAuthenticated && pendingImage && (
             <div className="border-t border-border/50 bg-muted/50 px-3 py-2 flex items-center gap-2">
               <img
                 src={pendingImage.preview}
@@ -488,7 +525,8 @@ export default function AIConcierge() {
             </div>
           )}
 
-          {/* Input */}
+          {/* Input — hidden when not authenticated */}
+          {isAuthenticated && (
           <div className="border-t border-border/50 bg-card p-3">
             <form
               onSubmit={(e) => {
@@ -525,6 +563,7 @@ export default function AIConcierge() {
               </Button>
             </form>
           </div>
+          )}
         </Card>
       )}
     </>
