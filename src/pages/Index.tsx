@@ -99,13 +99,13 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
               { step: "01", icon: Search, title: "Analyze", description: "AI analyzes your skin concerns, type, and goals using clinical knowledge.", color: "text-primary" },
               { step: "02", icon: FlaskConical, title: "Recommend", description: "Receive a personalized regimen curated from 5,000+ products by your AI pharmacist.", color: "text-accent" },
               { step: "03", icon: ShoppingBag, title: "Cart", description: "One click adds your complete routine. Quick, elegant, and beautifully simple.", color: "text-primary" },
             ].map((item, i) => (
-              <Card key={i} className="group relative border-border/50 hover:border-accent/50 transition-all duration-300 hover:shadow-lg overflow-hidden">
+              <Card key={i} className="group relative border-border/50 hover:border-accent/50 transition-all duration-300 shadow-maroon-glow hover:shadow-maroon-deep overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                 <CardContent className="p-8">
                   <div className="flex items-start justify-between mb-6">
@@ -138,8 +138,8 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Card className="border-primary/20 hover:border-primary/40 transition-colors">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <Card className="border-primary/20 hover:border-primary/40 transition-all shadow-maroon-glow hover:shadow-maroon-deep">
               <CardContent className="p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -161,7 +161,7 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-accent/20 hover:border-accent/40 transition-colors">
+            <Card className="border-accent/20 hover:border-accent/40 transition-all shadow-maroon-glow hover:shadow-maroon-deep">
               <CardContent className="p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">

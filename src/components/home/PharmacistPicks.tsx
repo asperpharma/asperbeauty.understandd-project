@@ -16,6 +16,7 @@ interface PharmacistPick {
   image_url: string | null;
   price: number | null;
   product_highlights: string[] | null;
+  pharmacist_note: string | null;
 }
 
 export default function PharmacistPicks() {
@@ -24,7 +25,7 @@ export default function PharmacistPicks() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("id, handle, title, brand, clinical_badge, gold_stitch_tier, image_url, price, product_highlights")
+        .select("id, handle, title, brand, clinical_badge, gold_stitch_tier, image_url, price, product_highlights, pharmacist_note")
         .eq("is_hero", true)
         .order("bestseller_rank", { ascending: true })
         .limit(6);
@@ -58,7 +59,7 @@ export default function PharmacistPicks() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {picks.map((product, i) => (
             <motion.div
               key={product.id}
@@ -69,10 +70,10 @@ export default function PharmacistPicks() {
             >
               <Link to={`/product/${product.handle}`}>
                 <div
-                  className={`group relative rounded-lg border bg-card overflow-hidden transition-all duration-500 hover:shadow-xl ${
+                  className={`group relative rounded-lg border bg-card overflow-hidden transition-all duration-500 shadow-maroon-glow hover:shadow-maroon-deep ${
                     product.gold_stitch_tier
-                      ? "border-transparent hover:border-accent hover:shadow-accent/10"
-                      : "border-border hover:border-border"
+                      ? "border-transparent hover:border-accent hover:shadow-[0_8px_30px_-8px_hsl(var(--accent)/0.25)]"
+                      : "border-border/50 hover:border-accent/30"
                   }`}
                 >
                   {/* Gold stitch animated border */}
@@ -86,16 +87,16 @@ export default function PharmacistPicks() {
                   )}
 
                   {/* Image */}
-                  <div className="aspect-square bg-muted overflow-hidden">
+                  <div className="aspect-square bg-background overflow-hidden flex items-center justify-center p-6">
                     {product.image_url ? (
                       <img
                         src={product.image_url}
                         alt={product.title}
-                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
                       />
                     ) : (
-                      <div className="h-full w-full flex items-center justify-center text-muted-foreground font-heading text-2xl">
+                      <div className="h-full w-full flex items-center justify-center text-muted-foreground font-heading text-3xl">
                         {product.title.charAt(0)}
                       </div>
                     )}
@@ -134,9 +135,17 @@ export default function PharmacistPicks() {
                       </div>
                     )}
 
+                    {product.pharmacist_note && (
+                      <p className="text-xs font-body italic text-muted-foreground leading-relaxed border-l-2 border-accent/30 pl-2.5">
+                        "Dr. Sami says: {product.pharmacist_note}"
+                      </p>
+                    )}
+
                     {product.price && (
-                      <p className="font-body text-lg font-semibold text-foreground pt-1">
-                        {product.price.toFixed(2)} JOD
+                      <p className="font-body text-lg font-semibold text-primary pt-1">
+                        <span className="text-[10px] align-top mr-0.5 font-normal text-muted-foreground">JOD</span>
+                        {Math.floor(product.price)}
+                        <span className="text-xs font-normal text-muted-foreground">.{(product.price % 1).toFixed(2).slice(2)}</span>
                       </p>
                     )}
                   </div>
