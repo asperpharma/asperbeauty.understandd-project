@@ -8,7 +8,12 @@ import BrandStory from "@/components/home/BrandStory";
 import ConciergeShowcase from "@/components/home/ConciergeShowcase";
 import PromoBanner from "@/components/home/PromoBanner";
 import Newsletter from "@/components/home/Newsletter";
+import ShopByConcern from "@/components/home/ShopByConcern";
+import PharmacistPicks from "@/components/home/PharmacistPicks";
+import SocialGallery from "@/components/home/SocialGallery";
+import SearchBar from "@/components/home/SearchBar";
 import AuthButton from "@/components/AuthButton";
+import asperLogo from "@/assets/asper-logo.png";
 
 const Index = () => {
   return (
@@ -18,9 +23,7 @@ const Index = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="font-heading text-2xl font-bold text-primary tracking-tight">
-                Asper
-              </span>
+              <img src={asperLogo} alt="Asper" className="h-8 w-auto" />
               <span className="text-xs font-body uppercase tracking-[0.25em] text-muted-foreground mt-1">
                 Beauty Shop
               </span>
@@ -28,14 +31,11 @@ const Index = () => {
             <div className="hidden md:flex items-center gap-8">
               <Link to="/products" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Shop</Link>
               <Link to="/intelligence" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Intelligence</Link>
-              <a href="#concierge" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">AI Concierge</a>
+              <a href="#experts" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">AI Concierge</a>
               <a href="#about" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">About</a>
             </div>
             <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" className="hidden sm:flex">
-                <Search className="h-4 w-4 mr-2" />
-                Search
-              </Button>
+              <SearchBar />
               <Link to="/products">
                 <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
                   <ShoppingBag className="h-4 w-4 mr-2" />
@@ -48,23 +48,23 @@ const Index = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* 1. Hero Section — "First Impression" */}
       <Hero />
 
       {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* Brand Story — The Sanctuary of Science */}
-      <BrandStory />
+      {/* 2a. Shop by Concern — Guided Discovery */}
+      <ShopByConcern />
 
       {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* AI Concierge Showcase — Safety Interlock */}
+      {/* 2b. AI Concierge Showcase — Safety Interlock Demo */}
       <ConciergeShowcase />
 
       {/* 3-Click Solution */}
-      <section id="concierge" className="py-20 sm:py-28 bg-card">
+      <section id="experts" className="py-20 sm:py-28 bg-card">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge variant="secondary" className="mb-4 font-body text-xs tracking-wider">
@@ -121,10 +121,13 @@ const Index = () => {
       {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* Dual Persona */}
+      {/* Dual Persona — "Consult with Our Experts" */}
       <section className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
+            <Badge variant="outline" className="mb-4 border-accent text-accent font-body text-xs tracking-[0.2em] px-4 py-1.5">
+              CONSULT WITH OUR EXPERTS
+            </Badge>
             <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground">
               One Brain, <span className="text-primary">Two Voices</span>
             </h2>
@@ -184,7 +187,19 @@ const Index = () => {
       {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* Trust Banner — The Three Pillars */}
+      {/* 3. Pharmacist's Choice — Gold Stitch Cards */}
+      <PharmacistPicks />
+
+      {/* Gold divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+
+      {/* Brand Story — The Sanctuary of Science */}
+      <BrandStory />
+
+      {/* Gold divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+
+      {/* Trust Banner — Certifications & Three Pillars */}
       <section id="about" className="py-20 sm:py-28 bg-card">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground mb-12">
@@ -232,6 +247,12 @@ const Index = () => {
       {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
+      {/* 5. Social Gallery */}
+      <SocialGallery />
+
+      {/* Gold divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+
       {/* Newsletter */}
       <Newsletter />
 
@@ -240,7 +261,7 @@ const Index = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-heading text-xl font-bold text-primary">Asper</span>
+              <img src={asperLogo} alt="Asper" className="h-6 w-auto" />
               <span className="text-xs font-body uppercase tracking-[0.2em] text-muted-foreground">Beauty Shop</span>
             </div>
             <p className="text-sm text-muted-foreground font-body italic">
