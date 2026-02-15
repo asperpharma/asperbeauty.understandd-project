@@ -15,6 +15,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import asperLogo from "@/assets/asper-lotus-logo.png";
 
 /* ─── Ingredient Pill ─── */
 function IngredientPill({ name, isActive }: { name: string; isActive: boolean }) {
@@ -446,7 +447,7 @@ function Nav() {
             </Link>
             <div className="h-6 w-px bg-border" />
             <Link to="/">
-              <span className="font-heading text-xl font-bold text-primary">Asper</span>
+              <img src={asperLogo} alt="Asper" className="h-7 w-auto" />
             </Link>
           </div>
           <CartDrawer />

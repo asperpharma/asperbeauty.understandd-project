@@ -17,6 +17,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AuthButton from "@/components/AuthButton";
+import asperLogo from "@/assets/asper-lotus-logo.png";
 
 const Products = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -71,7 +72,7 @@ const Products = () => {
                 </Button>
               </Link>
               <div className="h-6 w-px bg-border" />
-              <span className="font-heading text-xl font-bold text-primary">Asper</span>
+              <img src={asperLogo} alt="Asper" className="h-7 w-auto" />
             </div>
             <div className="flex items-center gap-3">
               <AuthButton />

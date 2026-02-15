@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import asperLogo from "@/assets/asper-lotus-logo.png";
 
 export default function Auth() {
   const { user, loading, signInWithGoogle } = useAuth();
@@ -26,12 +27,12 @@ export default function Auth() {
 
       <div className="w-full max-w-md space-y-8">
         {/* Brand */}
-        <div className="text-center space-y-2">
-          <h1 className="font-heading text-4xl font-bold text-primary tracking-tight">Asper</h1>
-          <p className="text-xs font-body uppercase tracking-[0.3em] text-muted-foreground">
-            The Sanctuary of Science
-          </p>
-        </div>
+         <div className="text-center space-y-3">
+           <img src={asperLogo} alt="Asper" className="h-16 w-auto mx-auto" />
+           <p className="text-xs font-body uppercase tracking-[0.3em] text-muted-foreground">
+             The Sanctuary of Science
+           </p>
+         </div>
 
         {/* Gold divider */}
         <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
