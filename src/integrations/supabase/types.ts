@@ -186,6 +186,7 @@ export type Database = {
           is_hero: boolean
           key_ingredients: string[] | null
           mpn: string | null
+          pharmacist_note: string | null
           price: number | null
           primary_concern: Database["public"]["Enums"]["skin_concern"]
           product_highlights: string[] | null
@@ -213,6 +214,7 @@ export type Database = {
           is_hero?: boolean
           key_ingredients?: string[] | null
           mpn?: string | null
+          pharmacist_note?: string | null
           price?: number | null
           primary_concern: Database["public"]["Enums"]["skin_concern"]
           product_highlights?: string[] | null
@@ -240,6 +242,7 @@ export type Database = {
           is_hero?: boolean
           key_ingredients?: string[] | null
           mpn?: string | null
+          pharmacist_note?: string | null
           price?: number | null
           primary_concern?: Database["public"]["Enums"]["skin_concern"]
           product_highlights?: string[] | null

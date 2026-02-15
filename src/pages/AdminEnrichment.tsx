@@ -22,9 +22,10 @@ interface ProductRow {
   availability_status: string | null;
   product_highlights: string[] | null;
   clinical_badge: string | null;
+  pharmacist_note: string | null;
 }
 
-type EditableFields = Pick<ProductRow, "gtin" | "mpn" | "condition" | "availability_status" | "product_highlights" | "clinical_badge">;
+type EditableFields = Pick<ProductRow, "gtin" | "mpn" | "condition" | "availability_status" | "product_highlights" | "clinical_badge" | "pharmacist_note">;
 
 const CONDITIONS = ["new", "refurbished", "used"] as const;
 const AVAILABILITY = ["in_stock", "out_of_stock", "preorder", "backorder"] as const;
@@ -49,7 +50,7 @@ export default function AdminEnrichment() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("id, handle, title, brand, gtin, mpn, condition, availability_status, product_highlights, clinical_badge")
+        .select("id, handle, title, brand, gtin, mpn, condition, availability_status, product_highlights, clinical_badge, pharmacist_note")
         .order("title");
       if (error) throw error;
       return data as ProductRow[];
@@ -138,6 +139,7 @@ export default function AdminEnrichment() {
               <th className="py-3 px-2 font-medium w-28">Availability</th>
               <th className="py-3 px-2 font-medium w-36">Clinical Badge</th>
               <th className="py-3 px-2 font-medium min-w-[200px]">Highlights (comma-separated)</th>
+              <th className="py-3 px-2 font-medium min-w-[200px]">Pharmacist Note</th>
               <th className="py-3 px-2 font-medium w-20">Save</th>
             </tr>
           </thead>
@@ -216,6 +218,14 @@ export default function AdminEnrichment() {
                         handleField(p.id, "product_highlights", arr);
                       }}
                       placeholder="Fragrance Free, SPF 50+"
+                      className="h-8 text-xs"
+                    />
+                  </td>
+                  <td className="py-3 px-2">
+                    <Input
+                      value={(getValue(p, "pharmacist_note") as string) ?? ""}
+                      onChange={(e) => handleField(p.id, "pharmacist_note", e.target.value || null)}
+                      placeholder="Why this product is curated…"
                       className="h-8 text-xs"
                     />
                   </td>

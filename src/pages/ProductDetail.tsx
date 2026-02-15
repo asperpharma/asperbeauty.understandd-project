@@ -153,6 +153,23 @@ const ProductDetail = () => {
               )}
             </div>
 
+            {/* Pharmacist Note — "Why it's here" */}
+            {enrichment?.pharmacist_note && (
+              <div className="flex items-start gap-2.5 bg-secondary/50 rounded-lg px-4 py-3 border border-border/30">
+                <span className="text-accent text-base mt-0.5 shrink-0">
+                  {enrichment.ai_persona_lead === "ms_zain" ? "✨" : "🔬"}
+                </span>
+                <div>
+                  <p className="text-xs font-medium text-foreground mb-0.5">
+                    {enrichment.ai_persona_lead === "ms_zain" ? "Ms. Zain says" : "Dr. Sami says"}
+                  </p>
+                  <p className="text-sm text-muted-foreground italic leading-relaxed">
+                    "{enrichment.pharmacist_note}"
+                  </p>
+                </div>
+              </div>
+            )}
+
             {enrichment?.texture_profile && (
               <p className="text-sm italic text-muted-foreground">
                 Texture: {enrichment.texture_profile}
