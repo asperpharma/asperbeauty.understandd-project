@@ -326,6 +326,20 @@ export default function AIConcierge() {
   const persona = personaConfig[currentPersona as keyof typeof personaConfig] || personaConfig.ms_zain;
   const PersonaIcon = persona.icon;
 
+  /* ─── Swipe-to-dismiss for mobile ─── */
+  const touchStartRef = useRef({ x: 0, y: 0 });
+  const handleSwipeStart = useCallback((e: React.TouchEvent) => {
+    touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, []);
+  const handleSwipeEnd = useCallback((e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchStartRef.current.x;
+    const dy = e.changedTouches[0].clientY - touchStartRef.current.y;
+    // Swipe right or down to dismiss
+    if ((dx > 80 && Math.abs(dy) < 60) || (dy > 100 && Math.abs(dx) < 60)) {
+      setOpen(false);
+    }
+  }, []);
+
   return (
     <>
       {/* Hidden file input */}
@@ -355,7 +369,11 @@ export default function AIConcierge() {
 
       {/* Chat panel */}
       {open && (
-        <Card className="fixed bottom-6 right-6 z-50 flex h-[520px] w-[380px] flex-col overflow-hidden border-accent/30 shadow-2xl sm:w-[400px]">
+        <Card
+          className="fixed bottom-6 right-6 z-50 flex h-[520px] w-[380px] flex-col overflow-hidden border-accent/30 shadow-2xl sm:w-[400px]"
+          onTouchStart={handleSwipeStart}
+          onTouchEnd={handleSwipeEnd}
+        >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border/50 bg-primary px-4 py-3">
             <div className="flex items-center gap-3">
