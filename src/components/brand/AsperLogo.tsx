@@ -8,7 +8,7 @@ interface AsperLogoProps {
   animated?: boolean;
 }
 
-export default function AsperLogo({ size = 120, className, animated }: AsperLogoProps) {
+export default function AsperLogo({ size = 160, className, animated }: AsperLogoProps) {
   return (
     <img
       src={asperLogo}

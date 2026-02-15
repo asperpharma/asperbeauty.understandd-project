@@ -173,7 +173,7 @@ export default function PromoBanner({
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.2, duration: 0.6, type: "spring" }}
                 >
-                  <AsperLogo size={80} />
+                  <AsperLogo size={120} />
                 </motion.div>
 
                 <motion.div
