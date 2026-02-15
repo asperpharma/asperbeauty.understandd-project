@@ -52,13 +52,14 @@ export function ShopifyProductCard({ product, enrichment }: Props) {
             : "border border-transparent hover:border-gold"
         )}
       >
-        <div className="relative aspect-[3/4] bg-muted flex items-center justify-center overflow-hidden">
+        <div className="relative aspect-[3/4] bg-background flex items-center justify-center overflow-hidden">
           {image ? (
             <img
               src={image.url}
               alt={image.altText || node.title}
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className="h-full w-full object-contain p-4 transition-transform duration-700 group-hover:scale-105"
               loading="lazy"
+              style={{ filter: "drop-shadow(4px 6px 12px rgba(128, 0, 32, 0.1))" }}
             />
           ) : (
             <Package className="h-16 w-16 text-muted-foreground/40" />

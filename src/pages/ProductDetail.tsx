@@ -4,6 +4,7 @@ import { useShopifyProduct } from "@/hooks/useShopifyProducts";
 import { useProductEnrichment } from "@/hooks/useProductEnrichment";
 import { useCartStore } from "@/stores/cartStore";
 import { CartDrawer } from "@/components/CartDrawer";
+import { ClinicalScoreRing } from "@/components/ClinicalScoreRing";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -195,8 +196,8 @@ const ProductDetail = () => {
               {/* Title */}
               <h1 className="font-heading text-3xl lg:text-4xl font-bold text-foreground leading-tight">{node.title}</h1>
 
-              {/* Price — Smart Typography */}
-              <div className="flex items-baseline gap-3 flex-wrap">
+              {/* Clinical Score Ring + Price */}
+              <div className="flex items-center gap-4 flex-wrap">
                 <p className="font-body text-2xl font-semibold text-primary">
                   <span className="text-xs align-top mr-0.5 font-normal text-muted-foreground">
                     {selectedVariant?.price.currencyCode}
@@ -206,6 +207,13 @@ const ProductDetail = () => {
                     .{priceAmount.toFixed(2).split(".")[1]}
                   </span>
                 </p>
+                <ClinicalScoreRing
+                  score={94}
+                  label="Based on 420 verified trials"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap">
                 {enrichment?.clinical_badge && (
                   <Badge variant="outline" className="gap-1 text-xs">
                     <Shield className="h-3 w-3 text-primary" />
