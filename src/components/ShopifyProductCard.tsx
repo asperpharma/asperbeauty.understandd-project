@@ -36,8 +36,8 @@ export function ShopifyProductCard({ product, enrichment }: Props) {
       quantity: 1,
       selectedOptions: variant.selectedOptions || [],
     });
-    toast.success("Added to cart", {
-      description: node.title,
+    toast.success("Excellent choice", {
+      description: `${node.title} added to your regimen.`,
       position: "top-center",
     });
   };
@@ -188,7 +188,7 @@ export function ShopifyProductCard({ product, enrichment }: Props) {
 
           <Button
             size="sm"
-            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 text-xs"
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 text-xs btn-ripple"
             onClick={handleAddToCart}
             disabled={isLoading || !variant?.availableForSale}
           >
