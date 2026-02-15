@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, Sparkles, ShoppingBag, Shield, FlaskConical, Heart, Award, Truck } from "lucide-react";
+import { Search, Sparkles, ShoppingBag, Shield, FlaskConical, Heart, Award, Truck, Globe } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import Hero from "@/components/home/Hero";
 import BrandStory from "@/components/home/BrandStory";
 import ConciergeShowcase from "@/components/home/ConciergeShowcase";
@@ -16,8 +17,10 @@ import AuthButton from "@/components/AuthButton";
 import asperLogo from "@/assets/asper-logo.png";
 
 const Index = () => {
+  const { t, toggle, dir, locale } = useLanguage();
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir={dir}>
       {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -29,17 +32,26 @@ const Index = () => {
               </span>
             </div>
             <div className="hidden md:flex items-center gap-8">
-              <Link to="/products" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Shop</Link>
-              <Link to="/intelligence" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Intelligence</Link>
-              <a href="#experts" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">AI Concierge</a>
-              <a href="#about" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">About</a>
+              <Link to="/products" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">{t("nav.shop")}</Link>
+              <Link to="/intelligence" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">{t("nav.intelligence")}</Link>
+              <a href="#experts" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">{t("nav.concierge")}</a>
+              <a href="#about" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">{t("nav.about")}</a>
             </div>
             <div className="flex items-center gap-3">
+              {/* Language Toggle */}
+              <button
+                onClick={toggle}
+                className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors border border-border rounded-full px-3 py-1.5"
+                title="Switch language"
+              >
+                <Globe className="h-3.5 w-3.5" />
+                <span className={locale === "ar" ? "font-body" : "font-arabic"}>{t("lang.switch")}</span>
+              </button>
               <SearchBar />
               <Link to="/products">
                 <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
                   <ShoppingBag className="h-4 w-4 mr-2" />
-                  Shop Now
+                  {t("nav.shop_now")}
                 </Button>
               </Link>
               <AuthButton />
@@ -48,19 +60,17 @@ const Index = () => {
         </div>
       </nav>
 
-      {/* 1. Hero Section — "First Impression" */}
+      {/* 1. Hero Section */}
       <Hero />
 
-      {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* 2a. Shop by Concern — Guided Discovery */}
+      {/* 2a. Shop by Concern */}
       <ShopByConcern />
 
-      {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* 2b. AI Concierge Showcase — Safety Interlock Demo */}
+      {/* 2b. AI Concierge Showcase */}
       <ConciergeShowcase />
 
       {/* 3-Click Solution */}
@@ -80,27 +90,9 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              {
-                step: "01",
-                icon: Search,
-                title: "Analyze",
-                description: "AI analyzes your skin concerns, type, and goals using clinical knowledge.",
-                color: "text-primary",
-              },
-              {
-                step: "02",
-                icon: FlaskConical,
-                title: "Recommend",
-                description: "Receive a personalized regimen curated from 5,000+ products by your AI pharmacist.",
-                color: "text-accent",
-              },
-              {
-                step: "03",
-                icon: ShoppingBag,
-                title: "Cart",
-                description: "One click adds your complete routine. Quick, elegant, and beautifully simple.",
-                color: "text-primary",
-              },
+              { step: "01", icon: Search, title: "Analyze", description: "AI analyzes your skin concerns, type, and goals using clinical knowledge.", color: "text-primary" },
+              { step: "02", icon: FlaskConical, title: "Recommend", description: "Receive a personalized regimen curated from 5,000+ products by your AI pharmacist.", color: "text-accent" },
+              { step: "03", icon: ShoppingBag, title: "Cart", description: "One click adds your complete routine. Quick, elegant, and beautifully simple.", color: "text-primary" },
             ].map((item, i) => (
               <Card key={i} className="group relative border-border/50 hover:border-accent/50 transition-all duration-300 hover:shadow-lg overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -118,10 +110,9 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* Dual Persona — "Consult with Our Experts" */}
+      {/* Dual Persona */}
       <section className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -184,22 +175,17 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* 3. Pharmacist's Choice — Gold Stitch Cards */}
       <PharmacistPicks />
 
-      {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* Brand Story — The Sanctuary of Science */}
       <BrandStory />
 
-      {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* Trust Banner — Certifications & Three Pillars */}
+      {/* Trust Banner */}
       <section id="about" className="py-20 sm:py-28 bg-card">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground mb-12">
@@ -207,21 +193,9 @@ const Index = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[
-              {
-                icon: Award,
-                title: "Guaranteed Authentic",
-                desc: "The Gold Standard. Sourced directly from authorized distributors.",
-              },
-              {
-                icon: FlaskConical,
-                title: "Pharmacist Verified",
-                desc: "Vetted by experts. Safe for pregnancy and sensitive skin.",
-              },
-              {
-                icon: Truck,
-                title: "Amman Concierge Delivery",
-                desc: "Temperature-controlled local delivery. Free over 50 JOD.",
-              },
+              { icon: Award, title: "Guaranteed Authentic", desc: "The Gold Standard. Sourced directly from authorized distributors." },
+              { icon: FlaskConical, title: "Pharmacist Verified", desc: "Vetted by experts. Safe for pregnancy and sensitive skin." },
+              { icon: Truck, title: "Amman Concierge Delivery", desc: "Temperature-controlled local delivery. Free over 50 JOD." },
             ].map((item, i) => (
               <div key={i} className="flex flex-col items-center text-center">
                 <div className="w-14 h-14 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center mb-4">
@@ -235,25 +209,16 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* Seasonal Promo Banner */}
-      <PromoBanner
-        campaign="Summer Hydration"
-        subtitle="Shield. Glow. Repeat."
-      />
+      <PromoBanner campaign="Summer Hydration" subtitle="Shield. Glow. Repeat." />
 
-      {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* 5. Social Gallery */}
       <SocialGallery />
 
-      {/* Gold divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* Newsletter */}
       <Newsletter />
 
       {/* Footer */}
@@ -264,13 +229,13 @@ const Index = () => {
               <img src={asperLogo} alt="Asper" className="h-6 w-auto" />
               <span className="text-xs font-body uppercase tracking-[0.2em] text-muted-foreground">Beauty Shop</span>
             </div>
-            <p className="text-sm text-muted-foreground font-body italic">
-              "We do not just sell cosmetics; we dispense beauty through intelligence."
+            <p className={`text-sm text-muted-foreground italic ${locale === "ar" ? "font-arabic" : "font-body"}`}>
+              {t("footer.tagline")}
             </p>
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent mt-8" />
-          <p className="text-xs text-muted-foreground text-center mt-6 font-body">
-            © {new Date().getFullYear()} Asper Beauty Shop. The Sanctuary of Science.
+          <p className={`text-xs text-muted-foreground text-center mt-6 ${locale === "ar" ? "font-arabic" : "font-body"}`}>
+            © {new Date().getFullYear()} {t("footer.copyright")}
           </p>
         </div>
       </footer>
