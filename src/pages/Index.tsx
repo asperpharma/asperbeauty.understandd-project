@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,13 +17,18 @@ import SearchBar from "@/components/home/SearchBar";
 import ExpertTips from "@/components/home/ExpertTips";
 import ScrollProgress from "@/components/ScrollProgress";
 import AuthButton from "@/components/AuthButton";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import MegaMenu from "@/components/MegaMenu";
+import { CartDrawer } from "@/components/CartDrawer";
 import asperLogo from "@/assets/asper-logo.png";
 
 const Index = () => {
   const { t, toggle, dir, locale } = useLanguage();
+  const [conciergeOpen, setConciergeOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background" dir={dir}>
+    <div className="min-h-screen bg-background mobile-bottom-pad" dir={dir}>
       {/* Gold scroll progress bar */}
       <ScrollProgress />
 
@@ -37,7 +43,7 @@ const Index = () => {
               </span>
             </div>
             <div className="hidden md:flex items-center gap-8">
-              <Link to="/products" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">{t("nav.shop")}</Link>
+              <MegaMenu label={t("nav.shop")} />
               <Link to="/intelligence" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">{t("nav.intelligence")}</Link>
               <a href="#experts" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">{t("nav.concierge")}</a>
               <a href="#about" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">{t("nav.about")}</a>
@@ -267,11 +273,26 @@ const Index = () => {
             </div>
           </div>
           <div className="h-px bg-primary-foreground/10" />
-          <p className={`text-xs text-primary-foreground/50 text-center mt-6 ${locale === "ar" ? "font-arabic" : "font-body"}`}>
-            © {new Date().getFullYear()} {t("footer.copyright")}
-          </p>
+          <div className="flex items-center justify-between mt-6">
+            <p className={`text-xs text-primary-foreground/50 ${locale === "ar" ? "font-arabic" : "font-body"}`}>
+              © {new Date().getFullYear()} {t("footer.copyright")}
+            </p>
+            {/* Gold Authenticity Seal */}
+            <div className="gold-seal-rotate cursor-pointer" title="Guaranteed Authentic">
+              <svg viewBox="0 0 40 40" fill="none" className="h-10 w-10 text-accent">
+                <path d="M20 2L24.5 8.5L32 7L29 14.5L35 20L29 25.5L32 33L24.5 31.5L20 38L15.5 31.5L8 33L11 25.5L5 20L11 14.5L8 7L15.5 8.5L20 2Z" fill="currentColor" fillOpacity="0.9"/>
+                <path d="M20 12L22 16.5L27 17L23 20.5L24 25.5L20 23L16 25.5L17 20.5L13 17L18 16.5L20 12Z" fill="hsl(var(--primary))" fillOpacity="0.8"/>
+              </svg>
+            </div>
+          </div>
         </div>
       </footer>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav
+        onOpenConcierge={() => setConciergeOpen(true)}
+        onOpenCart={() => setCartOpen(true)}
+      />
     </div>
   );
 };

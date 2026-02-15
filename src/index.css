@@ -127,13 +127,19 @@
     font-family: var(--font-heading);
   }
 
-  /* RTL support — slightly taller line-height for Arabic elegance */
+  /* RTL support — larger size + tighter spacing for Arabic elegance */
   [dir="rtl"] body {
     font-family: var(--font-arabic);
+    font-size: 1.1em;
+    letter-spacing: 0;
   }
   [dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3 {
     font-family: var(--font-arabic);
     line-height: 1.6;
+    letter-spacing: 0;
+  }
+  [dir="rtl"] p, [dir="rtl"] span, [dir="rtl"] a {
+    letter-spacing: 0;
   }
 }
 
@@ -209,4 +215,48 @@
 .product-card-hover:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 32px -8px hsl(var(--gold) / 0.2);
+}
+
+/* ─── Button Ripple Effect ─── */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, hsl(var(--primary-foreground) / 0.2) 10%, transparent 60%);
+  transform: scale(0);
+  opacity: 0;
+  transition: none;
+}
+.btn-ripple:active::after {
+  transform: scale(4);
+  opacity: 1;
+  transition: transform 0.5s ease, opacity 0.3s ease;
+}
+
+/* ─── Image Fade-In ─── */
+.img-fade-in {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.img-fade-in.loaded {
+  opacity: 1;
+}
+
+/* ─── Gold Seal Rotation ─── */
+.gold-seal-rotate {
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gold-seal-rotate:hover {
+  transform: rotate(360deg);
+}
+
+/* ─── Mobile Bottom Nav Spacing ─── */
+@media (max-width: 768px) {
+  .mobile-bottom-pad {
+    padding-bottom: 5rem;
+  }
 }
