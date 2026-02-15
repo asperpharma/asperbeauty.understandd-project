@@ -16,6 +16,7 @@ import BrandShowcase from "./pages/BrandShowcase";
 import LabTools from "./pages/LabTools";
 import Intelligence from "./pages/Intelligence";
 import AdminEnrichment from "./pages/AdminEnrichment";
+import Checkout from "./pages/Checkout";
 import AIConcierge from "./components/AIConcierge";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ function AppContent() {
         <Route path="/auth" element={<Auth />} />
         <Route path="/intelligence" element={<Intelligence />} />
         <Route path="/lab" element={<LabTools />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="/admin/enrichment" element={<AdminEnrichment />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
