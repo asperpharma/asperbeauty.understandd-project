@@ -130,6 +130,8 @@ const personaConfig = {
     icon: Shield,
     color: "text-primary",
     bgColor: "bg-primary/10",
+    shape: "clip-hexagon",
+    chatBg: "bg-[url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 5 L50 17.5 L50 42.5 L30 55 L10 42.5 L10 17.5 Z' fill='none' stroke='%23800020' stroke-width='0.5' opacity='0.04'/%3E%3C/svg%3E\")]",
   },
   ms_zain: {
     name: "Ms. Zain",
@@ -137,6 +139,8 @@ const personaConfig = {
     icon: Heart,
     color: "text-gold",
     bgColor: "bg-gold/10",
+    shape: "rounded-full",
+    chatBg: "bg-[url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Ccircle cx='30' cy='30' r='20' fill='none' stroke='%23C5A028' stroke-width='0.5' opacity='0.04'/%3E%3C/svg%3E\")]",
   },
 };
 
@@ -369,7 +373,7 @@ export default function AIConcierge() {
           </div>
 
           {/* Messages */}
-          <ScrollArea className="flex-1 bg-background px-4 py-3" ref={scrollRef}>
+          <ScrollArea className={cn("flex-1 bg-background px-4 py-3", persona.chatBg)} ref={scrollRef}>
             {/* Sign-in prompt for unauthenticated users */}
             {isAuthenticated === false && (
               <div className="flex flex-col items-center justify-center h-full space-y-4 py-8">

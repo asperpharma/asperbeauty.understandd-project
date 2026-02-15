@@ -24,13 +24,14 @@ export function ProductCard({ product }: { product: Product }) {
           : "border-border/50 hover:shadow-lg"
       )}
     >
-      <div className="relative aspect-square bg-muted flex items-center justify-center overflow-hidden">
+      <div className="relative aspect-square bg-background flex items-center justify-center overflow-hidden">
         {product.image_url && !product.image_url.includes("example.com") ? (
           <img
             src={product.image_url}
             alt={product.title}
-            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+            className="h-full w-full object-contain p-4 transition-transform group-hover:scale-105"
             loading="lazy"
+            style={{ filter: "drop-shadow(4px 6px 12px rgba(128, 0, 32, 0.1))" }}
           />
         ) : (
           <Package className="h-16 w-16 text-muted-foreground/40" />
