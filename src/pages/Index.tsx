@@ -13,6 +13,7 @@ import ShopByConcern from "@/components/home/ShopByConcern";
 import PharmacistPicks from "@/components/home/PharmacistPicks";
 import SocialGallery from "@/components/home/SocialGallery";
 import SearchBar from "@/components/home/SearchBar";
+import ExpertTips from "@/components/home/ExpertTips";
 import AuthButton from "@/components/AuthButton";
 import asperLogo from "@/assets/asper-logo.png";
 
@@ -182,6 +183,11 @@ const Index = () => {
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
       <BrandStory />
+
+      <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+
+      {/* Expert Weekly Tips */}
+      <ExpertTips />
 
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 

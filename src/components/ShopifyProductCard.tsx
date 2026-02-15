@@ -110,6 +110,18 @@ export function ShopifyProductCard({ product, enrichment }: Props) {
             </h3>
           </div>
 
+          {/* Pharmacist Note — "Why it's here" */}
+          {enrichment?.pharmacist_note && (
+            <div className="flex items-start gap-1.5 bg-secondary/50 rounded-md px-2.5 py-1.5 border border-border/30">
+              <span className="text-accent text-xs mt-0.5 shrink-0">
+                {enrichment.ai_persona_lead === "ms_zain" ? "✨" : "🔬"}
+              </span>
+              <p className="text-[11px] text-muted-foreground italic leading-snug line-clamp-2">
+                {enrichment.pharmacist_note}
+              </p>
+            </div>
+          )}
+
           {enrichment?.texture_profile && (
             <p className="text-[11px] italic text-muted-foreground">
               {enrichment.texture_profile}

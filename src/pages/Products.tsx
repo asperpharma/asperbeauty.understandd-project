@@ -6,7 +6,7 @@ import { useProductEnrichmentBulk } from "@/hooks/useProductEnrichment";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { VendorFilter, buildVendorQuery } from "@/components/VendorFilter";
 import { CartDrawer } from "@/components/CartDrawer";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ProductGridSkeleton } from "@/components/skeletons/ProductSkeletons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Package, ArrowLeft, Search, SlidersHorizontal, X } from "lucide-react";
@@ -180,17 +180,7 @@ const Products = () => {
               </div>
             )}
 
-            {isLoading && (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="space-y-3">
-                    <Skeleton className="aspect-square w-full rounded-lg" />
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-3 w-1/2" />
-                  </div>
-                ))}
-              </div>
-            )}
+            {isLoading && <ProductGridSkeleton count={6} />}
 
             {!isLoading && data?.products && data.products.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
