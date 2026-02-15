@@ -72,11 +72,11 @@ export default function SearchBar() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-md border border-border bg-muted/40 hover:bg-muted transition-colors text-sm text-muted-foreground"
+        className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-background hover:border-accent/50 hover:shadow-maroon-glow transition-all text-sm text-muted-foreground"
       >
-        <Search className="h-4 w-4" />
+        <Search className="h-4 w-4 text-primary/50" />
         <span className="hidden sm:inline">Search 5,000+ products…</span>
-        <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-background border border-border rounded">
+        <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-muted border border-border rounded">
           ⌘K
         </kbd>
       </button>
@@ -93,7 +93,7 @@ export default function SearchBar() {
             value={query}
             onChange={(e) => handleSearch(e.target.value)}
             placeholder="Search products, brands, ingredients…"
-            className="pl-9 pr-8 h-9 w-[260px] sm:w-[320px] text-sm"
+            className="pl-9 pr-8 h-10 w-[280px] sm:w-[360px] text-sm rounded-full border-primary/20 bg-background"
           />
           {query && (
             <button
