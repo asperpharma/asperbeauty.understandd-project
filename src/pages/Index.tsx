@@ -27,6 +27,8 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { IncognitoToggle } from "@/components/IncognitoToggle";
 import TrustBadges from "@/components/brand/TrustBadges";
 import BrandIcon from "@/components/brand/BrandIcon";
+import SocialIconsRow from "@/components/brand/SocialLinks";
+import FloatingSocial from "@/components/FloatingSocial";
 import { useCartStore } from "@/stores/cartStore";
 import { cn } from "@/lib/utils";
 import asperLogo from "@/assets/asper-lotus-logo.png";
@@ -338,12 +340,22 @@ const Index = () => {
             </div>
             <div>
               <h4 className="font-heading text-sm font-semibold mb-4 text-primary-foreground/90">Connect</h4>
-              <div className="flex flex-col gap-2">
-                <a href="#" className="text-sm text-primary-foreground/60 hover:text-accent transition-colors font-body">Instagram</a>
-                <a href="#" className="text-sm text-primary-foreground/60 hover:text-accent transition-colors font-body">WhatsApp</a>
-                <IncognitoToggle className="mt-2 border-primary-foreground/20 text-primary-foreground/60 hover:text-primary-foreground hover:border-primary-foreground/40" />
+              <div className="flex flex-col gap-3">
+                <a href="https://wa.me/962790656666" target="_blank" rel="noopener noreferrer" className="text-sm text-primary-foreground/60 hover:text-accent transition-colors font-body">
+                  WhatsApp: +962 79 065 6666
+                </a>
+                <a href="https://instagram.com/asper.beauty.shop" target="_blank" rel="noopener noreferrer" className="text-sm text-primary-foreground/60 hover:text-accent transition-colors font-body">
+                  @asper.beauty.shop
+                </a>
+                <IncognitoToggle className="mt-1 border-primary-foreground/20 text-primary-foreground/60 hover:text-primary-foreground hover:border-primary-foreground/40" />
               </div>
             </div>
+          </div>
+
+          {/* Social Icons — All 9 Platforms */}
+          <div className="mb-6">
+            <h4 className="font-heading text-xs font-semibold mb-3 text-primary-foreground/70 uppercase tracking-[0.2em]">Follow Us</h4>
+            <SocialIconsRow variant="footer" />
           </div>
 
           {/* Trust Badges — Hexagonal Gold Stamps */}
@@ -363,6 +375,9 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {/* Floating Social Sidebar — Desktop */}
+      <FloatingSocial />
 
       {/* Cart Drawer (controlled) */}
       <CartDrawer />
