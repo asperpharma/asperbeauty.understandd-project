@@ -22,6 +22,7 @@ const Intelligence = lazy(() => import("./pages/Intelligence"));
 const AdminEnrichment = lazy(() => import("./pages/AdminEnrichment"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 const Profile = lazy(() => import("./pages/Profile"));
+const Contact = lazy(() => import("./pages/Contact"));
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ function AppContent() {
           <Route path="/lab" element={<LabTools />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/admin/enrichment" element={<AdminEnrichment />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
