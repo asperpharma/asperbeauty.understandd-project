@@ -62,7 +62,7 @@ So COD/confirmation emails and any links in Edge Functions point to the main sit
 
 ## 4. Social media platforms (all point to main site)
 
-All "Velvet Rope" and campaign links should open the main site.
+All “Velvet Rope” and campaign links should open the main site:
 
 Base URL for all: **https://asperbeautyshop-com.lovable.app/** (or custom domain when live).
 
@@ -127,26 +127,30 @@ After deploy, confirm these pages on **https://asperbeautyshop-com.lovable.app/*
 Do this in the **understand-project** repo (clone if needed: `gh repo clone asperpharma/understand-project`).
 
 **A) Local `.env` (for local dev)**  
-- Copy from `env.main-site.example` (in this repo) into `.env`  
+- Copy from `env.main-site.example` (in this VIP folder) into understand-project as `.env`  
 - Fill in real values; keep `.env` in `.gitignore`  
 
 **B) Design system (optional but recommended)**  
-- Copy the Tailwind color tokens from **DESIGN_SYSTEM.md** (Asper Stone, Rose Clay, Burgundy, Polished Gold, Asper Ink) into `tailwind.config.js` so the live site matches the "Morning Spa" / Medical Luxury look  
+- Copy the Tailwind color tokens from **DESIGN_SYSTEM.md** (Asper Stone, Rose Clay, Burgundy, Polished Gold, Asper Ink) into understand-project’s `tailwind.config.js` so the live site matches the “Morning Spa” / Medical Luxury look  
 
-**C) GitHub Actions**  
-- Use workflows in `.github/workflows/`: `deploy-health-check.yml`, `sync-file-changes-to-lovable.yml`, `sync-issues-prs-to-lovable.yml`  
-- In repo **Settings → Secrets and variables → Actions**, add **`LOVABLE_WEBHOOK_URL`** if Lovable provides a webhook  
+**C) GitHub Actions (in understand-project)**  
+- Copy these workflow files from this VIP folder into `understand-project/.github/workflows/`:  
+  - `deploy-health-check.yml` — post-push health check  
+  - `sync-file-changes-to-lovable.yml` — push → file changes to Lovable  
+  - `sync-issues-prs-to-lovable.yml` — issues/PRs to Lovable  
+- In understand-project → **Settings → Secrets and variables → Actions**, add:  
+  - **`LOVABLE_WEBHOOK_URL`** (if Lovable gave you a webhook for file/issue sync)  
 
-- [ ] `.env` from example, not committed  
+- [ ] `.env` in understand-project (from example), not committed  
 - [ ] Tailwind tokens applied (if desired)  
-- [ ] Workflows in place; `LOVABLE_WEBHOOK_URL` set if needed  
+- [ ] Workflows copied; `LOVABLE_WEBHOOK_URL` set if needed  
 
 ---
 
 ## 8. Deploy and verify
 
 1. **Push to `main`** (or trigger deploy in Lovable) so the latest code and env are live.  
-2. **Health check** (from VIP folder or run against main site):  
+2. **Health check** (from this VIP folder):  
    ```bash
    node scripts/health-check.js
    ```  
@@ -158,7 +162,7 @@ Do this in the **understand-project** repo (clone if needed: `gh repo clone aspe
    - If you have login: test sign-in redirect back to the main site  
 
 - [ ] Deploy triggered and successful  
-- [ ] Health check passes  
+- [ ] `node scripts/health-check.js` passes  
 - [ ] Homepage, products, and chatbot work on main URL  
 
 ---
@@ -167,9 +171,15 @@ Do this in the **understand-project** repo (clone if needed: `gh repo clone aspe
 
 If you have a new or updated CSV catalog to push to the store that feeds the main site:
 
-1. In the VIP folder (or where the sync script lives), set in `.env`: `SHOPIFY_STORE`, `SHOPIFY_ACCESS_TOKEN`, and optionally `CSV_PATH`.  
-2. Dry-run: `node scripts/sync-shopify-catalog.js --dry-run --limit 5`  
-3. Full sync: `node scripts/sync-shopify-catalog.js`  
+1. In this VIP folder, set in `.env`: `SHOPIFY_STORE`, `SHOPIFY_ACCESS_TOKEN`, and optionally `CSV_PATH` (or pass CSV path when running).  
+2. Dry-run:  
+   ```bash
+   node scripts/sync-shopify-catalog.js --dry-run --limit 5
+   ```  
+3. Full sync:  
+   ```bash
+   node scripts/sync-shopify-catalog.js
+   ```  
 4. In Shopify Admin, confirm products/variants; then on the main site check `/products` and category filters.  
 
 - [ ] Sync run (if needed); products visible on main site  
@@ -184,9 +194,10 @@ If you have a new or updated CSV catalog to push to the store that feeds the mai
 | Lovable settings | https://lovable.dev/projects/657fb572-13a5-4a3e-bac9-184d39fdf7e6/settings |
 | GitHub repo | https://github.com/asperpharma/understand-project |
 | Supabase project | rgehleqcubtmcwyipyvi |
-| Env template | `env.main-site.example` (this repo) |
-| Single source of truth | MAIN_PROJECT.md (in VIP folder) |
+| Env template | `env.main-site.example` (this folder) |
+| Design system | `DESIGN_SYSTEM.md` |
+| Single source of truth | `MAIN_PROJECT.md` |
 
 ---
 
-*Last updated: Feb 2026. Run this checklist whenever you want to "run all updates and apply all brain and everything" to the main website.*
+*Last updated: Feb 2026. Run this checklist whenever you want to “run all updates and apply all brain and everything” to the main website.*
