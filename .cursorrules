@@ -1,0 +1,30 @@
+# Asper Beauty Shop — Cursor / Claude Code (understand-project)
+
+**Keep up with Claude code:** This repo is the main project. All edits here deploy to https://asperbeautyshop-com.lovable.app/ via Lovable. Follow the rules below so code stays on-brand and aligned.
+
+## Identity
+
+- **Repo:** asperpharma/understand-project
+- **Live site:** https://asperbeautyshop-com.lovable.app/
+- **Lovable project ID:** 657fb572-13a5-4a3e-bac9-184d39fdf7e6
+
+## Design (mandatory for UI)
+
+- **Four pillars:** Resilience, Transparency, Refinement, Empathy.
+- **Colors:** Asper Stone (canvas), Rose Clay (soft emphasis), Deep Burgundy (primary actions/nav), Polished Gold/White (accents only). No pure #FFF or #000 for main background or primary text.
+- **Tailwind:** Use design tokens (e.g. asper-stone, burgundy, polished-gold, asper-ink). See APPLY_TO_MAIN_SITE.md / DESIGN_SYSTEM in the VIP folder for full palette.
+- **Copy:** Authoritative and clinical where needed; empathetic for skin conditions. Transparent pricing and ingredients.
+
+## When implementing
+
+1. Smooth transitions and refined micro-interactions.
+2. Clear navigation and pricing; no dark patterns.
+3. Clinical Luxury palette; avoid harsh contrast for long-reading areas.
+4. Empathetic tone for support and AI touchpoints (Dr. Sami, Ms. Zain).
+
+## Env and deploy
+
+- Env template: `env.main-site.example`. Set vars in Lovable and in local `.env` (do not commit `.env`).
+- Full apply checklist (Lovable, Supabase, social, Google, all pages): see APPLY_TO_MAIN_SITE.md in this repo or in the Asper Shop ALL Files VIP folder.
+
+Following these rules keeps this codebase aligned with the Asper Beauty Shop brand and with Claude/Cursor expectations.
