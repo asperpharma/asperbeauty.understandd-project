@@ -1,461 +1,559 @@
-import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { useShopifyProduct } from "@/hooks/useShopifyProducts";
-import { useProductEnrichment } from "@/hooks/useProductEnrichment";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { useCartStore } from "@/stores/cartStore";
-import { CartDrawer } from "@/components/CartDrawer";
-import { ClinicalScoreRing } from "@/components/ClinicalScoreRing";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useWishlistStore } from "@/stores/wishlistStore";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import {
-  ArrowLeft, ShoppingCart, Loader2, Package, Shield, CheckCircle2,
-  Barcode, Sun, Moon, Droplets, Sparkles,
+  Droplets,
+  Heart,
+  Loader2,
+  Minus,
+  Plus,
+  ShieldCheck,
+  ShoppingBag,
+  Sparkles,
+  Star,
 } from "lucide-react";
+import { ShareButtons } from "@/components/ShareButtons";
 import { toast } from "sonner";
-import { normalizePrice } from "@/lib/shopify";
-import { cn } from "@/lib/utils";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import asperLogo from "@/assets/asper-lotus-logo.png";
+import {
+  getLocalizedCategory,
+  getLocalizedDescription,
+  translateTitle,
+} from "@/lib/productUtils";
+import { formatJOD } from "@/lib/productImageUtils";
+import { useLanguage } from "@/contexts/LanguageContext";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 
-/* ─── Ingredient Pill ─── */
-function IngredientPill({ name, isActive }: { name: string; isActive: boolean }) {
-  return (
-    <TooltipProvider delayDuration={200}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span
-            className={cn(
-              "px-3 py-1 rounded-full text-xs font-body font-medium tracking-wide cursor-help transition-colors duration-300",
-              isActive
-                ? "border border-primary text-primary bg-primary/5 hover:bg-primary hover:text-primary-foreground"
-                : "border border-border text-muted-foreground hover:border-foreground hover:text-foreground"
-            )}
-          >
-            {name}
-          </span>
-        </TooltipTrigger>
-        <TooltipContent className="bg-foreground text-background text-xs font-body max-w-[200px] text-center">
-          Key active ingredient in this formulation.
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-}
-
-/* ─── How-To-Use Timeline ─── */
-function UsageTimeline({ productName }: { productName: string }) {
-  const steps = [
-    { icon: Droplets, label: "Cleanse", desc: "Start with a gentle cleanser on damp skin.", time: "AM / PM" },
-    { icon: Sparkles, label: `Apply ${productName}`, desc: "Apply a pea-sized amount evenly.", time: "AM / PM" },
-    { icon: Sun, label: "Protect", desc: "Follow with SPF 30+ in the morning.", time: "AM" },
-  ];
-
-  return (
-    <div className="space-y-0">
-      {steps.map((step, i) => (
-        <div key={i} className="flex gap-4">
-          {/* Gold timeline line */}
-          <div className="flex flex-col items-center">
-            <div className="w-8 h-8 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center shrink-0">
-              <step.icon className="h-4 w-4 text-accent" />
-            </div>
-            {i < steps.length - 1 && <div className="w-px flex-1 bg-accent/30 my-1" />}
-          </div>
-          <div className="pb-6">
-            <div className="flex items-center gap-2">
-              <p className="text-sm font-body font-semibold text-foreground">{step.label}</p>
-              <span className="text-[10px] font-body text-accent uppercase tracking-wider">{step.time}</span>
-            </div>
-            <p className="text-xs text-muted-foreground font-body mt-0.5">{step.desc}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+interface SupabaseProduct {
+  id: string;
+  title: string;
+  description: string | null;
+  price: number;
+  original_price: number | null;
+  discount_percent: number | null;
+  is_on_sale: boolean | null;
+  image_url: string | null;
+  category: string;
+  subcategory: string | null;
+  brand: string | null;
+  tags: string[] | null;
+  volume_ml: string | null;
+  skin_concerns: string[] | null;
+  texture: string | null;
+  scent: string | null;
 }
 
 const ProductDetail = () => {
   const { handle } = useParams<{ handle: string }>();
-  const { data: product, isLoading, error } = useShopifyProduct(handle || "");
-  const { data: enrichment } = useProductEnrichment(handle);
-  const addItem = useCartStore(state => state.addItem);
-  const cartLoading = useCartStore(state => state.isLoading);
-  const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
-  const [selectedImage, setSelectedImage] = useState(0);
+  const { language } = useLanguage();
+  const isArabic = language === "ar";
+  const [product, setProduct] = useState<SupabaseProduct | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<SupabaseProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [quantity, setQuantity] = useState(1);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Nav />
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-            <div className="lg:col-span-3">
-              <Skeleton className="aspect-square w-full rounded-lg" />
-            </div>
-            <div className="lg:col-span-2 space-y-4">
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-8 w-3/4" />
-              <Skeleton className="h-6 w-1/3" />
-              <Skeleton className="h-24 w-full" />
-              <Skeleton className="h-12 w-full" />
-            </div>
-          </div>
-        </div>
-      </div>
+  const addItem = useCartStore((state) => state.addItem);
+  const setCartOpen = useCartStore((state) => state.setOpen);
+  const { toggleItem, isInWishlist } = useWishlistStore();
+
+  useEffect(() => {
+    const loadProduct = async () => {
+      if (!handle) return;
+      try {
+        const { data, error } = await supabase
+          .from("products")
+          .select("*")
+          .eq("id", handle)
+          .maybeSingle();
+
+        if (error) throw error;
+        setProduct(data);
+
+        if (data?.category) {
+          const { data: related } = await supabase
+            .from("products")
+            .select("*")
+            .eq("category", data.category)
+            .neq("id", handle)
+            .limit(4);
+
+          setRelatedProducts(related || []);
+        }
+      } catch (error) {
+        if (import.meta.env.DEV) {
+          console.error("Failed to fetch product:", error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProduct();
+  }, [handle]);
+
+  const handleAddToCart = () => {
+    if (!product) return;
+
+    const cartItem = {
+      product: {
+        node: {
+          id: product.id,
+          title: product.title,
+          handle: product.id,
+          description: product.description || "",
+          priceRange: {
+            minVariantPrice: {
+              amount: product.price.toString(),
+              currencyCode: "JOD",
+            },
+          },
+          images: {
+            edges: [{
+              node: { url: product.image_url || "", altText: product.title },
+            }],
+          },
+          variants: { edges: [] },
+          options: [],
+        },
+      },
+      variantId: product.id,
+      variantTitle: "Default",
+      price: { amount: product.price.toString(), currencyCode: "JOD" },
+      quantity,
+      selectedOptions: [],
+    };
+
+    addItem(cartItem);
+    toast.success(
+      isArabic ? "تمت الإضافة إلى الحقيبة" : "Added to your ritual",
+      {
+        description: product.title,
+        position: "top-center",
+      },
     );
-  }
-
-  if (error || !product) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Nav />
-        <div className="flex flex-col items-center justify-center py-32 text-muted-foreground">
-          <Package className="h-16 w-16 mb-4" />
-          <p className="text-lg font-heading">Product not found</p>
-          <Link to="/products">
-            <Button variant="outline" className="mt-4">Back to Products</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const { node } = product;
-  const images = node.images.edges;
-  const variants = node.variants.edges;
-  const selectedVariant = variants[selectedVariantIdx]?.node;
-
-  const handleAddToCart = async () => {
-    if (!selectedVariant) return;
-    await addItem({
-      product,
-      variantId: selectedVariant.id,
-      variantTitle: selectedVariant.title,
-      price: selectedVariant.price,
-      quantity: 1,
-      selectedOptions: selectedVariant.selectedOptions || [],
-    });
-    toast.success("Added to your regimen", {
-      description: `${node.title} — Excellent choice.`,
-      position: "top-center",
-    });
+    setCartOpen(true);
   };
 
-  const keyIngredients = enrichment?.key_ingredients || [];
-  const priceAmount = normalizePrice(selectedVariant?.price.amount || "0");
+  const handleWishlistToggle = () => {
+    if (!product) return;
+    const shopifyFormat = {
+      node: {
+        id: product.id,
+        title: product.title,
+        handle: product.id,
+        description: product.description || "",
+        priceRange: {
+          minVariantPrice: {
+            amount: product.price.toString(),
+            currencyCode: "JOD",
+          },
+        },
+        images: {
+          edges: [{
+            node: { url: product.image_url || "", altText: product.title },
+          }],
+        },
+        variants: { edges: [] },
+        options: [],
+      },
+    };
+    toggleItem(shopifyFormat);
+    if (!isInWishlist(product.id)) {
+      toast.success(isArabic ? "تمت الإضافة إلى المفضلة" : "Added to wishlist", {
+        description: product.title,
+        position: "top-center",
+      });
+    }
+  };
+
+  const isWishlisted = product ? isInWishlist(product.id) : false;
+  const rawPrice = product?.price;
+  const currentPrice = typeof rawPrice === "number" && !Number.isNaN(rawPrice) && rawPrice >= 0
+    ? rawPrice
+    : 0;
+  const rawOriginal = product?.original_price;
+  const originalPrice = typeof rawOriginal === "number" && !Number.isNaN(rawOriginal) && rawOriginal >= 0
+    ? rawOriginal
+    : null;
+  const isOnSale = product?.is_on_sale && originalPrice &&
+    originalPrice > currentPrice;
+  const discountPercent = product?.discount_percent || 0;
+
+  // 💎 LUXURY LOADING STATE
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="grid lg:grid-cols-2 min-h-screen pt-20">
+          <div className="bg-muted/30 aspect-[4/5] animate-pulse" />
+          <div className="p-8 lg:p-16 space-y-6">
+            <div className="h-4 w-32 bg-muted rounded animate-pulse" />
+            <div className="h-10 w-3/4 bg-muted rounded animate-pulse" />
+            <div className="h-8 w-24 bg-muted rounded animate-pulse" />
+            <div className="h-20 w-full bg-muted rounded animate-pulse" />
+            <div className="h-14 w-full bg-muted rounded animate-pulse" />
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex flex-col items-center justify-center min-h-[60vh] pt-36">
+          <h1 className="font-serif text-2xl text-foreground mb-4">
+            {isArabic ? "المنتج غير موجود" : "Product Not Found"}
+          </h1>
+          <Link to="/" className="text-primary hover:underline text-sm">
+            {isArabic ? "العودة للمتجر" : "Return to Shop"}
+          </Link>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Smart Defaults for Scraped Data
+  const brandName = product.brand ||
+    (isArabic ? "مجموعة حصرية" : "Exclusive Collection");
+  const textureInfo = product.texture ||
+    (product.volume_ml
+      ? `${product.volume_ml}ml - ${
+        isArabic ? "قوام حريري سريع الامتصاص" : "Silky, fast-absorbing formula"
+      }`
+      : (isArabic
+        ? "قوام حريري سريع الامتصاص"
+        : "Silky, fast-absorbing formula"));
+  const scentInfo = product.scent ||
+    (isArabic ? "خالٍ من العطور / طبيعي" : "Fragrance-free / Natural");
+
+  // If we only have 1 image, duplicate it for gallery effect
+  const galleryImages = product.image_url
+    ? [product.image_url, product.image_url]
+    : [
+      "https://images.unsplash.com/photo-1571781535014-53bd44f29186?q=80&w=1200",
+    ];
 
   return (
     <div className="min-h-screen bg-background">
-      <Nav />
+      <Header />
 
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
-
-          {/* LEFT — Images (60%) */}
-          <div className="lg:col-span-3 space-y-4">
-            {/* Main image — white bg, object-contain, cursor zoom */}
-            <div className="aspect-square bg-card rounded-lg overflow-hidden flex items-center justify-center border border-border/30 shadow-maroon-glow cursor-zoom-in group">
-              {images[selectedImage]?.node ? (
+      {/* Split Screen Layout */}
+      <div className="grid lg:grid-cols-2 min-h-screen pt-20">
+        {/* LEFT: The Gallery (Cinematic Scroll) */}
+        <div className="bg-muted/30 lg:overflow-y-auto">
+          <div className="space-y-1">
+            {galleryImages.map((img, idx) => (
+              <div key={idx} className="relative aspect-[4/5] overflow-hidden">
                 <img
-                  src={images[selectedImage].node.url}
-                  alt={images[selectedImage].node.altText || node.title}
-                  className="h-full w-full object-contain p-6 group-hover:scale-110 transition-transform duration-700 ease-luxury"
+                  src={img}
+                  alt={`${product.title} - View ${idx + 1}`}
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                 />
-              ) : (
-                <Package className="h-24 w-24 text-muted-foreground/30" />
-              )}
+                {idx === 0 && isOnSale && (
+                  <div className="absolute top-6 left-6 bg-primary text-primary-foreground px-4 py-2 text-sm font-medium rounded">
+                    -{discountPercent}% OFF
+                  </div>
+                )}
+                <div className="absolute bottom-6 left-6 text-xs font-light tracking-widest text-white/70 uppercase">
+                  Figure 0{idx + 1} — {idx === 0 ? "The Vessel" : "The Texture"}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT: The Editorial Details */}
+        <div className="lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-background">
+          <div className="p-8 lg:p-16 flex flex-col justify-center min-h-full">
+            {/* Breadcrumbs */}
+            <nav className="flex items-center gap-2 text-sm mb-6">
+              <Link
+                to="/"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                {isArabic ? "الرئيسية" : "Home"}
+              </Link>
+              <span className="text-muted-foreground">/</span>
+              <Link
+                to="/collections"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                {getLocalizedCategory(product.category, language)}
+              </Link>
+            </nav>
+
+            {/* Brand & Title */}
+            <div className="mb-8">
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground mb-3 block">
+                {product.brand || product.category}
+              </span>
+              <h1 className="font-serif text-3xl lg:text-4xl text-foreground leading-tight mb-6">
+                {translateTitle(product.title, language)}
+              </h1>
+
+              {/* Price & Rating */}
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl font-light text-foreground">
+                    {formatJOD(currentPrice)}
+                  </span>
+                  {isOnSale && originalPrice && (
+                    <span className="text-lg text-muted-foreground line-through">
+                      {formatJOD(originalPrice)}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-4 h-4 fill-primary text-primary"
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm text-muted-foreground">
+                    (128 {isArabic ? "تقييم" : "Reviews"})
+                  </span>
+                </div>
+              </div>
             </div>
-            {/* Thumbnail strip */}
-            {images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-1">
-                {images.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedImage(i)}
-                    className={cn(
-                      "w-16 h-16 rounded-md overflow-hidden border-2 flex-shrink-0 transition-all duration-300 bg-card",
-                      selectedImage === i ? "border-accent shadow-maroon-glow" : "border-border/30 hover:border-accent/50"
-                    )}
-                  >
-                    <img src={img.node.url} alt="" className="w-full h-full object-contain p-1" />
-                  </button>
-                ))}
+
+            {/* Description */}
+            <p className="text-muted-foreground leading-relaxed mb-8 font-light">
+              {getLocalizedDescription(product.description, language, 300) ||
+                (isArabic
+                  ? "منتج تجميل فاخر من مجموعتنا المختارة، مصنوع بأجود المكونات للحصول على بشرة مشرقة ونضرة."
+                  : "A premium beauty product from our curated collection, crafted with the finest ingredients for radiant and youthful skin.")}
+            </p>
+
+            {/* Skin Concern Tags */}
+            {product.skin_concerns && product.skin_concerns.length > 0 && (
+              <div className="mb-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                  {isArabic ? "مناسب لـ" : "Good For"}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {product.skin_concerns.map((concern) => (
+                    <span
+                      key={concern}
+                      className="px-3 py-1 rounded-full bg-[#FFF8E1] border border-[#D4AF37]/40 text-xs text-[#7A6000] font-medium capitalize"
+                    >
+                      {concern.replace(/-/g, " ")}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
-          </div>
 
-          {/* RIGHT — Sticky Clinical Sidebar (40%) */}
-          <div className="lg:col-span-2">
-            <div className="lg:sticky lg:top-24 space-y-6">
-              {/* Brand */}
-              {node.vendor && (
-                <p className="text-xs font-body font-semibold uppercase tracking-[0.2em] text-accent">
-                  {node.vendor}
-                </p>
-              )}
-
-              {/* Title */}
-              <h1 className="font-heading text-3xl lg:text-4xl font-bold text-foreground leading-tight">{node.title}</h1>
-
-              {/* Clinical Score Ring + Price */}
-              <div className="flex items-center gap-4 flex-wrap">
-                <p className="font-body text-2xl font-semibold text-primary">
-                  <span className="text-xs align-top mr-0.5 font-normal text-muted-foreground">
-                    {selectedVariant?.price.currencyCode}
-                  </span>
-                  {Math.floor(priceAmount)}
-                  <span className="text-sm font-normal text-muted-foreground">
-                    .{priceAmount.toFixed(2).split(".")[1]}
-                  </span>
-                </p>
-                <ClinicalScoreRing
-                  score={94}
-                  label="Based on 420 verified trials"
-                />
+            {/* Sensory Details */}
+            <div className="grid grid-cols-2 gap-6 mb-10 pb-10 border-b border-border">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                  <Droplets className="w-4 h-4 text-primary" />
+                  {isArabic ? "القوام" : "Texture"}
+                </div>
+                <p className="text-sm text-muted-foreground">{textureInfo}</p>
               </div>
-
-              <div className="flex items-center gap-2 flex-wrap">
-                {enrichment?.clinical_badge && (
-                  <Badge variant="outline" className="gap-1 text-xs">
-                    <Shield className="h-3 w-3 text-primary" />
-                    {enrichment.clinical_badge}
-                  </Badge>
-                )}
-                {enrichment?.ai_persona_lead && (
-                  <Badge variant="outline" className="border-accent/50 text-xs">
-                    {enrichment.ai_persona_lead === "dr_sami" ? "🔬 Dr. Sami Pick" : "✨ Ms. Zain Pick"}
-                  </Badge>
-                )}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  {isArabic ? "العطر" : "Scent"}
+                </div>
+                <p className="text-sm text-muted-foreground">{scentInfo}</p>
               </div>
-
-              {/* Pharmacist Note */}
-              {enrichment?.pharmacist_note && (
-                <div className="flex items-start gap-2.5 bg-secondary/50 rounded-lg px-4 py-3 border border-border/30">
-                  <span className="text-accent text-base mt-0.5 shrink-0">
-                    {enrichment.ai_persona_lead === "ms_zain" ? "✨" : "🔬"}
-                  </span>
-                  <div>
-                    <p className="text-xs font-medium text-foreground mb-0.5 font-body">
-                      {enrichment.ai_persona_lead === "ms_zain" ? "Ms. Zain says" : "Dr. Sami says"}
-                    </p>
-                    <p className="text-sm text-muted-foreground italic leading-relaxed font-body">
-                      "{enrichment.pharmacist_note}"
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Description */}
-              {node.description && (
-                <p className="text-muted-foreground font-body leading-relaxed text-sm">
-                  {node.description}
-                </p>
-              )}
-
-              {/* Ingredients Decoder — Pill System */}
-              {keyIngredients.length > 0 && (
-                <div className="space-y-3">
-                  <p className="text-sm font-body font-semibold text-foreground tracking-wide">Key Ingredients</p>
-                  <div className="flex flex-wrap gap-2">
-                    {keyIngredients.map((ing, i) => (
-                      <IngredientPill key={ing} name={ing} isActive={i < 3} />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Product Highlights */}
-              {enrichment?.product_highlights && enrichment.product_highlights.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm font-body font-semibold text-foreground">Highlights</p>
-                  <ul className="space-y-1.5">
-                    {enrichment.product_highlights.map((h, i) => (
-                      <li key={i} className="text-sm text-muted-foreground flex items-start gap-2 font-body">
-                        <span className="text-accent mt-0.5">✦</span>
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* How-To-Use Timeline */}
-              <div className="space-y-3 pt-2">
-                <p className="text-sm font-body font-semibold text-foreground tracking-wide">How to Use</p>
-                <UsageTimeline productName={node.title.split(" ").slice(0, 3).join(" ")} />
-              </div>
-
-              {/* Authenticity Identifiers */}
-              {(enrichment?.gtin || enrichment?.mpn) && (
-                <div className="border border-border rounded-lg p-4 space-y-2 bg-muted/30">
-                  <div className="flex items-center gap-2">
-                    <Barcode className="h-4 w-4 text-accent" />
-                    <p className="text-sm font-medium text-foreground font-body">Authenticity Identifiers</p>
-                    <CheckCircle2 className="h-3.5 w-3.5 text-accent ml-auto" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground">
-                    {enrichment.gtin && (
-                      <div>
-                        <span className="font-medium text-foreground">GTIN</span>
-                        <p className="font-mono mt-0.5">{enrichment.gtin}</p>
-                      </div>
-                    )}
-                    {enrichment.mpn && (
-                      <div>
-                        <span className="font-medium text-foreground">MPN</span>
-                        <p className="font-mono mt-0.5">{enrichment.mpn}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Variant Selection */}
-              {node.options.map((option) =>
-                option.name !== "Title" && (
-                  <div key={option.name} className="space-y-2">
-                    <label className="text-sm font-medium text-foreground font-body">{option.name}</label>
-                    <div className="flex flex-wrap gap-2">
-                      {variants.map((v, i) => {
-                        const optionValue = v.node.selectedOptions.find(o => o.name === option.name)?.value;
-                        if (!optionValue) return null;
-                        const alreadyShown = variants.slice(0, i).some(
-                          prev => prev.node.selectedOptions.find(o => o.name === option.name)?.value === optionValue
-                        );
-                        if (alreadyShown) return null;
-                        const isSelected = selectedVariant?.selectedOptions.find(
-                          o => o.name === option.name
-                        )?.value === optionValue;
-                        return (
-                          <Button
-                            key={`${option.name}-${optionValue}`}
-                            variant={isSelected ? "default" : "outline"}
-                            size="sm"
-                            className="text-xs"
-                            onClick={() => {
-                              const idx = variants.findIndex(
-                                vv => vv.node.selectedOptions.find(o => o.name === option.name)?.value === optionValue
-                              );
-                              if (idx >= 0) setSelectedVariantIdx(idx);
-                            }}
-                          >
-                            {optionValue}
-                          </Button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )
-              )}
-
-              {/* Add to Cart / Notify Me — Desktop */}
-              {selectedVariant?.availableForSale ? (
-                <Button
-                  size="lg"
-                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 btn-ripple h-12 text-sm uppercase tracking-widest hidden lg:flex"
-                  onClick={handleAddToCart}
-                  disabled={cartLoading}
-                >
-                  {cartLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>
-                      <ShoppingCart className="h-4 w-4 mr-2" />
-                      Add to Regimen
-                    </>
-                  )}
-                </Button>
-              ) : (
-                <div className="hidden lg:block space-y-3">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full h-12 text-sm uppercase tracking-widest border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                    onClick={() => toast.success("We'll notify you!", { description: "You'll get an alert when this item is back in stock.", position: "top-center" })}
-                  >
-                    🔔 Notify Me When Available
-                  </Button>
-                  <div className="flex items-start gap-2 bg-secondary/50 rounded-lg px-4 py-3 border border-border/30">
-                    <span className="text-base shrink-0 mt-0.5">🔬</span>
-                    <div>
-                      <p className="text-xs font-medium text-foreground font-body">Dr. Sami suggests this alternative:</p>
-                      <p className="text-xs text-muted-foreground font-body italic">Browse similar products with comparable active ingredients.</p>
-                      <Link to="/products" className="text-xs text-primary font-semibold font-body hover:underline">
-                        View Alternatives →
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
-          </div>
-        </div>
-      </main>
 
-      {/* Mobile Sticky Add-to-Cart */}
-      <div className="fixed bottom-0 inset-x-0 z-40 lg:hidden border-t border-border/30 bg-card/80 backdrop-blur-md px-4 py-3 safe-area-bottom">
-        <div className="flex items-center gap-3">
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-body font-semibold text-foreground truncate">{node.title}</p>
-            <p className="text-xs text-primary font-body font-medium">
-              {selectedVariant?.price.currencyCode} {priceAmount.toFixed(2)}
-            </p>
+            {/* Quantity & Add to Bag */}
+            <div className="space-y-6 mb-10">
+              <div className="flex items-center justify-center gap-8 py-4 border border-border">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="p-3 hover:text-primary transition-colors"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <span className="text-lg font-medium w-8 text-center">
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="p-3 hover:text-primary transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="flex gap-4">
+                <Button
+                  onClick={handleAddToCart}
+                  className="flex-1 py-6 text-base font-medium tracking-wide bg-primary hover:bg-primary/90 text-primary-foreground rounded-none"
+                >
+                  <ShoppingBag className="w-5 h-5 mr-3" />
+                  {isArabic ? "أضف إلى الحقيبة" : "Add to Ritual"} —{" "}
+                  {formatJOD(currentPrice * quantity)}
+                </Button>
+                <button
+                  onClick={handleWishlistToggle}
+                  className={`w-14 h-14 flex items-center justify-center border transition-all ${
+                    isWishlisted
+                      ? "bg-primary border-primary text-primary-foreground"
+                      : "border-border text-foreground hover:border-primary"
+                  }`}
+                >
+                  <Heart
+                    className={`w-5 h-5 ${isWishlisted ? "fill-current" : ""}`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                <ShieldCheck className="w-4 h-4 text-primary" />
+                {isArabic
+                  ? "موزع معتمد • منتج أصلي 100%"
+                  : "Authorized Retailer • 100% Authentic"}
+              </div>
+
+              <ShareButtons
+                url={window.location.href}
+                title={`${isArabic ? "اكتشف" : "Check out"} ${product.title} ${
+                  isArabic ? "من آسبر بيوتي" : "from Asper Beauty"
+                }`}
+              />
+            </div>
+
+            {/* Accordions */}
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="ritual" className="border-border">
+                <AccordionTrigger className="text-sm font-medium uppercase tracking-widest hover:no-underline">
+                  {isArabic ? "طريقة الاستخدام" : "The Ritual"}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex items-start gap-3 py-2">
+                    <Sparkles className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {isArabic
+                        ? "ضعيه صباحاً ومساءً على بشرة نظيفة قبل المرطب. استخدمي كمية مناسبة ووزعيها بلطف على الوجه والرقبة."
+                        : "Apply AM and PM on clean skin before your moisturizer. Gently smooth over face and throat."}
+                    </p>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="ingredients" className="border-border">
+                <AccordionTrigger className="text-sm font-medium uppercase tracking-widest hover:no-underline">
+                  {isArabic ? "المكونات الرئيسية" : "Key Ingredients"}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {isArabic
+                      ? "مكونات طبيعية فاخرة تعمل على ترطيب البشرة وتجديدها. تحتوي على فيتامين سي وحمض الهيالورونيك والنياسيناميد."
+                      : "Premium natural ingredients that hydrate and rejuvenate. Contains Vitamin C, Hyaluronic Acid, and Niacinamide."}
+                  </p>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="shipping" className="border-border">
+                <AccordionTrigger className="text-sm font-medium uppercase tracking-widest hover:no-underline">
+                  {isArabic ? "الشحن والإرجاع" : "Shipping & Returns"}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {isArabic
+                      ? "شحن مجاني للطلبات فوق 50 دينار. التوصيل خلال 24-48 ساعة في عمان. 3 دينار للتوصيل داخل عمان، 5 دينار للمحافظات."
+                      : "Free shipping on all orders over 50 JOD. Delivered within 24-48 hours in Amman. 3 JOD for Amman, 5 JOD for Governorates."}
+                  </p>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
-          {selectedVariant?.availableForSale ? (
-            <Button
-              size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 btn-ripple px-6 h-11 text-sm uppercase tracking-widest shrink-0"
-              onClick={handleAddToCart}
-              disabled={cartLoading}
-            >
-              {cartLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  Add
-                </>
-              )}
-            </Button>
-          ) : (
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-primary text-primary px-6 h-11 text-sm uppercase tracking-widest shrink-0"
-              onClick={() => toast.success("We'll notify you!", { description: "You'll get an alert when this item is back.", position: "top-center" })}
-            >
-              🔔 Notify Me
-            </Button>
-          )}
         </div>
       </div>
+
+      {/* Related Products */}
+      {relatedProducts.length > 0 && (
+        <section className="py-20 px-8 lg:px-16 bg-muted/30">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="font-serif text-2xl lg:text-3xl text-center mb-12">
+              {isArabic ? "أكملي طقوسك" : "Complete The Ritual"}
+            </h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              {relatedProducts.map((related) => (
+                <Link
+                  key={related.id}
+                  to={`/product/${related.id}`}
+                  className="group bg-background rounded-lg overflow-hidden border border-border hover:border-primary transition-all"
+                >
+                  <div className="aspect-square overflow-hidden">
+                    <img
+                      src={related.image_url || "/placeholder.svg"}
+                      alt={related.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                      {related.brand || related.category}
+                    </p>
+                    <h3 className="font-medium text-foreground text-sm line-clamp-2 mb-2">
+                      {related.title}
+                    </h3>
+                    <p className="text-primary font-medium">
+                      {formatJOD(related.price)}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Mobile Sticky CTA */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-40 shadow-2xl">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={handleWishlistToggle}
+            className={`w-12 h-12 flex-shrink-0 flex items-center justify-center border transition-all ${
+              isWishlisted
+                ? "bg-primary border-primary text-primary-foreground"
+                : "border-border text-foreground"
+            }`}
+          >
+            <Heart
+              className={`w-5 h-5 ${isWishlisted ? "fill-current" : ""}`}
+            />
+          </button>
+          <div className="flex-shrink-0">
+            <p className="text-xl text-primary font-medium">
+              {formatJOD(currentPrice)}
+            </p>
+          </div>
+          <Button
+            onClick={handleAddToCart}
+            className="flex-1 py-3 bg-primary text-primary-foreground font-medium rounded-none"
+          >
+            {isArabic ? "أضف إلى الحقيبة" : "Add to Bag"}
+          </Button>
+        </div>
+      </div>
+
+      <Footer />
     </div>
   );
 };
-
-function Nav() {
-  return (
-    <nav className="sticky top-0 z-50 border-b border-border/50 glass-nav">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link to="/products">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Products
-              </Button>
-            </Link>
-            <div className="h-6 w-px bg-border" />
-            <Link to="/">
-              <img src={asperLogo} alt="Asper" className="h-7 w-auto" />
-            </Link>
-          </div>
-          <CartDrawer />
-        </div>
-      </div>
-    </nav>
-  );
-}
 
 export default ProductDetail;

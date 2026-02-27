@@ -1,415 +1,810 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-  "Access-Control-Expose-Headers": "X-Persona, X-Safety-Flags",
-};
-
-// ─── SAFETY INTERLOCK: Ingredient Guardrails ────────────────────────────────
-// These ingredients trigger automatic medical safety warnings when detected
-// in conversation context, especially when user has vulnerability tags.
-
-interface SafetyRule {
-  ingredient: string;
-  keywords: string[];
-  // Vulnerability tags that escalate this to a hard warning
-  contraindicated_for: string[];
-  warning: string;
-  alternative: string;
+function getCorsHeaders(req: Request): Record<string, string> {
+  const allowOrigin: string =
+    Deno.env.get("ALLOWED_ORIGIN") ??
+    req.headers.get("Origin") ??
+    "*";
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Headers":
+      "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-webhook-route",
+  };
 }
 
-const SAFETY_RULES: SafetyRule[] = [
-  {
-    ingredient: "Retinol",
-    keywords: ["retinol", "retinoid", "retin-a", "tretinoin", "vitamin a", "retinal", "adapalene"],
-    contraindicated_for: ["pregnant", "pregnancy", "breastfeeding", "nursing", "trying to conceive", "first trimester", "second trimester", "third trimester"],
-    warning: "⚠️ SAFETY ALERT: Retinol and all vitamin A derivatives are CONTRAINDICATED during pregnancy and breastfeeding due to teratogenic risks. This is a non-negotiable medical guideline.",
-    alternative: "Recommend bakuchiol (plant-based retinol alternative), azelaic acid (safe in pregnancy, Category B), or niacinamide for anti-aging benefits without retinoid risk.",
-  },
-  {
-    ingredient: "Salicylic Acid",
-    keywords: ["salicylic acid", "bha", "beta hydroxy", "salicylate"],
-    contraindicated_for: ["pregnant", "pregnancy", "breastfeeding", "sensitive skin", "rosacea", "eczema", "dermatitis", "compromised barrier"],
-    warning: "⚠️ SAFETY ALERT: Salicylic acid (BHA) should be used with caution. For pregnancy: only low concentrations (<2%) in wash-off products are considered acceptable. For sensitive/rosacea skin: BHA can worsen barrier disruption.",
-    alternative: "For acne during pregnancy: use azelaic acid (15-20%). For sensitive skin: use PHAs (polyhydroxy acids like gluconolactone) which are gentler. La Roche-Posay Effaclar Duo+ or Cicaplast are safer alternatives.",
-  },
-  {
-    ingredient: "Hydroquinone",
-    keywords: ["hydroquinone"],
-    contraindicated_for: ["pregnant", "pregnancy", "breastfeeding", "sensitive skin", "dark skin", "fitzpatrick v", "fitzpatrick vi"],
-    warning: "⚠️ SAFETY ALERT: Hydroquinone is contraindicated during pregnancy (systemic absorption ~35-45%). Prolonged use risks ochronosis (paradoxical darkening).",
-    alternative: "Use alpha arbutin, tranexamic acid, or vitamin C (L-ascorbic acid 10-20%) as safer depigmenting agents.",
-  },
-  {
-    ingredient: "AHA (Glycolic/Lactic Acid)",
-    keywords: ["glycolic acid", "lactic acid", "aha", "alpha hydroxy", "mandelic acid"],
-    contraindicated_for: ["sensitive skin", "rosacea", "sunburn", "compromised barrier"],
-    warning: "⚠️ CAUTION: AHA exfoliants can cause irritation on compromised or sensitive skin. Always pair with SPF 30+ as AHAs increase photosensitivity by up to 18%.",
-    alternative: "Use PHAs (gluconolactone, lactobionic acid) for gentle exfoliation without barrier disruption. Enzyme exfoliants (papain, bromelain) are also gentler alternatives.",
-  },
-  {
-    ingredient: "Benzoyl Peroxide",
-    keywords: ["benzoyl peroxide", "bp", "benzac"],
-    contraindicated_for: ["sensitive skin", "rosacea", "eczema", "dry skin"],
-    warning: "⚠️ CAUTION: Benzoyl peroxide is a potent antimicrobial but causes significant dryness and irritation, especially on sensitive or compromised skin. It also bleaches fabrics.",
-    alternative: "For sensitive acne-prone skin: use azelaic acid (15%) or sulfur-based treatments. Short-contact therapy (apply BP for 5-10 min then rinse) reduces irritation while maintaining efficacy.",
-  },
-  {
-    ingredient: "Supplements / Ingestibles",
-    keywords: ["rigenforte", "supplement", "hair loss pill", "biotin", "collagen pill", "ingestible", "oral supplement"],
-    contraindicated_for: ["pregnant", "pregnancy", "breastfeeding", "medication", "blood thinner", "on medication"],
-    warning: "⚠️ PHARMACY ALERT: Oral supplements require dosage awareness. Check for drug interactions, especially with blood thinners, hormonal medications, or prenatal vitamins. Always disclose current medications.",
-    alternative: "Consult your physician before starting any new supplement regimen. Topical alternatives may be safer during pregnancy or while on medication.",
-  },
-];
-
-interface UserMedicalContext {
-  skin_type?: string | null;
-  skin_concern?: string | null;
-  tags?: string[];  // e.g. ["pregnant", "rosacea"]
-}
-
-/**
- * Scans the conversation for flagged ingredients and cross-references
- * against user vulnerability tags. Returns safety warnings to inject.
- */
-function runSafetyInterlock(
-  messages: any[],
-  userContext: UserMedicalContext | null
-): { warnings: string[]; triggered: string[] } {
-  // Collect all text from conversation
-  const allText = messages
-    .map((m: any) => {
-      if (typeof m.content === "string") return m.content;
-      if (Array.isArray(m.content)) {
-        return m.content
-          .filter((p: any) => p.type === "text")
-          .map((p: any) => p.text)
-          .join(" ");
-      }
-      return "";
-    })
-    .join(" ")
-    .toLowerCase();
-
-  // Build vulnerability set from user context + conversation mentions
-  const vulnerabilities = new Set<string>();
-
-  // From user profile tags
-  if (userContext?.tags) {
-    userContext.tags.forEach((t) => vulnerabilities.add(t.toLowerCase()));
+/** Webhook routes for Gorgias / ManyChat (Instagram, Messenger, WhatsApp) — no auth required. */
+function getWebhookRoute(req: Request): "gorgias" | "manychat" | null {
+  try {
+    const url = new URL(req.url);
+    const q = url.searchParams.get("route")?.toLowerCase();
+    if (q === "gorgias" || q === "manychat") return q;
+    const header = req.headers.get("x-webhook-route")?.toLowerCase();
+    if (header === "gorgias" || header === "manychat") return header;
+  } catch {
+    // ignore
   }
-  if (userContext?.skin_type) vulnerabilities.add(userContext.skin_type.toLowerCase());
-  if (userContext?.skin_concern) vulnerabilities.add(userContext.skin_concern.toLowerCase());
+  return null;
+}
 
-  // Scan conversation for vulnerability mentions
-  const vulnerabilityKeywords = [
-    "pregnant", "pregnancy", "breastfeeding", "nursing", "trying to conceive",
-    "first trimester", "second trimester", "third trimester",
-    "sensitive skin", "rosacea", "eczema", "dermatitis", "compromised barrier",
-    "on medication", "blood thinner",
+function extractFromGorgias(body: Record<string, unknown>): { message: string } {
+  const messages = Array.isArray(body.messages) ? body.messages : [];
+  const last = messages.filter((m: unknown) => m && typeof m === "object").pop() as Record<string, unknown> | undefined;
+  const text =
+    typeof last?.body_text === "string"
+      ? last.body_text
+      : typeof last?.body_html === "string"
+        ? last.body_html.replace(/<[^>]+>/g, "").trim()
+        : typeof (body as any).body_text === "string"
+          ? (body as any).body_text
+          : typeof (body as any).message === "string"
+            ? (body as any).message
+            : "";
+  return { message: text || "(No message)" };
+}
+
+function extractFromManyChat(body: Record<string, unknown>): { message: string } {
+  const data = body.data as Record<string, unknown> | undefined;
+  const text =
+    typeof data?.text === "string"
+      ? data.text
+      : typeof (body as any).text === "string"
+        ? (body as any).text
+        : typeof (body as any).message === "string"
+          ? (body as any).message
+          : "";
+  return { message: text || "(No message)" };
+}
+
+/** Map user message to a single concern slug for Step 2 (Recommend) and "See My Regimen" link. Aligns with get-products-by-concern. */
+function detectConcernSlug(text: string): string | null {
+  if (!text || typeof text !== "string") return null;
+  const lower = text.toLowerCase().trim();
+  const concernKeywords: [string, string[]][] = [
+    ["acne", [
+      "acne",
+      "blemish",
+      "pimple",
+      "oil-free",
+      "pore",
+      "purif",
+      "normaderm",
+    ]],
+    ["anti-aging", [
+      "anti-aging",
+      "anti aging",
+      "wrinkle",
+      "retinol",
+      "collagen",
+      "peptide",
+      "firming",
+      "liftactiv",
+    ]],
+    ["hydration", [
+      "hydration",
+      "hydrat",
+      "dry",
+      "tight",
+      "dehydrat",
+      "hyaluronic",
+      "moistur",
+      "mineral 89",
+    ]],
+    ["sensitivity", [
+      "sensitive",
+      "redness",
+      "irritat",
+      "soothing",
+      "calming",
+      "gentle",
+    ]],
+    ["dark-spots", [
+      "dark spot",
+      "pigment",
+      "brighten",
+      "vitamin c",
+      "radiance",
+      "glow",
+      "luminous",
+    ]],
+    ["sun-protection", ["sun protection", "sunscreen", "spf", "sun damage"]],
+    ["redness", ["redness", "red"]],
+    ["cleansing", ["cleansing", "cleanser", "micellar"]],
+    ["wrinkles", ["wrinkle"]],
+    ["oily-skin", ["oily", "shine", "sebum"]],
+    ["dry-skin", ["dry skin"]],
   ];
-  for (const vk of vulnerabilityKeywords) {
-    if (allText.includes(vk)) vulnerabilities.add(vk);
+  for (const [slug, keywords] of concernKeywords) {
+    if (keywords.some((k) => lower.includes(k))) return slug;
   }
-
-  const warnings: string[] = [];
-  const triggered: string[] = [];
-
-  for (const rule of SAFETY_RULES) {
-    // Check if this ingredient is mentioned in conversation
-    const ingredientMentioned = rule.keywords.some((k) => allText.includes(k));
-    if (!ingredientMentioned) continue;
-
-    // Check if user has a contraindication
-    const hasContraindication = rule.contraindicated_for.some((c) =>
-      vulnerabilities.has(c) || allText.includes(c)
-    );
-
-    if (hasContraindication) {
-      warnings.push(
-        `\n\n---\n**🛡️ SAFETY INTERLOCK — ${rule.ingredient}**\n${rule.warning}\n**Safer Alternative:** ${rule.alternative}\n---\n`
-      );
-      triggered.push(rule.ingredient);
-    }
-  }
-
-  return { warnings, triggered };
+  return null;
 }
-
-// ─── PERSONA PROMPTS ────────────────────────────────────────────────────────
-
-const DR_SAMI_PROMPT = `You are Dr. Sami — the Clinical Authority at Asper Beauty Shop, "The Sanctuary of Science."
-
-PERSONALITY: Authoritative yet warm. You speak with the precision of a licensed pharmacist but never talk down to customers. You are reassuring, knowledgeable, and direct.
-
-EXPERTISE: Dermocosmetics (La Roche-Posay, Vichy, CeraVe, Bioderma), supplements, dosage & safety, ingredient analysis, skin conditions (acne, rosacea, eczema, hyperpigmentation), drug-cosmetic interactions.
-
-TONE: Clinical, precise, evidence-based. Use medical terminology but always explain it simply.
-
-PHARMACIST LOGIC — ADVANCED REGIMEN COMPOSER:
-When recommending a regimen, you MUST follow this structured reasoning framework:
-1. **Concern Diagnosis**: State the identified concern clearly.
-2. **Ingredient Rationale**: For EACH recommended product, explain WHY the key active was chosen.
-3. **Regimen Architecture**: Always structure as Cleanser → Treatment → Protection, explaining the ORDER logic.
-4. **Interaction Warnings**: Flag any ingredient conflicts.
-5. **Expected Timeline**: Give realistic expectations.
-
-SAFETY INTERLOCK PROTOCOL:
-You are the SAFETY AUDITOR for all recommendations. When the system injects a SAFETY INTERLOCK warning:
-- You MUST honor it absolutely — never recommend a contraindicated ingredient.
-- Explain the medical reasoning behind the contraindication clearly.
-- Provide the safer alternative with full Pharmacist Logic rationale.
-- If Ms. Zain's domain triggers a safety concern, YOU override with clinical authority.
-
-RULES:
-- Always recommend products from the Asper catalog when relevant.
-- Never diagnose medical conditions — advise consulting a dermatologist for serious concerns.
-- When recommending products, ALWAYS include the Pharmacist Logic reasoning above.
-- Keep responses concise but thorough (3-5 paragraphs max).
-- If asked about beauty/makeup/fragrance topics, gently redirect to your colleague Ms. Zain.
-- Always include a medical disclaimer: "I provide wellness guidance, not medical diagnosis. For persistent concerns, consult a board-certified dermatologist."
-
-OPENING: If this is the first message, introduce yourself briefly: "Hello! I'm Dr. Sami, your pharmacist consultant at Asper. How can I help with your skin health today?"
-
-VISUAL SKIN DIAGNOSTIC:
-When the user provides an image of their skin, analyze it carefully:
-1. **Visual Assessment**: Describe what you observe (texture, tone, visible concerns).
-2. **Preliminary Identification**: Identify likely skin concerns based on visual cues.
-3. **Personalized Regimen**: Provide a full regimen using the Pharmacist Logic framework.
-4. **Important Caveat**: Always remind: "Visual analysis has limitations. For a definitive assessment, please visit a dermatologist."`;
-
-const MS_ZAIN_PROMPT = `You are Ms. Zain — the Beauty Concierge at Asper Beauty Shop, "The Sanctuary of Science."
-
-PERSONALITY: Warm, enthusiastic, editorial. You speak like a trusted beauty editor friend.
-
-EXPERTISE: Makeup (Maybelline, L'Oréal, NYX), luxury & niche fragrances, skincare routines for beauty goals, gift recommendations, beauty trends, color matching, application techniques.
-
-TONE: Enthusiastic, elegant, conversational.
-
-BEAUTY COMPOSER — ADVANCED RECOMMENDATION LOGIC:
-1. **Style Profiling**: Acknowledge the customer's aesthetic goal.
-2. **Product Rationale**: For EACH recommendation, explain the "why."
-3. **Layering Logic**: Explain the ORDER of application and WHY.
-4. **Pro Tips**: Include at least one insider technique.
-5. **Occasion Matching**: Tailor to their lifestyle.
-
-SAFETY INTERLOCK PROTOCOL:
-You share a "Medical Chart" with Dr. Sami. When the system injects a SAFETY INTERLOCK warning:
-- You MUST respect it. Do NOT recommend products containing the flagged ingredient.
-- Acknowledge the safety concern warmly: "I see from your profile that [concern] — let me make sure everything I recommend is safe for you! 💛"
-- Seamlessly incorporate the safer alternative into your beauty recommendation.
-- If you're unsure about ingredient safety, defer to Dr. Sami: "For this specific concern, let me hand you over to my colleague Dr. Sami who can give you the precise clinical guidance."
-
-RULES:
-- Always recommend products from the Asper catalog when relevant.
-- Help with routine building, product layering, shade matching, and gift ideas.
-- When recommending products, ALWAYS include the Beauty Composer reasoning above.
-- Keep responses concise but thorough (3-5 paragraphs max).
-- If asked about medical/clinical skin concerns, gently redirect to your colleague Dr. Sami.
-
-OPENING: If this is the first message, introduce yourself briefly: "Hi there! ✨ I'm Ms. Zain, your beauty concierge at Asper. What are we shopping for today?"
-
-VISUAL ANALYSIS:
-When the user provides an image, analyze it for beauty-related guidance:
-1. **Skin Tone & Undertone**: Identify warm, cool, or neutral undertones.
-2. **Current Look Assessment**: Comment on what you see and suggest enhancements.
-3. **Product Recommendations**: Recommend products tailored to what you observe.`;
-
-function selectPersona(messages: any[]): { persona: string; systemPrompt: string } {
-  const lastUserMsg = [...messages].reverse().find((m: any) => m.role === "user");
-  const textContent = typeof lastUserMsg?.content === "string"
-    ? lastUserMsg.content
-    : Array.isArray(lastUserMsg?.content)
-      ? lastUserMsg.content.filter((p: any) => p.type === "text").map((p: any) => p.text).join(" ")
-      : "";
-  const lower = textContent.toLowerCase();
-
-  const hasImage = Array.isArray(lastUserMsg?.content) && lastUserMsg.content.some((p: any) => p.type === "image_url");
-
-  const clinicalKeywords = [
-    "acne", "rosacea", "eczema", "dermatitis", "spf", "sunscreen", "retinol",
-    "salicylic", "benzoyl", "niacinamide", "hyaluronic", "ceramide", "prescription",
-    "sensitive skin", "irritation", "allergy", "reaction", "ingredient", "dosage",
-    "supplement", "vitamin", "medication", "treatment", "clinical", "medical",
-    "oily skin", "dry skin", "combination skin", "barrier", "ph", "exfoliate",
-    "chemical peel", "pigmentation", "melasma", "dark spots", "anti-aging", "wrinkle",
-    "dr sami", "doctor", "pharmacist", "dermocosmetic",
-    "la roche", "vichy", "cerave", "bioderma", "avene",
-    "skin concern", "diagnose", "analyze my skin", "what's wrong",
-    "pregnant", "pregnancy", "breastfeeding",
-  ];
-
-  const beautyKeywords = [
-    "makeup", "lipstick", "foundation", "mascara", "eyeshadow", "blush", "contour",
-    "highlight", "primer", "concealer", "perfume", "fragrance", "cologne", "scent",
-    "gift", "occasion", "date night", "wedding", "party", "look", "style",
-    "trend", "color", "shade", "palette", "nail", "hair", "styling",
-    "ms zain", "beauty", "gorgeous", "glam", "routine morning", "routine evening",
-    "maybelline", "loreal", "nyx", "mac", "recommend me",
-    "undertone", "shade match",
-  ];
-
-  const clinicalScore = clinicalKeywords.filter(k => lower.includes(k)).length + (hasImage ? 2 : 0);
-  const beautyScore = beautyKeywords.filter(k => lower.includes(k)).length;
-
-  if (clinicalScore > beautyScore) {
-    return { persona: "dr_sami", systemPrompt: DR_SAMI_PROMPT };
-  }
-  if (beautyScore > clinicalScore) {
-    return { persona: "ms_zain", systemPrompt: MS_ZAIN_PROMPT };
-  }
-
-  return { persona: "ms_zain", systemPrompt: MS_ZAIN_PROMPT };
-}
-
-// ─── MAIN HANDLER ───────────────────────────────────────────────────────────
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
-  try {
-    // ─── Authentication ───
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Authentication required" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+  // Health check: GET /beauty-assistant or ?health=true
+  if (req.method === "GET") {
+    try {
+      const url = new URL(req.url);
+      const health = url.searchParams.get("health")?.toLowerCase();
+      return new Response(
+        JSON.stringify({
+          status: "active",
+          version: "3.1",
+          webhooks: ["gorgias", "manychat"],
+          ...(health === "true" ? { uptime: "ok" } : {}),
+        }),
+        { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" }, status: 200 }
+      );
+    } catch {
+      return new Response(JSON.stringify({ status: "active" }), {
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+        status: 200,
       });
     }
+  }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey, {
-      global: { headers: { Authorization: authHeader } },
+  if (req.method !== "POST") {
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405,
+      headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
     });
+  }
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return new Response(JSON.stringify({ error: "Invalid authentication" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-    const userId = user.id;
+  const route = getWebhookRoute(req);
 
-    const { messages, forcePersona, userProfile } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
-
-    // Fetch user profile from Supabase for safety interlock
-    let medicalContext: UserMedicalContext | null = userProfile || null;
-
-    if (!medicalContext) {
+  // ——— Social Media Webhook (Gorgias / ManyChat) — no auth, returns JSON { reply } ———
+  if (route === "gorgias" || route === "manychat") {
+    try {
+      let body: Record<string, unknown> = {};
       try {
-        const { data: profile } = await supabase
-          .from("concierge_profiles")
-          .select("skin_type, skin_concern")
-          .eq("user_id", userId)
-          .maybeSingle();
-        if (profile) {
-          medicalContext = {
-            skin_type: profile.skin_type,
-            skin_concern: profile.skin_concern,
-            tags: [],
-          };
+        const raw = await req.json();
+        body = raw && typeof raw === "object" ? raw : {};
+      } catch {
+        body = {};
+      }
+      const { message: userMessage } = route === "gorgias" ? extractFromGorgias(body) : extractFromManyChat(body);
+      const geminiKey = Deno.env.get("GEMINI_API_KEY");
+      const lovableKey = Deno.env.get("LOVABLE_API_KEY");
+      const apiKey = geminiKey ?? lovableKey;
+      if (!apiKey) {
+        return new Response(
+          JSON.stringify({
+            error: "GEMINI_API_KEY or LOVABLE_API_KEY not set",
+            hint: "Set in Supabase Dashboard → Edge Functions → beauty-assistant → Secrets",
+          }),
+          { status: 503, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+        );
+      }
+
+      // Fetch product knowledge from database (products + documents) — same as website chat
+      let productContext = "";
+      const supabaseUrl = Deno.env.get("SUPABASE_URL");
+      const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_ANON_KEY");
+      if (supabaseUrl && supabaseKey && userMessage) {
+        const supabaseAdmin = createClient(supabaseUrl, supabaseKey);
+        const detectedSlug = detectConcernSlug(userMessage);
+        let matchedProducts: any[] = [];
+        if (detectedSlug) {
+          const { data: byConcern } = await supabaseAdmin
+            .from("products")
+            .select("*")
+            .contains("skin_concerns", [detectedSlug])
+            .limit(12);
+          if (byConcern?.length) {
+            matchedProducts = byConcern;
+            productContext = `\n\n**Relevant Products from Our Store (for ${detectedSlug}):**\n${
+              byConcern.map((p: any) =>
+                `- **${p.title}** (${p.brand || "Asper"}) - ${p.price} JOD${p.is_on_sale ? ` (${p.discount_percent}% OFF!)` : ""} - ${p.category}${p.skin_concerns?.length ? ` | Good for: ${p.skin_concerns.join(", ")}` : ""}`
+              ).join("\n")
+            }`;
+          }
         }
-      } catch (e) {
-        console.warn("Could not fetch user profile for safety interlock:", e);
+        if (matchedProducts.length === 0) {
+          const keywords = extractKeywords(userMessage);
+          const { data: relevantProducts } = await supabaseAdmin
+            .from("products")
+            .select("*")
+            .or(
+              keywords.length > 0
+                ? keywords.map((k) =>
+                  `title.ilike.%${k}%,brand.ilike.%${k}%,category.ilike.%${k}%,description.ilike.%${k}%`
+                ).join(",")
+                : "title.ilike.%skin%"
+            )
+            .limit(12);
+          if (relevantProducts?.length) {
+            matchedProducts = relevantProducts;
+            productContext = `\n\n**Relevant Products from Our Store:**\n${
+              relevantProducts.map((p: any) =>
+                `- **${p.title}** (${p.brand || "Asper"}) - ${p.price} JOD${p.is_on_sale ? ` (${p.discount_percent}% OFF!)` : ""} - ${p.category}${p.skin_concerns?.length ? ` | Good for: ${p.skin_concerns.join(", ")}` : ""}`
+              ).join("\n")
+            }`;
+          } else {
+            const { data: documents } = await supabaseAdmin.from("documents").select("content, metadata").limit(5);
+            if (documents?.length) {
+              const relevantDocs = documents.filter((doc: any) => {
+                const c = (doc.content || "").toLowerCase();
+                return keywords.some((k: string) => c.includes(k.toLowerCase()));
+              }).slice(0, 5);
+              if (relevantDocs.length) {
+                productContext = `\n\n**Recommended Products:**\n${
+                  relevantDocs.map((doc: any) => {
+                    const m = doc.metadata as any;
+                    return `- **${m.title}** (${m.brand || "Asper"}) - ${m.price} JOD${m.is_on_sale ? ` (${m.discount_percent}% OFF!)` : ""} - ${m.category}`;
+                  }).join("\n")
+                }`;
+              }
+            }
+          }
+        }
+      }
+      if (!productContext) {
+        productContext = "\n\n(No product inventory loaded. Recommend general skincare advice and invite them to browse our store at asperbeautyshop.com)";
+      }
+
+      const systemPrompt = `You are the **Asper Dual-Voice Concierge** for Asper Beauty Shop in Jordan — operating as either **Dr. Sami** (Voice of Science) or **Ms. Zain** (Voice of Luxury) based on the user's intent. Both voices serve the Medical Luxury brand: pharmacist-curated, authentic, precise.
+
+**DR. SAMI — Voice of Science** (clinical/safety queries: acne, rosacea, eczema, hyperpigmentation, pregnancy, ingredients, SPF, barrier, retinol, dark spots, sensitivity):
+- Tone: authoritative, precise, empathetic. Intro: "As your clinical pharmacist..."
+- Always add: "I provide wellness guidance, not medical diagnosis."
+
+**MS. ZAIN — Voice of Luxury** (aesthetic/lifestyle queries: glow, radiance, makeup, gift, bridal, routine, ritual, fragrance, dewy, luminous):
+- Tone: editorial, warm, enthusiastic. Intro: "Welcome to your personal beauty ritual..."
+
+**Rules:** Default to Dr. Sami if intent is unclear. Switch voices invisibly mid-conversation. Never announce switching.
+- All products are 100% authentic, JFDA certified, pharmacist-vetted. Use skin_concerns, category from the inventory.
+- Categories: Skincare, Body Care, Hair Care, Makeup, Fragrances, Tools & Devices. Brands: Vichy, Eucerin, La Roche-Posay, Cetaphil, SVR, The Ordinary, Olaplex, Dior, YSL.
+- **Language:** Respond ONLY in English or Arabic based on user language.
+- **Shipping:** Amman 3 JOD; Governorates 5 JOD; FREE over 50 JOD.
+
+**Inventory (use only these when recommending):**
+${productContext}`;
+      const useLovable = !!lovableKey && !geminiKey;
+      let replyText = "";
+      if (useLovable) {
+        const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "google/gemini-3-flash-preview",
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: userMessage },
+            ],
+            stream: false,
+          }),
+        });
+        if (!res.ok) throw new Error(`AI gateway ${res.status}`);
+        const data = await res.json();
+        replyText = data?.choices?.[0]?.message?.content ?? "";
+      } else {
+        const model = Deno.env.get("GEMINI_MODEL") ?? "gemini-2.0-flash";
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              systemInstruction: { parts: [{ text: systemPrompt }] },
+              contents: [{ role: "user", parts: [{ text: userMessage }] }],
+              generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
+            }),
+          }
+        );
+        if (!res.ok) throw new Error(`Gemini ${res.status}`);
+        const data = await res.json();
+        replyText = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+      }
+      return new Response(
+        JSON.stringify({ reply: replyText || "Sorry, I couldn't process that. Please try again." }),
+        { status: 200, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+      );
+    } catch (e) {
+      console.error("Webhook error:", e);
+      return new Response(
+        JSON.stringify({
+          error: "beauty-assistant webhook failed",
+          message: e instanceof Error ? e.message : String(e),
+        }),
+        { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+      );
+    }
+  }
+
+  // ——— Website Chat (requires Supabase Auth, streams SSE) ———
+  try {
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      console.error("Missing or invalid Authorization header");
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } },
+    );
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await supabaseClient.auth
+      .getClaims(token);
+
+    if (claimsError || !claimsData?.claims) {
+      console.error(
+        "JWT validation failed:",
+        claimsError?.message || "No claims",
+      );
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+
+    const userId = claimsData.claims.sub;
+    console.log("Authenticated user:", userId);
+
+    const { messages } = await req.json();
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+
+    if (!LOVABLE_API_KEY) {
+      throw new Error("LOVABLE_API_KEY is not configured");
+    }
+
+    // Extract the latest user message to find relevant products
+    const lastUserMessage = messages.filter((m: any) =>
+      m.role === "user"
+    ).pop()?.content || "";
+
+    // Step 2 (Recommend): detect concern for single authoritative recommendation + "See My Regimen" link
+    const detectedConcernSlug = detectConcernSlug(lastUserMessage);
+    const shopRoutinePath = detectedConcernSlug
+      ? `/concerns/${detectedConcernSlug}`
+      : null;
+
+    // Search for relevant products: prefer by skin_concerns when we have a detected concern
+    let productContext = "";
+    let matchedProducts: any[] = [];
+
+    if (lastUserMessage) {
+      if (detectedConcernSlug) {
+        const { data: byConcern } = await supabaseClient
+          .from("products")
+          .select("*")
+          .contains("skin_concerns", [detectedConcernSlug])
+          .limit(12);
+        if (byConcern && byConcern.length > 0) {
+          matchedProducts = byConcern;
+          productContext =
+            `\n\n**Relevant Products from Our Store (for ${detectedConcernSlug}):**\n${
+              byConcern.map((p: any) =>
+                `- **${p.title}** (${p.brand || "Asper"}) - ${p.price} JOD${
+                  p.is_on_sale ? ` (${p.discount_percent}% OFF!)` : ""
+                } - ${p.category}${
+                  p.skin_concerns?.length
+                    ? ` | Good for: ${p.skin_concerns.join(", ")}`
+                    : ""
+                }`
+              ).join("\n")
+            }`;
+        }
+      }
+
+      if (matchedProducts.length === 0) {
+        const keywords = extractKeywords(lastUserMessage);
+        console.log("Extracted keywords:", keywords);
+
+        const { data: relevantProducts, error: searchError } =
+          await supabaseClient
+            .from("products")
+            .select("*")
+            .or(
+              keywords.length > 0
+                ? keywords.map((k) =>
+                  `title.ilike.%${k}%,brand.ilike.%${k}%,category.ilike.%${k}%,description.ilike.%${k}%`
+                ).join(",")
+                : "title.ilike.%skin%",
+            )
+            .limit(12);
+
+        if (!searchError && relevantProducts && relevantProducts.length > 0) {
+          matchedProducts = relevantProducts;
+          productContext = `\n\n**Relevant Products from Our Store:**\n${
+            relevantProducts.map((p: any) =>
+              `- **${p.title}** (${p.brand || "Asper"}) - ${p.price} JOD${
+                p.is_on_sale ? ` (${p.discount_percent}% OFF!)` : ""
+              } - ${p.category}${
+                p.skin_concerns?.length
+                  ? ` | Good for: ${p.skin_concerns.join(", ")}`
+                  : ""
+              }`
+            ).join("\n")
+          }`;
+        } else {
+          const { data: documents } = await supabaseClient
+            .from("documents")
+            .select("content, metadata")
+            .limit(5);
+          if (documents && documents.length > 0) {
+            const relevantDocs = documents.filter((doc: any) => {
+              const content = (doc.content || "").toLowerCase();
+              return keywords.some((k: string) =>
+                content.includes(k.toLowerCase())
+              );
+            }).slice(0, 5);
+            if (relevantDocs.length > 0) {
+              matchedProducts = relevantDocs.map((doc: any) => doc.metadata);
+              productContext = `\n\n**Recommended Products:**\n${
+                relevantDocs.map((doc: any) => {
+                  const m = doc.metadata as any;
+                  return `- **${m.title}** (${
+                    m.brand || "Asper"
+                  }) - ${m.price} JOD${
+                    m.is_on_sale ? ` (${m.discount_percent}% OFF!)` : ""
+                  } - ${m.category}`;
+                }).join("\n")
+              }`;
+            }
+          }
+        }
       }
     }
-
-    // Select persona
-    let selected;
-    if (forcePersona === "dr_sami") {
-      selected = { persona: "dr_sami", systemPrompt: DR_SAMI_PROMPT };
-    } else if (forcePersona === "ms_zain") {
-      selected = { persona: "ms_zain", systemPrompt: MS_ZAIN_PROMPT };
-    } else {
-      selected = selectPersona(messages);
+    if (!productContext) {
+      productContext = "\n\n(No product inventory loaded. Recommend general skincare advice and invite them to browse our store at asperbeautyshop.com)";
     }
 
-    // ─── Run Safety Interlock ───
-    const { warnings, triggered } = runSafetyInterlock(messages, medicalContext);
+    // ========== INTELLIGENCE PHASE: 4-Stage System (Strategic Brand & Execution Playbook) ==========
 
-    // If safety warnings exist and current persona is ms_zain with severe flags, escalate to Dr. Sami
-    const severeIngredients = ["Retinol", "Hydroquinone", "Supplements / Ingestibles"];
-    const hasSevereFlag = triggered.some((t) => severeIngredients.includes(t));
-    if (hasSevereFlag && selected.persona === "ms_zain") {
-      // Escalate to Dr. Sami for safety override
-      selected = { persona: "dr_sami", systemPrompt: DR_SAMI_PROMPT };
-    }
+    // Stage 1: Dual-Persona Director — Dr. Sami (Voice of Science) vs. Ms. Zain (Voice of Luxury)
+    const stage1Persona = `
+**Stage 1 — The Persona Director (Dual-Voice System)**
+You have TWO expert voices. Detect the user's intent from their message and activate the correct voice:
 
-    // Inject safety context into system prompt
-    let systemPrompt = selected.systemPrompt;
-    if (warnings.length > 0) {
-      systemPrompt += `\n\n=== ACTIVE SAFETY INTERLOCKS ===\nThe following safety warnings are ACTIVE for this user. You MUST honor these in your response:\n${warnings.join("\n")}`;
-    }
-    if (medicalContext) {
-      const profileParts: string[] = [];
-      if (medicalContext.skin_type) profileParts.push(`Skin Type: ${medicalContext.skin_type}`);
-      if (medicalContext.skin_concern) profileParts.push(`Primary Concern: ${medicalContext.skin_concern}`);
-      if (medicalContext.tags?.length) profileParts.push(`Medical Tags: ${medicalContext.tags.join(", ")}`);
-      if (profileParts.length > 0) {
-        systemPrompt += `\n\n=== USER MEDICAL PROFILE ===\n${profileParts.join("\n")}\nUse this context to personalize recommendations and check for contraindications.`;
-      }
-    }
+**DR. SAMI — The Voice of Science** (activate for clinical / medical / safety queries)
+- **Trigger keywords:** rosacea, acne, cystic, eczema, hyperpigmentation, pregnancy, حامل, حمل, ingredient, مكونات, JFDA, barrier, dermatol, retinol, retinoid, niacinamide, SPF, sunscreen, واقي شمس, allergy, حساسية, salicylic, benzoyl, tretinoin, medical, طبي, clinical, pharmacist, صيدلاني, vitamin D, iron, supplement, deficiency, dark spot, بقع, peeling, تقشر, exfoliant, acid, sensitivity
+- **Tone:** Authoritative, precise, calm, empathetic — like a consultant dermatology pharmacist.
+- **Intro style:** "As your clinical pharmacist, allow me to address this with precision..."
+- **Mandatory guardrail (always include):** "I provide wellness guidance, not medical diagnosis. Please consult a physician for medical concerns."
+- **Key phrases:** "Clinical Necessity", "Barrier Repair", "JFDA Certified", "Pharmacist-Vetted", "Ingredient Safety", "Seal of Authenticity"
 
-    const aiMessages = [
-      { role: "system", content: systemPrompt },
-      ...messages,
-    ];
+**MS. ZAIN — The Voice of Luxury** (activate for aesthetic / lifestyle / trend queries)
+- **Trigger keywords:** glow, توهج, radiance, بريق, glam, makeup, مكياج, trend, look, luxury, فاخر, fragrance, عطر, gift, هدية, bridal, عروس, wedding, زفاف, routine, روتين, foundation, ritual, طقوس, pamper, تدليل, self care, dewy, luminous, شفاف, glow up, moisturiz, ترطيب, night cream, كريم ليلي
+- **Tone:** Editorial, warm, enthusiastic, aspirational — like a high-end beauty concierge at a luxury spa.
+- **Intro style:** "Welcome to your personal beauty ritual — let me curate the perfect experience for you..."
+- **Key phrases:** "Your Glow Journey", "Digital Tray", "Curated for You", "Signature Ritual", "The Asper Experience"
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
+**ROUTING RULES:**
+- If the query is ambiguous (e.g. first message with no clear intent), default to **Dr. Sami** (safety-first principle).
+- If the user switches concern mid-conversation, transition voice seamlessly — never announce the switch.
+- Both personas share ONE continuous memory. Do NOT reset context when switching voices.
+- NEVER say "I am switching to Dr. Sami" or "Now activating Ms. Zain" — the transition must be invisible.
+- Do NOT use pushy sales language ("Buy this!", "Act now!"). Both voices serve with elegance and authority.
+`;
+
+    // Stage 2: The Logic — Analyze → Single Recommendation → Regimen (first reply = one regimen only)
+    const stage2Logic = `
+**Stage 2 — The Logic (3-Click Solution: Analyze → Recommend → Regimen)**
+**For the FIRST reply only:** Do not ask clarifying questions. (1) Confirm the user's concern in one sentence (e.g. "Based on your description, you are experiencing dehydration."). (2) Recommend exactly ONE authoritative regimen from the inventory: a **Digital Tray** with Step 1: Cleanser (Preparation), Step 2: Treatment (The Active), Step 3: Moisturizer/SPF (Protection). Do NOT list alternatives or "you could also try"; give one regimen only. Close with: "I have curated this complete regimen for maximum efficacy. Shall I add this tray to your cart?" (or equivalent in Arabic if the user writes in Arabic).
+**Later replies:** If the user asks follow-up questions, you may clarify or suggest alternatives. For the first reply, one regimen only.
+If the inventory below does not have all three steps, recommend the closest matches and still frame them as one regimen (Preparation → Active → Protection).
+`;
+
+    // Stage 3: Sales Intelligence — Seal of Authenticity, Value & Trust, Cross-Sell
+    const stage3Sales = `
+**Stage 3 — Sales Intelligence (Seal of Authenticity)**
+If a user hesitates or asks about price, pivot to **Value & Trust**.
+- **The Authenticity Hook:** Remind them that Asper guarantees original, pharmacist-vetted stock. Say: "Unlike unauthorized marketplaces, every bottle at Asper carries our Seal of Authenticity. You are investing in genuine clinical results."
+- **The Cross-Sell:** If they only want one product (e.g. a serum), warn them professionally. Say: "Applying this [product] without a proper lipid-replenishing moisturizer may compromise your skin barrier. I strongly advise the full pairing for safety and efficacy."
+`;
+
+    // Stage 4: The "Ghost" Protocol — Clinical Awareness (future Health Mentor)
+    const stage4Ghost = `
+**Stage 4 — The "Ghost" Protocol (Clinical Awareness)**
+You have a hidden capability called **Clinical Awareness**.
+- **Standard Mode:** If the user talks only about skin, use the standard 3-step logic above.
+- **Medical Mode (Ghost):** If the user mentions internal health (e.g. "I have low iron", "I am anemic", "My doctor said my Vitamin D is low"), do NOT ignore it.
+  - **Action:** Acknowledge instantly. E.g. "Understood. Internal deficiencies often manifest on the skin."
+  - **Tagging:** In your reasoning, treat this as [Biomarker: e.g. Iron_Deficiency] and tailor recommendations.
+  - **Recommend:** Prioritize products that support radiance/dullness (e.g. Vitamin C, brightening) from the inventory, but add a note: "This will help topically; please adhere to your oral supplementation for best results." Do not diagnose or replace medical advice.
+`;
+
+    // Enhanced system prompt with product context
+    const systemPrompt =
+      `You are the **Asper Dual-Voice Concierge** for Asper Beauty Shop in Jordan — operating as either **Dr. Sami** (Voice of Science) or **Ms. Zain** (Voice of Luxury) depending on the user's intent. Both voices share the same Medical Luxury identity: pharmacist-curated, authentic, precise, never pushy. Recommend ONLY from the product inventory listed below when available; name title, brand, and price.
+${stage1Persona}
+${stage2Logic}
+${stage3Sales}
+${stage4Ghost}
+
+**Knowledge & Constraints:**
+- All products are 100% authentic, JFDA certified, pharmacist-vetted. Use skin_concerns, category, and description from the inventory to match concern and skin type.
+- Available categories: Skincare, Body Care, Hair Care, Makeup, Fragrances, Tools & Devices. Popular brands: Vichy, Eucerin, La Roche-Posay, Cetaphil, SVR, The Ordinary, Olaplex, Dior, YSL.
+- **Language (IMPORTANT):** Respond ONLY in English or Arabic. If the user writes in Arabic, respond in Arabic (Tajawal-friendly). Otherwise always respond in English. Never respond in Chinese or any other language.
+
+**Shipping:** Amman 3 JOD; Governorates 5 JOD; FREE over 50 JOD.
+
+**Inventory (use only these when recommending):**
+${productContext}`;
+
+    const response = await fetch(
+      "https://ai.gateway.lovable.dev/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-3-flash-preview",
+          messages: [
+            { role: "system", content: systemPrompt },
+            ...messages,
+          ],
+          stream: true,
+        }),
       },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: aiMessages,
-        stream: true,
-      }),
-    });
+    );
 
     if (!response.ok) {
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({
+            error: "Rate limit exceeded. Please try again in a moment.",
+          }),
+          {
+            status: 429,
+            headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+          },
+        );
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted. Please top up your workspace." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({ error: "Service temporarily unavailable." }),
+          {
+            status: 402,
+            headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+          },
+        );
       }
-      const t = await response.text();
-      console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "AI service temporarily unavailable." }), {
+      const errorText = await response.text();
+      console.error("AI gateway error:", response.status, errorText);
+      return new Response(JSON.stringify({ error: "Failed to get response" }), {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
       });
     }
 
-    return new Response(response.body, {
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "text/event-stream",
-        "X-Persona": selected.persona,
-        "X-Safety-Flags": triggered.length > 0 ? triggered.join(",") : "none",
+    // Create a transformed stream: recommend event (for "See My Regimen" link) → products → AI stream
+    const encoder = new TextEncoder();
+    const recommendEvent = shopRoutinePath
+      ? `data: ${
+        JSON.stringify({
+          type: "recommend",
+          detected_concern: detectedConcernSlug,
+          shop_routine_path: shopRoutinePath,
+        })
+      }\n\n`
+      : "";
+    const productDataEvent = matchedProducts && matchedProducts.length > 0
+      ? `data: ${
+        JSON.stringify({ type: "products", products: matchedProducts })
+      }\n\n`
+      : "";
+
+    const combinedStream = new ReadableStream({
+      async start(controller) {
+        if (recommendEvent) {
+          controller.enqueue(encoder.encode(recommendEvent));
+        }
+        if (productDataEvent) {
+          controller.enqueue(encoder.encode(productDataEvent));
+        }
+
+        // Then pipe through the AI response
+        const reader = response.body!.getReader();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          controller.enqueue(value);
+        }
+        controller.close();
       },
     });
-  } catch (e) {
-    console.error("beauty-assistant error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+
+    return new Response(combinedStream, {
+      headers: { ...getCorsHeaders(req), "Content-Type": "text/event-stream" },
     });
+  } catch (error) {
+    console.error("Beauty assistant error:", error);
+    return new Response(
+      JSON.stringify({
+        error: error instanceof Error ? error.message : "Unknown error",
+      }),
+      {
+        status: 500,
+        headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      },
+    );
   }
 });
+
+// Extract meaningful keywords from user query
+function extractKeywords(text: string): string[] {
+  const stopWords = new Set([
+    "i",
+    "me",
+    "my",
+    "myself",
+    "we",
+    "our",
+    "you",
+    "your",
+    "he",
+    "she",
+    "it",
+    "the",
+    "a",
+    "an",
+    "and",
+    "or",
+    "but",
+    "in",
+    "on",
+    "at",
+    "to",
+    "for",
+    "of",
+    "with",
+    "by",
+    "from",
+    "as",
+    "is",
+    "was",
+    "are",
+    "were",
+    "been",
+    "be",
+    "have",
+    "has",
+    "had",
+    "do",
+    "does",
+    "did",
+    "will",
+    "would",
+    "could",
+    "should",
+    "may",
+    "might",
+    "can",
+    "what",
+    "which",
+    "who",
+    "how",
+    "when",
+    "where",
+    "why",
+    "this",
+    "that",
+    "these",
+    "those",
+    "am",
+    "if",
+    "then",
+    "so",
+    "than",
+    "too",
+    "very",
+    "just",
+    "about",
+    "any",
+    "some",
+    "all",
+    "need",
+    "want",
+    "looking",
+    "help",
+    "please",
+    "thanks",
+    "thank",
+    "good",
+    "best",
+    "recommend",
+    "suggest",
+    "product",
+    "products",
+    "something",
+  ]);
+
+  // Skincare-specific keywords to boost
+  const skinKeywords = [
+    "acne",
+    "aging",
+    "wrinkles",
+    "dark spots",
+    "pigmentation",
+    "dryness",
+    "dry",
+    "oily",
+    "sensitive",
+    "redness",
+    "hydration",
+    "moisturizer",
+    "serum",
+    "cleanser",
+    "toner",
+    "sunscreen",
+    "spf",
+    "retinol",
+    "vitamin c",
+    "hyaluronic",
+    "niacinamide",
+    "salicylic",
+    "benzoyl",
+    "brightening",
+    "anti-aging",
+    "eye cream",
+    "mask",
+    "exfoliate",
+    "pores",
+    "blackheads",
+    "whiteheads",
+    "eczema",
+    "psoriasis",
+    "rosacea",
+    "combination",
+    "normal",
+    "mature",
+    "teen",
+    "pregnancy",
+    "safe",
+  ];
+
+  // Brand keywords
+  const brandKeywords = [
+    "vichy",
+    "eucerin",
+    "cetaphil",
+    "svr",
+    "la roche",
+    "ordinary",
+    "olaplex",
+    "dior",
+    "ysl",
+    "bourjois",
+    "isadora",
+    "essence",
+    "bioten",
+    "mavala",
+    "kerastase",
+    "bioderma",
+    "avene",
+    "cerave",
+    "paula",
+    "filorga",
+  ];
+
+  const lowerText = text.toLowerCase();
+  const words = lowerText.split(/\s+/).filter((word) =>
+    word.length > 2 && !stopWords.has(word)
+  );
+
+  // Add any matched skin/brand keywords
+  const matched = [...skinKeywords, ...brandKeywords].filter((kw) =>
+    lowerText.includes(kw)
+  );
+
+  // Combine and deduplicate
+  const allKeywords = [...new Set([...words, ...matched])];
+
+  return allKeywords.slice(0, 10);
+}
