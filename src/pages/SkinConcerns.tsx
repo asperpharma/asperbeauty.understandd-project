@@ -16,13 +16,14 @@ import {
   Umbrella,
 } from "lucide-react";
 import { logSkinConcernClick } from "@/lib/conciergeAnalytics";
-import antiAgingImage from "@/assets/concerns/anti-aging.jpg";
-import hydrationImage from "@/assets/concerns/hydration.jpg";
-import acneImage from "@/assets/concerns/acne.jpg";
-import brighteningImage from "@/assets/concerns/brightening.jpg";
-import sensitivityImage from "@/assets/concerns/sensitivity.jpg";
-import sunProtectionImage from "@/assets/concerns/sun-protection.jpg";
-import darkCirclesImage from "@/assets/concerns/dark-circles.jpg";
+// Concern image placeholders (actual images not yet available)
+const antiAgingImage = "/placeholder.svg";
+const hydrationImage = "/placeholder.svg";
+const acneImage = "/placeholder.svg";
+const brighteningImage = "/placeholder.svg";
+const sensitivityImage = "/placeholder.svg";
+const sunProtectionImage = "/placeholder.svg";
+const darkCirclesImage = "/placeholder.svg";
 const skinConcerns = [{
   id: "anti-aging",
   nameEn: "Anti-Aging",

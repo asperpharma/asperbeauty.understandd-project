@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-// Spotlight images - WebP for better compression
-import skinCareSpotlight from "@/assets/spotlights/skin-care-spotlight.webp";
-import hairCareSpotlight from "@/assets/spotlights/hair-care-spotlight.webp";
-import makeUpSpotlight from "@/assets/spotlights/make-up-spotlight.webp";
+// Spotlight image placeholders (actual images not yet available)
+const skinCareSpotlight = "/placeholder.svg";
+const hairCareSpotlight = "/placeholder.svg";
+const makeUpSpotlight = "/placeholder.svg";
 
 const categories = [
   {

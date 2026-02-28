@@ -265,6 +265,47 @@ export type Database = {
         }
         Relationships: []
       }
+      consultations: {
+        Row: {
+          channel: string | null
+          created_at: string
+          id: string
+          locale: string | null
+          profile_id: string | null
+          regimen: Json | null
+          transcript: Json | null
+          user_id: string
+        }
+        Insert: {
+          channel?: string | null
+          created_at?: string
+          id?: string
+          locale?: string | null
+          profile_id?: string | null
+          regimen?: Json | null
+          transcript?: Json | null
+          user_id: string
+        }
+        Update: {
+          channel?: string | null
+          created_at?: string
+          id?: string
+          locale?: string | null
+          profile_id?: string | null
+          regimen?: Json | null
+          transcript?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consultations_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "concierge_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversations: {
         Row: {
           created_at: string

@@ -3,11 +3,11 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatedSection } from "./AnimatedSection";
 import { LazyImage } from "./LazyImage";
 
-// Product images
-import anthelios from "@/assets/products/anthelios-uvmune.webp";
-import olaplex from "@/assets/products/olaplex-no3.webp";
-import eucerin from "@/assets/products/eucerin-dual-serum.webp";
-import diorSauvage from "@/assets/products/dior-sauvage-elixir.webp";
+// Product placeholder images (actual images not yet available)
+const anthelios = "/placeholder.svg";
+const olaplex = "/placeholder.svg";
+const eucerin = "/placeholder.svg";
+const diorSauvage = "/placeholder.svg";
 
 const products = [
   {
