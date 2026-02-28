@@ -37,6 +37,7 @@ async function streamChat({
   messages,
   forcePersona,
   userProfile,
+  campaignSource,
   onPersona,
   onDelta,
   onDone,
@@ -45,6 +46,7 @@ async function streamChat({
   messages: Msg[];
   forcePersona?: string;
   userProfile?: { skin_type: string | null; skin_concern: string; tags: string[] } | null;
+  campaignSource?: string | null;
   onPersona: (p: string) => void;
   onDelta: (text: string) => void;
   onDone: () => void;
@@ -65,7 +67,7 @@ async function streamChat({
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ messages: payload, forcePersona, userProfile }),
+    body: JSON.stringify({ messages: payload, forcePersona, userProfile, ...(campaignSource ? { source: campaignSource } : {}) }),
   });
 
   if (!resp.ok) {
@@ -147,10 +149,10 @@ const personaConfig = {
 };
 
 const quickPrompts = [
-  { label: "Acne routine", text: "I have acne-prone oily skin. What's a good 3-step routine?" },
-  { label: "Gift ideas", text: "I need a luxury gift set for my friend's birthday" },
-  { label: "Sunscreen help", text: "What SPF should I use for sensitive skin?" },
-  { label: "📸 Skin check", text: "" }, // special: triggers image upload
+  { label: "✨ Find My Routine", text: "I want a personalized skincare routine based on my concerns" },
+  { label: "🧪 Shop by Ingredient", text: "I'm looking for products with Vitamin C, Retinol, or Hyaluronic Acid" },
+  { label: "🌿 Natural Options", text: "What natural and organic skincare products do you recommend?" },
+  { label: "📸 Skin Analysis", text: "" }, // special: triggers image upload
 ];
 
 export default function AIConcierge() {
@@ -166,6 +168,51 @@ export default function AIConcierge() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const deepLinkHandled = useRef(false);
+  const pendingDeepLinkPrompt = useRef<string | null>(null);
+  const deepLinkSource = useRef<string | null>(null);
+
+  // Intent-to-prompt mapping for marketing deep links
+  const INTENT_PROMPTS: Record<string, string> = {
+    acne: "I'm struggling with acne and oiliness. What's the best clinical routine?",
+    glow: "I want radiant, glowing skin. What do you recommend?",
+    "anti-aging": "I'm looking for an anti-aging routine with proven actives.",
+    hydration: "My skin is very dry. I need a deep hydration regimen.",
+    bridal: "I'm getting married soon! Help me with a bridal skincare bootcamp.",
+    pregnancy: "I'm pregnant and need a safe skincare routine.",
+    pigmentation: "I have uneven skin tone and dark spots. What treatments work best?",
+    sensitivity: "My skin is very sensitive and reactive. I need a gentle routine.",
+  };
+
+  // Deep link support: ?intent=acne&source=ig auto-opens with tailored prompt & auto-send
+  useEffect(() => {
+    if (deepLinkHandled.current) return;
+    const params = new URLSearchParams(window.location.search);
+    const intent = params.get("intent");
+    const source = params.get("source");
+    if (intent) {
+      deepLinkHandled.current = true;
+      setOpen(true);
+      const prompt = INTENT_PROMPTS[intent.toLowerCase()] || `I need help with ${intent}.`;
+      pendingDeepLinkPrompt.current = prompt;
+      deepLinkSource.current = source;
+      // Clean up URL params without reload
+      const url = new URL(window.location.href);
+      url.searchParams.delete("intent");
+      url.searchParams.delete("source");
+      window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+    }
+  }, []);
+
+  // Auto-send deep link prompt once authenticated
+  useEffect(() => {
+    if (pendingDeepLinkPrompt.current && isAuthenticated === true) {
+      const prompt = pendingDeepLinkPrompt.current;
+      pendingDeepLinkPrompt.current = null;
+      // Small delay to ensure panel is rendered
+      setTimeout(() => send(prompt), 300);
+    }
+  }, [isAuthenticated]);
 
   // Check auth state
   useEffect(() => {
@@ -308,6 +355,7 @@ export default function AIConcierge() {
       await streamChat({
         messages: [...messages, userMsg],
         userProfile,
+        campaignSource: deepLinkSource.current,
         onPersona: (p) => {
           detectedPersona = p;
           setCurrentPersona(p);
@@ -430,27 +478,42 @@ export default function AIConcierge() {
               </div>
             )}
             {isAuthenticated && messages.length === 0 && (
-              <div className="space-y-3">
-                <p className="text-center text-sm text-muted-foreground font-body">
-                  Ask me anything about skincare, beauty, or upload a photo for a skin diagnostic 📸
-                </p>
+              <div className="space-y-4 py-4">
+                {/* Pharmacist greeting */}
+                <div className="text-center space-y-2">
+                  <div className="flex justify-center mb-3">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="text-xl">🌿</span>
+                    </div>
+                  </div>
+                  <p className="text-sm font-heading font-semibold text-foreground">
+                    Welcome to Asper Beauty Shop
+                  </p>
+                  <p className="text-xs text-muted-foreground font-body max-w-[280px] mx-auto leading-relaxed">
+                    I am your Pharmacist-led Concierge. I'm here to help you navigate the intersection of Nature & Science.
+                  </p>
+                </div>
+                {/* Quick action buttons */}
                 <div className="grid grid-cols-2 gap-2">
                   {quickPrompts.map((qp) => (
                     <button
                       key={qp.label}
                       onClick={() => {
-                        if (qp.label === "📸 Skin check") {
+                        if (qp.label === "📸 Skin Analysis") {
                           triggerFileInput();
                         } else {
                           send(qp.text);
                         }
                       }}
-                      className="rounded-lg border border-border/50 bg-secondary/50 px-3 py-2 text-left text-xs font-body text-foreground/80 transition-colors hover:bg-secondary hover:border-primary/20"
+                      className="rounded-lg border border-primary/20 bg-primary/5 px-3 py-2.5 text-left text-xs font-body text-foreground/80 transition-all hover:bg-primary/10 hover:border-primary/40 hover:shadow-sm"
                     >
                       {qp.label}
                     </button>
                   ))}
                 </div>
+                <p className="text-center text-[10px] text-accent font-body uppercase tracking-[0.15em]">
+                  Nature Meets Science ✦ Pharmacist Verified
+                </p>
               </div>
             )}
 
