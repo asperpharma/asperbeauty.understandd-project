@@ -265,6 +265,28 @@ serve(async (req) => {
         replyText = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
       }
 
+      // ManyChat expects { version, content } format for rich responses
+      if (route === "manychat") {
+        return new Response(
+          JSON.stringify({
+            version: "v2",
+            content: {
+              messages: [
+                { type: "text", text: replyText || "Sorry, I couldn't process that. Please try again." }
+              ],
+              actions: [],
+              quick_replies: [
+                { type: "node", caption: "🧴 Acne Help", target: "acne" },
+                { type: "node", caption: "✨ Glow Routine", target: "glow" },
+                { type: "node", caption: "👤 Talk to Human", target: "human" },
+              ],
+            },
+            reply: replyText || "Sorry, I couldn't process that. Please try again.",
+          }),
+          { status: 200, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
+        );
+      }
+
       return new Response(
         JSON.stringify({ reply: replyText || "Sorry, I couldn't process that. Please try again." }),
         { status: 200, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
@@ -305,10 +327,27 @@ serve(async (req) => {
     const userId = user.id;
     console.log("Authenticated user:", userId);
 
-    const { messages } = await req.json();
+    const body = await req.json();
+    const { messages, source: campaignSource } = body;
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
+    }
+
+    // Log campaign source attribution to telemetry_events if present
+    if (campaignSource) {
+      const adminClient = createClient(
+        Deno.env.get("SUPABASE_URL")!,
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+      );
+      adminClient.from("telemetry_events").insert({
+        user_id: userId,
+        event: "deep_link_campaign",
+        source: "ai_concierge",
+        payload: { campaign_source: campaignSource },
+      }).then(({ error }) => {
+        if (error) console.error("Telemetry insert error:", error.message);
+      });
     }
 
     // Extract last user message for product matching
