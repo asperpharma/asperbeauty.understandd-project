@@ -170,7 +170,7 @@ ${shopRoutinePath ? `\n**Regimen Link:** [See My Regimen](${shopRoutinePath})` :
 
 **Sales Intelligence:** If user hesitates, pivot to trust: "Every bottle carries our Seal of Authenticity — pharmacist-vetted, JFDA certified."
 
-**Knowledge:** All products 100% authentic. Brands: Vichy, Eucerin, La Roche-Posay, Cetaphil, SVR, The Ordinary, Olaplex, Dior, YSL.
+**Knowledge:** All products 100% authentic. Brands: Bioderma, Kérastase, YSL, Maybelline, Garnier, Beesline, Bio Balance, Seventeen, Petal Fresh.
 **Language:** Respond in the same language as the user (English or Arabic only).
 **Shipping:** Amman 3 JOD; Governorates 5 JOD; FREE over 50 JOD.
 
@@ -450,8 +450,8 @@ function extractKeywords(text: string): string[] {
     "brightening", "anti-aging", "eye cream", "mask", "exfoliate", "rosacea", "pregnancy",
   ];
   const brandKeywords = [
-    "vichy", "eucerin", "cetaphil", "svr", "la roche", "ordinary", "olaplex", "dior",
-    "ysl", "bioderma", "avene", "cerave", "filorga", "kerastase",
+    "bioderma", "kerastase", "kérastase", "ysl", "maybelline", "garnier",
+    "beesline", "bio balance", "seventeen", "petal fresh",
   ];
 
   const lowerText = text.toLowerCase();
