@@ -167,8 +167,22 @@ export default function AIConcierge() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const deepLinkHandled = useRef(false);
+  const pendingDeepLinkPrompt = useRef<string | null>(null);
+  const deepLinkSource = useRef<string | null>(null);
 
-  // Deep link support: ?intent=acne&source=ig auto-opens with pre-filled concern
+  // Intent-to-prompt mapping for marketing deep links
+  const INTENT_PROMPTS: Record<string, string> = {
+    acne: "I'm struggling with acne and oiliness. What's the best clinical routine?",
+    glow: "I want radiant, glowing skin. What do you recommend?",
+    "anti-aging": "I'm looking for an anti-aging routine with proven actives.",
+    hydration: "My skin is very dry. I need a deep hydration regimen.",
+    bridal: "I'm getting married soon! Help me with a bridal skincare bootcamp.",
+    pregnancy: "I'm pregnant and need a safe skincare routine.",
+    pigmentation: "I have uneven skin tone and dark spots. What treatments work best?",
+    sensitivity: "My skin is very sensitive and reactive. I need a gentle routine.",
+  };
+
+  // Deep link support: ?intent=acne&source=ig auto-opens with tailored prompt & auto-send
   useEffect(() => {
     if (deepLinkHandled.current) return;
     const params = new URLSearchParams(window.location.search);
@@ -177,13 +191,26 @@ export default function AIConcierge() {
     if (intent) {
       deepLinkHandled.current = true;
       setOpen(true);
-      // Auto-send after a brief delay to allow auth check
-      const intentText = `I need help with ${intent}. ${source ? `(via ${source})` : ""}`.trim();
-      setTimeout(() => {
-        setInput(intentText);
-      }, 500);
+      const prompt = INTENT_PROMPTS[intent.toLowerCase()] || `I need help with ${intent}.`;
+      pendingDeepLinkPrompt.current = prompt;
+      deepLinkSource.current = source;
+      // Clean up URL params without reload
+      const url = new URL(window.location.href);
+      url.searchParams.delete("intent");
+      url.searchParams.delete("source");
+      window.history.replaceState({}, "", url.pathname + url.search + url.hash);
     }
   }, []);
+
+  // Auto-send deep link prompt once authenticated
+  useEffect(() => {
+    if (pendingDeepLinkPrompt.current && isAuthenticated === true) {
+      const prompt = pendingDeepLinkPrompt.current;
+      pendingDeepLinkPrompt.current = null;
+      // Small delay to ensure panel is rendered
+      setTimeout(() => send(prompt), 300);
+    }
+  }, [isAuthenticated]);
 
   // Check auth state
   useEffect(() => {
