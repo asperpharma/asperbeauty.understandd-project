@@ -368,9 +368,17 @@ const Index = () => {
             <p className={`text-xs text-primary-foreground/50 ${locale === "ar" ? "font-arabic" : "font-body"}`}>
               © {new Date().getFullYear()} {t("footer.copyright")}
             </p>
-            {/* Gold Authenticity Seal */}
-            <div className="gold-seal-rotate cursor-pointer" title="Guaranteed Authentic">
-              <img src={asperSeal} alt="Asper Authenticity Seal" className="h-10 w-10 rounded-full object-cover" />
+            <div className="flex items-center gap-3">
+              <Link to="/contact" className="text-xs text-primary-foreground/50 hover:text-accent transition-colors font-body">
+                Contact
+              </Link>
+              <Link to="/health" className="text-xs text-primary-foreground/50 hover:text-accent transition-colors font-body">
+                Status
+              </Link>
+              {/* Gold Authenticity Seal */}
+              <div className="gold-seal-rotate cursor-pointer" title="Guaranteed Authentic">
+                <img src={asperSeal} alt="Asper Authenticity Seal" className="h-10 w-10 rounded-full object-cover" />
+              </div>
             </div>
           </div>
         </div>
