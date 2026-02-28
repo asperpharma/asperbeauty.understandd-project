@@ -170,6 +170,78 @@ export type Database = {
         }
         Relationships: []
       }
+      cod_orders: {
+        Row: {
+          assigned_at: string | null
+          city: string
+          created_at: string
+          customer_email: string | null
+          customer_lat: number | null
+          customer_lng: number | null
+          customer_name: string
+          customer_phone: string
+          delivered_at: string | null
+          delivery_address: string
+          delivery_notes: string | null
+          driver_id: string | null
+          id: string
+          items: Json
+          notes: string | null
+          order_number: string
+          shipping_cost: number
+          status: string
+          subtotal: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          city?: string
+          created_at?: string
+          customer_email?: string | null
+          customer_lat?: number | null
+          customer_lng?: number | null
+          customer_name: string
+          customer_phone: string
+          delivered_at?: string | null
+          delivery_address: string
+          delivery_notes?: string | null
+          driver_id?: string | null
+          id?: string
+          items?: Json
+          notes?: string | null
+          order_number: string
+          shipping_cost?: number
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          assigned_at?: string | null
+          city?: string
+          created_at?: string
+          customer_email?: string | null
+          customer_lat?: number | null
+          customer_lng?: number | null
+          customer_name?: string
+          customer_phone?: string
+          delivered_at?: string | null
+          delivery_address?: string
+          delivery_notes?: string | null
+          driver_id?: string | null
+          id?: string
+          items?: Json
+          notes?: string | null
+          order_number?: string
+          shipping_cost?: number
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       concierge_brain_rules: {
         Row: {
           action: Json
