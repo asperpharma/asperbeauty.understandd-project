@@ -5,15 +5,15 @@ import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
 import { LazyImage } from "./LazyImage";
 
-// Brand logos
-import vichyLogo from "@/assets/brands/vichy-logo.webp";
-import eucerinLogo from "@/assets/brands/eucerin-logo.webp";
-import svrLogo from "@/assets/brands/svr-logo.webp";
-import cetaphilLogo from "@/assets/brands/cetaphil-logo.webp";
-import biodermaLogo from "@/assets/brands/bioderma-logo.webp";
-import bourjoisLogo from "@/assets/brands/bourjois-logo.webp";
-import essenceLogo from "@/assets/brands/essence-logo.webp";
-import isadoraLogo from "@/assets/brands/isadora-logo.webp";
+// Brand logo placeholders (actual logos not yet available)
+const vichyLogo = "/placeholder.svg";
+const eucerinLogo = "/placeholder.svg";
+const svrLogo = "/placeholder.svg";
+const cetaphilLogo = "/placeholder.svg";
+const biodermaLogo = "/placeholder.svg";
+const bourjoisLogo = "/placeholder.svg";
+const essenceLogo = "/placeholder.svg";
+const isadoraLogo = "/placeholder.svg";
 
 const brands = [
   {

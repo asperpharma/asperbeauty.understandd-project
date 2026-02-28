@@ -10,18 +10,18 @@ import {
   Sparkles,
 } from "lucide-react";
 
-// Premium brand logos with elegant styling - High quality luxury logos
-import ceraveLogo from "@/assets/brands/cerave-luxury.png";
-import theOrdinaryLogo from "@/assets/brands/the-ordinary-luxury.png";
-import laRochePosayLogo from "@/assets/brands/la-roche-posay-luxury.png";
-import paulasChoiceLogo from "@/assets/brands/paulas-choice-luxury.png";
-import olaplexLogo from "@/assets/brands/olaplex-luxury.png";
-import diorLogo from "@/assets/brands/dior-luxury.png";
-import esteeLauderLogo from "@/assets/brands/estee-lauder-luxury.png";
-import kerastaseLogo from "@/assets/brands/kerastase-luxury.png";
-import cliniqueLogo from "@/assets/brands/clinique-luxury.png";
-import lancomeLogo from "@/assets/brands/lancome-luxury.png";
-import yslLogo from "@/assets/brands/ysl-luxury.png";
+// Brand logo placeholders (actual logos not yet available)
+const ceraveLogo = "/placeholder.svg";
+const theOrdinaryLogo = "/placeholder.svg";
+const laRochePosayLogo = "/placeholder.svg";
+const paulasChoiceLogo = "/placeholder.svg";
+const olaplexLogo = "/placeholder.svg";
+const diorLogo = "/placeholder.svg";
+const esteeLauderLogo = "/placeholder.svg";
+const kerastaseLogo = "/placeholder.svg";
+const cliniqueLogo = "/placeholder.svg";
+const lancomeLogo = "/placeholder.svg";
+const yslLogo = "/placeholder.svg";
 
 const BRANDS = [
   { name: "Dior", logo: diorLogo },
