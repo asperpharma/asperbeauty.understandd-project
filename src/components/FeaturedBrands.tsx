@@ -5,15 +5,14 @@ import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
 import { LazyImage } from "./LazyImage";
 
-// Brand logo placeholders (actual logos not yet available)
-const vichyLogo = "/placeholder.svg";
-const eucerinLogo = "/placeholder.svg";
-const svrLogo = "/placeholder.svg";
-const cetaphilLogo = "/placeholder.svg";
-const biodermaLogo = "/placeholder.svg";
-const bourjoisLogo = "/placeholder.svg";
-const essenceLogo = "/placeholder.svg";
-const isadoraLogo = "/placeholder.svg";
+const vichyLogo = "https://placehold.co/200x60/800020/C5A028?text=VICHY";
+const eucerinLogo = "https://placehold.co/200x60/800020/C5A028?text=EUCERIN";
+const svrLogo = "https://placehold.co/200x60/800020/C5A028?text=SVR";
+const cetaphilLogo = "https://placehold.co/200x60/800020/C5A028?text=CETAPHIL";
+const biodermaLogo = "https://placehold.co/200x60/800020/C5A028?text=BIODERMA";
+const bourjoisLogo = "https://placehold.co/200x60/800020/C5A028?text=BOURJOIS";
+const essenceLogo = "https://placehold.co/200x60/800020/C5A028?text=ESSENCE";
+const isadoraLogo = "https://placehold.co/200x60/800020/C5A028?text=ISADORA";
 
 const brands = [
   {

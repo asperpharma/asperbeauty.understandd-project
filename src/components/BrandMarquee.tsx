@@ -10,18 +10,17 @@ import {
   Sparkles,
 } from "lucide-react";
 
-// Brand logo placeholders (actual logos not yet available)
-const ceraveLogo = "/placeholder.svg";
-const theOrdinaryLogo = "/placeholder.svg";
-const laRochePosayLogo = "/placeholder.svg";
-const paulasChoiceLogo = "/placeholder.svg";
-const olaplexLogo = "/placeholder.svg";
-const diorLogo = "/placeholder.svg";
-const esteeLauderLogo = "/placeholder.svg";
-const kerastaseLogo = "/placeholder.svg";
-const cliniqueLogo = "/placeholder.svg";
-const lancomeLogo = "/placeholder.svg";
-const yslLogo = "/placeholder.svg";
+const ceraveLogo = "https://placehold.co/200x60/800020/C5A028?text=CERAVE";
+const theOrdinaryLogo = "https://placehold.co/200x60/800020/C5A028?text=THE+ORDINARY";
+const laRochePosayLogo = "https://placehold.co/200x60/800020/C5A028?text=LA+ROCHE-POSAY";
+const paulasChoiceLogo = "https://placehold.co/200x60/800020/C5A028?text=PAULA'S+CHOICE";
+const olaplexLogo = "https://placehold.co/200x60/800020/C5A028?text=OLAPLEX";
+const diorLogo = "https://placehold.co/200x60/800020/C5A028?text=DIOR";
+const esteeLauderLogo = "https://placehold.co/200x60/800020/C5A028?text=ESTÉE+LAUDER";
+const kerastaseLogo = "https://placehold.co/200x60/800020/C5A028?text=KÉRASTASE";
+const cliniqueLogo = "https://placehold.co/200x60/800020/C5A028?text=CLINIQUE";
+const lancomeLogo = "https://placehold.co/200x60/800020/C5A028?text=LANCÔME";
+const yslLogo = "https://placehold.co/200x60/800020/C5A028?text=YSL";
 
 const BRANDS = [
   { name: "Dior", logo: diorLogo },

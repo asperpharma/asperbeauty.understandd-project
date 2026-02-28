@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-// Category placeholder images (actual images not yet available)
-const skinCareImg = "/placeholder.svg";
-const hairCareImg = "/placeholder.svg";
-const bodyCareImg = "/placeholder.svg";
-const makeUpImg = "/placeholder.svg";
-const fragrancesImg = "/placeholder.svg";
-const toolsDevicesImg = "/placeholder.svg";
+const skinCareImg = "https://images.unsplash.com/photo-1570194065650-d99fb4bedf0a?w=400&q=80";
+const hairCareImg = "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80";
+const bodyCareImg = "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80";
+const makeUpImg = "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=400&q=80";
+const fragrancesImg = "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80";
+const toolsDevicesImg = "https://images.unsplash.com/photo-1559181567-c3190ca9be8a?w=400&q=80";
 
 const categories = [
   {
