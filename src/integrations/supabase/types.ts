@@ -561,6 +561,7 @@ export type Database = {
           id: string
           image_url: string | null
           inventory_total: number
+          is_bestseller: boolean
           is_hero: boolean
           key_ingredients: string[] | null
           mpn: string | null
@@ -589,6 +590,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           inventory_total?: number
+          is_bestseller?: boolean
           is_hero?: boolean
           key_ingredients?: string[] | null
           mpn?: string | null
@@ -617,6 +619,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           inventory_total?: number
+          is_bestseller?: boolean
           is_hero?: boolean
           key_ingredients?: string[] | null
           mpn?: string | null
