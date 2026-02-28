@@ -1,68 +1,67 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Droplets, Mountain, Sparkles, Gem } from "lucide-react";
 
 const minerals = [
-  { icon: Droplets, name: "Magnesium", benefit: "Deep hydration & barrier repair", concentration: "40.65%" },
-  { icon: Gem, name: "Calcium", benefit: "Cell renewal & skin firmness", concentration: "17.2%" },
-  { icon: Sparkles, name: "Potassium", benefit: "Moisture balance & radiance", concentration: "7.26%" },
-  { icon: Mountain, name: "Bromide", benefit: "Soothing & anti-inflammatory", concentration: "5.12%" },
+  { icon: Droplets, name: "Magnesium", benefit: "Deep hydration & barrier repair" },
+  { icon: Gem, name: "Calcium", benefit: "Cell renewal & skin firmness" },
+  { icon: Sparkles, name: "Potassium", benefit: "Moisture balance & radiance" },
+  { icon: Mountain, name: "Bromide", benefit: "Soothing & anti-inflammatory" },
 ];
 
 const HeritageSourcing = () => {
   return (
-    <section className="py-24 sm:py-32 relative overflow-hidden">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `radial-gradient(circle at 20% 50%, hsl(var(--primary)) 1px, transparent 1px),
-                          radial-gradient(circle at 80% 50%, hsl(var(--accent)) 1px, transparent 1px)`,
-        backgroundSize: '60px 60px',
-      }} />
-      
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-        <div className="text-center mb-16">
-          <Badge variant="outline" className="mb-4 border-accent text-accent font-body text-xs tracking-[0.2em] px-4 py-1.5">
-            HERITAGE & SOURCING
-          </Badge>
-          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
-            From the <span className="text-primary">Dead Sea</span> to Your Shelf
-          </h2>
-          <p className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto font-body">
-            Jordan's ancient mineral treasury — clinically validated, ethically sourced, and pharmacist-approved for modern skincare rituals.
-          </p>
-        </div>
-
-        {/* Mineral Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto mb-16">
-          {minerals.map((mineral) => (
-            <Card
-              key={mineral.name}
-              className="group border-border/50 hover:border-accent/50 transition-all duration-400 shadow-emerald-glow hover:shadow-emerald-deep text-center"
-            >
-              <CardContent className="p-6">
-                <div className="w-14 h-14 mx-auto rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center mb-4 group-hover:border-accent/40 transition-colors duration-400">
-                  <mineral.icon className="h-6 w-6 text-primary group-hover:text-accent transition-colors duration-400" />
-                </div>
-                <span className="block font-heading text-2xl font-bold text-accent mb-1">{mineral.concentration}</span>
-                <h3 className="font-heading text-lg font-semibold text-foreground mb-1">{mineral.name}</h3>
-                <p className="text-xs text-muted-foreground font-body leading-relaxed">{mineral.benefit}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Heritage Story */}
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-accent/30 bg-accent/5 mb-6">
-            <Mountain className="h-4 w-4 text-accent" />
-            <span className="font-body text-sm font-medium text-foreground">
-              430 meters below sea level — the lowest point on Earth
-            </span>
+    <section className="py-16 sm:py-20 bg-background">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-center">
+          {/* Left — Image with gold border */}
+          <div className="relative">
+            <div className="rounded-lg overflow-hidden border-2 border-accent shadow-emerald-glow">
+              <img
+                src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80"
+                alt="Luxury spa minerals and Dead Sea wellness"
+                className="w-full h-[420px] object-cover"
+                loading="lazy"
+              />
+            </div>
+            {/* Floating mineral badges */}
+            <div className="absolute -bottom-4 -end-4 bg-card border border-accent/30 rounded-lg px-4 py-3 shadow-lg">
+              <span className="font-heading text-xs text-accent tracking-[0.15em] uppercase">Dead Sea · Jordan</span>
+            </div>
           </div>
-          <p className="text-muted-foreground font-body leading-relaxed text-base">
-            For millennia, the Dead Sea has been a sanctuary of healing. Our partnerships with local Jordanian harvesters ensure every mineral compound 
-            is sustainably extracted and cold-processed — preserving the bioactive integrity that makes these ingredients irreplaceable in clinical skincare.
-          </p>
+
+          {/* Right — Text content */}
+          <div className="flex flex-col justify-center">
+            <Badge variant="outline" className="mb-4 w-fit border-accent text-accent font-body text-xs tracking-[0.2em] px-4 py-1.5">
+              HERITAGE & SOURCING
+            </Badge>
+            <h2 className="font-arabic text-3xl sm:text-4xl font-bold text-foreground mb-4 leading-tight">
+              Authentic Origins, <span className="text-primary">Clinical Results</span>
+            </h2>
+            <p className="text-muted-foreground font-body leading-relaxed mb-8">
+              Our formulations are rooted in the ancient healing power of the Dead Sea — the lowest point on Earth, 
+              rich in magnesium, calcium, and potassium. Every mineral compound is sustainably harvested from 
+              Jordanian sources and cold-processed to preserve its bioactive integrity, then paired with 
+              globally sourced clinical-grade actives for modern skincare that honors tradition.
+            </p>
+
+            {/* Mineral grid */}
+            <div className="grid grid-cols-2 gap-4">
+              {minerals.map((mineral) => (
+                <div
+                  key={mineral.name}
+                  className="group flex items-start gap-3 p-3 rounded-lg border border-border/50 hover:border-accent/40 transition-colors duration-400"
+                >
+                  <div className="w-9 h-9 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0 group-hover:border-accent/30 transition-colors">
+                    <mineral.icon className="h-4 w-4 text-primary group-hover:text-accent transition-colors duration-400" />
+                  </div>
+                  <div>
+                    <span className="font-heading text-sm font-semibold text-foreground">{mineral.name}</span>
+                    <p className="text-xs text-muted-foreground font-body leading-snug">{mineral.benefit}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
