@@ -45,9 +45,10 @@ jobs:
           jq -r 'keys | @json' "$GITHUB_EVENT_PATH" || echo "Failed to parse event payload"
           
           # Safely extract file changes, handling cases where commits field may be missing
-          ADDED=$(jq -r '(.commits // []) | .[] | .added[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s . || echo '[]')
-          MODIFIED=$(jq -r '(.commits // []) | .[] | .modified[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s . || echo '[]')
-          REMOVED=$(jq -r '(.commits // []) | .[] | .removed[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s . || echo '[]')
+          # The jq -s 'if length == 0 then [] else . end' ensures we always get valid JSON array
+          ADDED=$(jq -r '(.commits // []) | .[] | .added[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s 'if length == 0 then [] else . end')
+          MODIFIED=$(jq -r '(.commits // []) | .[] | .modified[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s 'if length == 0 then [] else . end')
+          REMOVED=$(jq -r '(.commits // []) | .[] | .removed[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s 'if length == 0 then [] else . end')
           PAYLOAD=$(jq -n \
             --arg repo "${{ github.repository }}" \
             --arg commit "${{ github.sha }}" \
