@@ -138,7 +138,7 @@ In **Lovable** → your project → **Settings** → **Environment variables**, 
 |----------|--------|----------|
 | `VITE_SUPABASE_PROJECT_ID` | `rgehleqcubtmcwyipyvi` | Brain / Beauty Assistant project |
 | `VITE_SUPABASE_URL` | `https://rgehleqcubtmcwyipyvi.supabase.co` | Supabase API |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | *(your anon/public key)* | Frontend auth &amp; Edge Function calls |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | *(your anon/public key)* | Frontend auth & Edge Function calls |
 | `VITE_SHOPIFY_STORE_DOMAIN` | `lovable-project-milns.myshopify.com` | 5000+ SKU catalog |
 | `VITE_SHOPIFY_STOREFRONT_TOKEN` | *(your Storefront API token)* | Storefront API |
 | `VITE_SHOPIFY_API_VERSION` | `2025-07` | API version |
@@ -322,7 +322,7 @@ If you have a new or updated CSV catalog to push to the store that feeds the mai
 | Design system | `DESIGN_SYSTEM.md` |
 | Single source of truth | `MAIN_PROJECT.md` |
 | Plan + CSV sync spec + Master Breakdown | `docs/PLAN_AND_SPEC.md` |
-| Test brain &amp; chatbot | `TEST_BRAIN_AND_CHATBOT.md` — run `npm run test:brain` |
+| Test brain & chatbot | `TEST_BRAIN_AND_CHATBOT.md` — run `npm run test:brain` |
 | Perfect update (4 steps) | See top of this file |
 
 ---
