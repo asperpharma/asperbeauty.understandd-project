@@ -1,51 +1,40 @@
 
 
-# Security and Bug Fix Plan
+## Fix Plan: Resolve All TypeScript Build Errors
 
-## Summary
-There are **2 critical bugs** and **several security findings** to address. Here's the full breakdown:
+The site is currently broken due to multiple TypeScript errors. Here's the fix plan organized by file:
 
----
+### Critical Blocker (Build Crash)
 
-## 1. Fix `getClaims` Bug in Lab Tools Edge Function (Critical)
+1. **`src/pages/BrandVichy.tsx`** — Replace the entire file with a simple redirect component. The file imports a missing asset `@/assets/brands/vichy-hero.jpg` that doesn't exist. Replace with `Navigate to="/brands"`.
 
-The `lab-tools` edge function has the exact same `supabase.auth.getClaims()` bug that was just fixed in `beauty-assistant`. This causes a 500 error whenever anyone uses the Lab Tools feature.
+### Type Mismatches
 
-**Fix:** Replace `getClaims(token)` with `supabase.auth.getUser()` on lines 204-210 of `supabase/functions/lab-tools/index.ts`, identical to the beauty-assistant fix.
+2. **`src/components/ProductQuickView.tsx`** — Change `price: number` to `price: number | null` in the `Product` interface (line 30) to match what `ProductCatalog` passes.
 
----
+3. **`src/components/LuxurySearch.tsx`** — The `SearchResult` interface at line 24 doesn't have `category`. The error at line 171 says `Property 'category' does not exist`. Current code at line 171 uses `product.primary_concern` which is correct. This error may already be resolved — will verify, but if `category` is referenced elsewhere in the file, replace with `primary_concern`.
 
-## 2. Fix Overly Permissive Chat Logs UPDATE Policy (Error)
+4. **`src/pages/ManageProducts.tsx`** — The `Product` interface is missing properties the DB returns, and `insert` call is missing required fields:
+   - Add `brand?: string | null`, `clinical_badge?: string | null`, `pharmacist_note?: string | null` to form data insert object
+   - Add `handle`, `primary_concern`, `regimen_step` as required fields in the insert payload (they're already in `formData`)
+   - Cast `setProducts` data with `as Product[]` or add index signature
 
-The `chat_logs` table has an UPDATE policy named "Enable read access for all users" with `USING (true)`, meaning **any authenticated user can modify any other user's chat history**. This is a serious data integrity issue.
+5. **`src/pages/BulkUpload.tsx`** — Status mapping mismatch: queue uses `"done"`/`"error"` but type expects `"completed"`/`"failed"`. The current fix at lines 128-132 maps these correctly. Verify this is still present.
 
-**Fix:** Replace the permissive policy with one restricted to the row owner:
-```text
-DROP the "Enable read access for all users" UPDATE policy
-CREATE a new UPDATE policy: USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid())
-```
+6. **`src/hooks/useProductFilter.ts`** — Type casting at line 134 needs `as unknown as ShopifyProduct[]` pattern. Currently uses a partial cast. Fix the generic type assertion.
 
----
+7. **`src/pages/ConcernCollection.tsx`** — Same `filterProductsByConcern` casting issue. Currently uses `as any` + `as unknown as ShopifyProduct[]` which should work. Verify.
 
-## 3. Update Stale Security Findings
+8. **`src/pages/AdminAuditLogs.tsx`** — Lines 214/217: "excessively deep" type instantiation with `cod_orders`. Replace with `(supabase as any).from("cod_orders")` pattern consistently.
 
-Several findings from the `agent_security` scanner are outdated (e.g., profiles table supposedly having no policies, when it actually does). The scan will be re-run to refresh these.
+### Component Props
 
----
+9. **`src/components/FloatingSocials.tsx`** — Line 129: SVG `Icon` component rendered as `<Icon />` but something passes `className`. Check if `<Icon className="..." />` exists — if so, use a wrapper `<span className="..."><Icon /></span>`.
 
-## 4. Remaining Informational Items (No Action Needed Now)
+### Technical Details
 
-- **Shopify Storefront token in client code** -- already marked as ignored (Storefront tokens are designed for client-side use)
-- **`cleanup_allowlist` table with no RLS** -- admin-only utility table, low risk
-- **Function search_path mutable** -- cosmetic warning on some DB functions
-
----
-
-## Technical Steps
-
-1. Edit `supabase/functions/lab-tools/index.ts`: replace lines 204-210 (`getClaims` block) with `supabase.auth.getUser()` pattern
-2. Deploy the updated `lab-tools` edge function
-3. Apply a database migration to fix the `chat_logs` UPDATE policy
-4. Re-run the security scan and update/dismiss resolved findings
-5. Test the lab-tools endpoint to confirm it returns 401 (not 500) for auth validation
+- The `BrandVichy.tsx` fix is the critical path — everything else fails to build because Vite stops on this missing import
+- The `ManageProducts.tsx` insert needs to include `handle`, `primary_concern`, and `regimen_step` which are NOT NULL columns in the DB
+- The `AdminAuditLogs.tsx` deep instantiation error is because `cod_orders` table isn't in the generated types — use `any` assertion
+- Most `useProductFilter`/`ConcernCollection` errors are about `ShopifyProduct.node.tags` being `string | string[]` vs `string[]` — fix with type assertion
 
