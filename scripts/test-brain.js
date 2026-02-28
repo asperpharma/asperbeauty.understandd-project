@@ -8,8 +8,8 @@
  *   npm run test:brain
  */
 
-const https = require('https');
-const http = require('http');
+import https from 'https';
+import http from 'http';
 
 const SITE_URL = process.env.SITE_URL || 'https://asperbeautyshop-com.lovable.app';
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://qqceibvalkoytafynwoc.supabase.co';
@@ -191,11 +191,9 @@ async function main() {
 }
 
 // Run if called directly
-if (require.main === module) {
-  main().catch(error => {
-    console.error('Fatal error:', error);
-    process.exit(1);
-  });
-}
+main().catch(error => {
+  console.error('Fatal error:', error);
+  process.exit(1);
+});
 
-module.exports = { testSupabaseConnection, testBeautyAssistantEndpoint, testConciergePresence };
+export { testSupabaseConnection, testBeautyAssistantEndpoint, testConciergePresence };

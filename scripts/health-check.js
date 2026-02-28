@@ -8,8 +8,8 @@
  *   npm run health
  */
 
-const https = require('https');
-const http = require('http');
+import https from 'https';
+import http from 'http';
 
 const SITE_URL = process.env.SITE_URL || 'https://asperbeautyshop-com.lovable.app';
 const TIMEOUT_MS = 10000;
@@ -164,11 +164,9 @@ async function main() {
 }
 
 // Run if called directly
-if (require.main === module) {
-  main().catch(error => {
-    console.error('Fatal error:', error);
-    process.exit(1);
-  });
-}
+main().catch(error => {
+  console.error('Fatal error:', error);
+  process.exit(1);
+});
 
-module.exports = { checkEndpoint, checkHealthEndpoint };
+export { checkEndpoint, checkHealthEndpoint };
