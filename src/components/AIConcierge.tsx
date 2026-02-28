@@ -37,6 +37,7 @@ async function streamChat({
   messages,
   forcePersona,
   userProfile,
+  campaignSource,
   onPersona,
   onDelta,
   onDone,
@@ -45,6 +46,7 @@ async function streamChat({
   messages: Msg[];
   forcePersona?: string;
   userProfile?: { skin_type: string | null; skin_concern: string; tags: string[] } | null;
+  campaignSource?: string | null;
   onPersona: (p: string) => void;
   onDelta: (text: string) => void;
   onDone: () => void;
@@ -65,7 +67,7 @@ async function streamChat({
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ messages: payload, forcePersona, userProfile }),
+    body: JSON.stringify({ messages: payload, forcePersona, userProfile, ...(campaignSource ? { source: campaignSource } : {}) }),
   });
 
   if (!resp.ok) {
@@ -353,6 +355,7 @@ export default function AIConcierge() {
       await streamChat({
         messages: [...messages, userMsg],
         userProfile,
+        campaignSource: deepLinkSource.current,
         onPersona: (p) => {
           detectedPersona = p;
           setCurrentPersona(p);
