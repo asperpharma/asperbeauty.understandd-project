@@ -15,7 +15,7 @@ const Health = () => {
 
   useEffect(() => {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const shopifyDomain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
+    const shopifyDomain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN || 'lovable-project-milns.myshopify.com';
 
     const checks = { supabase: !!supabaseUrl, shopify: !!shopifyDomain };
 
