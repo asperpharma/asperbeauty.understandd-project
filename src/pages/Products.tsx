@@ -4,6 +4,7 @@ import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 import { ShopifyProductCard } from "@/components/ShopifyProductCard";
 import { useProductEnrichmentBulk } from "@/hooks/useProductEnrichment";
 import { CategoryFilter } from "@/components/CategoryFilter";
+import { CategoryTabs } from "@/components/CategoryTabs";
 import { ConcernFilter } from "@/components/ConcernFilter";
 import { VendorFilter, buildVendorQuery } from "@/components/VendorFilter";
 import { CartDrawer } from "@/components/CartDrawer";
@@ -11,8 +12,8 @@ import { ProductGridSkeleton } from "@/components/skeletons/ProductSkeletons";
 import MobileFilterButton from "@/components/MobileFilterButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Package, ArrowLeft, Search, SlidersHorizontal, X } from "lucide-react";
-import { buildTypeQuery } from "@/lib/categoryMapping";
+import { Package, ArrowLeft, Search, X } from "lucide-react";
+import { categorizeProduct } from "@/lib/categoryMapping";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -23,26 +24,36 @@ import asperLogo from "@/assets/asper-lotus-logo.png";
 const Products = () => {
   const [searchInput, setSearchInput] = useState("");
   const [activeQuery, setActiveQuery] = useState<string | undefined>();
+  const [activeTab, setActiveTab] = useState("All");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedVendors, setSelectedVendors] = useState<string[]>([]);
   const [selectedConcern, setSelectedConcern] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
+  const visibleGroups: any[] = [];
+
   const buildQuery = () => {
     const parts: string[] = [];
     if (activeQuery) parts.push(activeQuery);
-    const typeQuery = buildTypeQuery(selectedTypes);
-    if (typeQuery) parts.push(`(${typeQuery})`);
-    const vendorQuery = buildVendorQuery(selectedVendors);
-    if (vendorQuery) parts.push(`(${vendorQuery})`);
+    if (activeTab !== "All") parts.push(`product_type:${activeTab}`);
+    if (selectedVendors.length > 0) {
+      const vendorQuery = buildVendorQuery(selectedVendors);
+      if (vendorQuery) parts.push(`(${vendorQuery})`);
+    }
     return parts.length > 0 ? parts.join(" ") : undefined;
   };
 
   const { data, isLoading, error } = useShopifyProducts(buildQuery(), 24);
 
+  // Reset sub-category selections when switching tabs
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setSelectedTypes([]);
+  };
+
   const handles = useMemo(
-    () => (data?.products || []).map((p) => p.node.handle),
-    [data?.products]
+    () => (data || []).map((p) => p.node.handle),
+    [data]
   );
   const { data: enrichmentMap } = useProductEnrichmentBulk(handles);
   const handleSearch = (e: React.FormEvent) => {
@@ -54,7 +65,7 @@ const Products = () => {
 
   const filterSidebar = (
     <div className="space-y-4">
-      <CategoryFilter selected={selectedTypes} onSelect={setSelectedTypes} />
+      <CategoryFilter selected={selectedTypes} onSelect={setSelectedTypes} groups={visibleGroups} />
       <Separator />
       <VendorFilter selected={selectedVendors} onSelect={setSelectedVendors} />
     </div>
@@ -89,7 +100,7 @@ const Products = () => {
             Product Catalog
           </h1>
           <p className="mt-2 text-muted-foreground font-body">
-            Browse our curated collection of 3,000+ beauty & wellness products
+            Browse our curated collection of 4,000+ beauty & wellness products
           </p>
 
           <form onSubmit={handleSearch} className="mt-6 flex gap-2 max-w-lg">
@@ -103,6 +114,11 @@ const Products = () => {
               <Search className="h-4 w-4" />
             </Button>
           </form>
+
+          {/* Top-level category tabs */}
+          <div className="mt-5">
+            <CategoryTabs activeTab={activeTab} onTabChange={handleTabChange} />
+          </div>
 
           {/* Active filter pills */}
           {totalFilters > 0 && (
@@ -193,7 +209,7 @@ const Products = () => {
 
             {isLoading && <ProductGridSkeleton count={6} />}
 
-            {!isLoading && data?.products && data.products.length === 0 && (
+            {!isLoading && data && data.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
                 <Package className="h-12 w-12 mb-4" />
                 <p className="text-lg font-medium font-heading">No products found</p>
@@ -201,21 +217,19 @@ const Products = () => {
               </div>
             )}
 
-            {!isLoading && data?.products && data.products.length > 0 && (
+            {!isLoading && data && data.length > 0 && (
               <>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {data.products.map((product) => (
+                  {data.map((product) => (
                     <ShopifyProductCard key={product.node.id} product={product} enrichment={enrichmentMap?.get(product.node.handle)} />
                   ))}
                 </div>
 
-                {data.pageInfo?.hasNextPage && (
-                  <div className="mt-8 flex justify-center">
-                    <p className="text-sm text-muted-foreground font-body">
-                      Showing {data.products.length} products — refine with filters to find more
-                    </p>
-                  </div>
-                )}
+                <div className="mt-8 flex justify-center">
+                  <p className="text-sm text-muted-foreground font-body">
+                    Showing {data.length} products — refine with filters to find more
+                  </p>
+                </div>
               </>
             )}
           </main>

@@ -1,51 +1,58 @@
 
 
-# Security and Bug Fix Plan
+## Analysis
 
-## Summary
-There are **2 critical bugs** and **several security findings** to address. Here's the full breakdown:
+After thorough review, the four named components (**BestSellersSection**, **DealOfTheDay**, **DriverAssignment**, **FeaturedCollection**) do not have TypeScript compilation errors. They correctly map Supabase `products` Row fields to their local interfaces. However, there are two real issues:
 
----
+### Issue 1: `is_bestseller` column missing from `products` table
 
-## 1. Fix `getClaims` Bug in Lab Tools Edge Function (Critical)
+The `build_digital_tray` DB function (used by the AI Concierge regimen builder) references `is_bestseller` on the `products` table:
 
-The `lab-tools` edge function has the exact same `supabase.auth.getClaims()` bug that was just fixed in `beauty-assistant`. This causes a 500 error whenever anyone uses the Lab Tools feature.
-
-**Fix:** Replace `getClaims(token)` with `supabase.auth.getUser()` on lines 204-210 of `supabase/functions/lab-tools/index.ts`, identical to the beauty-assistant fix.
-
----
-
-## 2. Fix Overly Permissive Chat Logs UPDATE Policy (Error)
-
-The `chat_logs` table has an UPDATE policy named "Enable read access for all users" with `USING (true)`, meaning **any authenticated user can modify any other user's chat history**. This is a serious data integrity issue.
-
-**Fix:** Replace the permissive policy with one restricted to the row owner:
-```text
-DROP the "Enable read access for all users" UPDATE policy
-CREATE a new UPDATE policy: USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid())
+```sql
+order by is_bestseller desc nulls last, is_hero desc nulls last ...
 ```
 
----
+But the `products` table does NOT have an `is_bestseller` column (only `digital_tray_products` does). This causes a **runtime SQL error** whenever the concierge tries to build a 3-step regimen.
 
-## 3. Update Stale Security Findings
+### Issue 2: `cod_orders` table not in generated types
 
-Several findings from the `agent_security` scanner are outdated (e.g., profiles table supposedly having no policies, when it actually does). The scan will be re-run to refresh these.
-
----
-
-## 4. Remaining Informational Items (No Action Needed Now)
-
-- **Shopify Storefront token in client code** -- already marked as ignored (Storefront tokens are designed for client-side use)
-- **`cleanup_allowlist` table with no RLS** -- admin-only utility table, low risk
-- **Function search_path mutable** -- cosmetic warning on some DB functions
+`AdminOrders.tsx` and `DriverDashboard.tsx` use `(supabase as any).from("cod_orders")` to bypass TypeScript because the table isn't in the generated types. This is a type-safety gap, not a compilation error.
 
 ---
 
-## Technical Steps
+## Plan
 
-1. Edit `supabase/functions/lab-tools/index.ts`: replace lines 204-210 (`getClaims` block) with `supabase.auth.getUser()` pattern
-2. Deploy the updated `lab-tools` edge function
-3. Apply a database migration to fix the `chat_logs` UPDATE policy
-4. Re-run the security scan and update/dismiss resolved findings
-5. Test the lab-tools endpoint to confirm it returns 401 (not 500) for auth validation
+### A. Add `is_bestseller` column to `products` table
+
+Apply migration:
+
+```sql
+ALTER TABLE public.products
+  ADD COLUMN IF NOT EXISTS is_bestseller boolean NOT NULL DEFAULT false;
+```
+
+### B. Regenerate TypeScript types
+
+After the migration, regenerate `src/integrations/supabase/types.ts` so the new column is available to TypeScript.
+
+### C. Refresh PostgREST schema cache
+
+```sql
+NOTIFY pgrst, 'reload schema';
+```
+
+This fixes the `build_digital_tray` runtime failure and makes the `is_bestseller` field available in TypeScript for any future component use.
+
+---
+
+### Technical Detail
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| BestSellersSection | No TS errors | Maps `pharmacist_note` to `description` correctly |
+| FeaturedCollection | No TS errors | Same mapping pattern |
+| DealOfTheDay | No TS errors | Accesses only existing columns |
+| DriverAssignment | No TS errors | Uses `user_roles` + `profiles` tables correctly |
+| `build_digital_tray` | **Runtime SQL error** | References missing `is_bestseller` on `products` |
+| AdminOrders / DriverDashboard | Type-safety gap | Uses `as any` cast for `cod_orders` |
 

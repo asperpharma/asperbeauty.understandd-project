@@ -21,10 +21,34 @@ jobs:
         env:
           LOVABLE_WEBHOOK_URL: ${{ secrets.LOVABLE_WEBHOOK_URL }}
         run: |
+          # Validate that LOVABLE_WEBHOOK_URL is set
+          if [ -z "$LOVABLE_WEBHOOK_URL" ]; then
+            echo "Warning: LOVABLE_WEBHOOK_URL is not set"
+            echo "Skipping file sync. Please set the LOVABLE_WEBHOOK_URL secret in the repository settings to enable sync."
+            exit 0
+          fi
+
+          # Debug: Show masked URL (only show protocol and domain)
+          MASKED_URL=$(echo "$LOVABLE_WEBHOOK_URL" | sed -E 's|(https?://[^/]+).*|\1/...|')
+          echo "LOVABLE_WEBHOOK_URL=$MASKED_URL"
+
+          # Validate URL format
+          if ! echo "$LOVABLE_WEBHOOK_URL" | grep -qE '^https?://'; then
+            echo "Error: LOVABLE_WEBHOOK_URL does not appear to be a valid URL"
+            echo "Expected format: https://api.lovable.ai/... or similar"
+            exit 1
+          fi
+
           echo "Gathering lists of changed files..."
-          ADDED=$(jq -r '.commits[].added[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s .)
-          MODIFIED=$(jq -r '.commits[].modified[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s .)
-          REMOVED=$(jq -r '.commits[].removed[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s .)
+          # Debug: Show event structure (safely showing only keys, not sensitive data)
+          echo "Event payload keys:"
+          jq -r 'keys | @json' "$GITHUB_EVENT_PATH" || echo "Failed to parse event payload"
+          
+          # Safely extract file changes, handling cases where commits field may be missing
+          # The jq -s 'if length == 0 then [] else . end' ensures we always get valid JSON array
+          ADDED=$(jq -r '(.commits // []) | .[] | .added[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s 'if length == 0 then [] else . end')
+          MODIFIED=$(jq -r '(.commits // []) | .[] | .modified[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s 'if length == 0 then [] else . end')
+          REMOVED=$(jq -r '(.commits // []) | .[] | .removed[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s 'if length == 0 then [] else . end')
           PAYLOAD=$(jq -n \
             --arg repo "${{ github.repository }}" \
             --arg commit "${{ github.sha }}" \

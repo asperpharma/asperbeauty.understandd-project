@@ -1,118 +1,118 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Sparkles, Thermometer, Sun, Moon, CloudSun } from "lucide-react";
+import { ArrowRight, Shield, Leaf, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useTimeContext } from "@/hooks/useTimeContext";
-import heroVideo from "@/assets/hero-video.mp4";
 import { cn } from "@/lib/utils";
-
-const timeIcons = { morning: Sun, afternoon: CloudSun, evening: Moon };
+import { motion } from "framer-motion";
+import heroVideo from "@/assets/hero-sanctuary-video.mp4";
 
 export default function Hero() {
-  const { t, dir } = useLanguage();
-  const { timeOfDay, greeting, tagline, moodClass } = useTimeContext();
-  const TimeIcon = timeIcons[timeOfDay];
+  const { dir, locale } = useLanguage();
+  const isAr = locale === "ar";
 
   return (
-    <section className="relative h-[85vh] min-h-[600px] max-h-[900px] overflow-hidden">
+    <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden flex items-center justify-center">
       {/* Video Background */}
-      {/* eslint-disable-next-line react/no-unknown-property */}
       <video
         autoPlay
-        muted
         loop
+        muted
         playsInline
-        // @ts-ignore fetchpriority is valid HTML but not yet in React types
-        fetchpriority="high"
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover"
+        aria-hidden="true"
       >
         <source src={heroVideo} type="video/mp4" />
       </video>
 
-      {/* Gradient overlays for readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/50 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-primary/30" />
-
-      {/* Gold border frame */}
-      <div className="absolute inset-4 sm:inset-8 border border-accent/30 pointer-events-none z-10" />
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-foreground/40 via-foreground/30 to-foreground/60" />
 
       {/* Content */}
-      <div className="relative z-20 h-full flex items-center">
-        <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-16 w-full">
-          <div className={`max-w-2xl space-y-6 ${dir === "rtl" ? "mr-0 ml-auto text-right" : ""}`}>
-            {/* Time-aware greeting pill */}
-            <div className={cn(
-              "inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-body tracking-wide backdrop-blur-sm",
-              "bg-primary-foreground/10 text-primary-foreground/90 border border-primary-foreground/20"
-            )}>
-              <TimeIcon className="h-3.5 w-3.5" />
-              <span>{greeting}</span>
-            </div>
+      <div className="relative z-10 mx-auto max-w-4xl px-6 sm:px-10 lg:px-16 text-center">
+        <motion.div
+          className="space-y-8"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
+        >
+          {/* Glassmorphism Card */}
+          <div className="bg-background/80 backdrop-blur-xl border border-accent/40 rounded-2xl p-8 sm:p-12 lg:p-16 shadow-2xl">
+            {/* Gold decorative line */}
+            <div className="mx-auto w-20 h-px bg-gradient-to-r from-transparent via-accent to-transparent mb-8" />
 
-            <h1 className={cn(
-              "font-heading text-4xl sm:text-5xl lg:text-7xl font-bold text-primary-foreground leading-[1.1] tracking-tight",
-              dir === "rtl" && "font-arabic"
-            )}>
-              {t("hero.title_1")}
-              <br />
-              <span className="text-accent">{t("hero.title_2")}</span>
+            <h1
+              className={cn(
+                "font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-primary leading-[1.05] tracking-tight",
+                isAr && "font-arabic"
+              )}
+            >
+              {isAr ? (
+                <>
+                  بإشراف <span className="text-accent">صيدلاني</span>.
+                  <br />
+                  مدعوم بالذكاء.
+                </>
+              ) : (
+                <>
+                  Curated by <span className="text-accent">Pharmacists</span>.
+                  <br />
+                  Powered by Intelligence.
+                </>
+              )}
             </h1>
 
-            <p className={cn(
-              "text-base sm:text-lg text-primary-foreground/80 max-w-lg leading-relaxed",
-              dir === "rtl" ? "font-arabic" : "font-body"
-            )}>
-              {tagline}
+            <p
+              className={cn(
+                "mt-6 text-base sm:text-lg text-foreground/80 max-w-2xl mx-auto leading-relaxed",
+                isAr ? "font-arabic" : "font-body"
+              )}
+            >
+              {isAr
+                ? "أصالة مضمونة 100% عبر أكثر من 5,000 منتج — من Vichy إلى Maybelline. روتينك المثالي يبدأ هنا."
+                : "Guaranteeing 100% authenticity across 5,000+ SKUs — from Vichy to Maybelline. Your perfect regimen starts here."}
             </p>
 
             {/* Trust micro-badges */}
-            <div className={`flex flex-wrap gap-3 ${dir === "rtl" ? "justify-end" : ""}`}>
+            <div className={cn("flex flex-wrap justify-center gap-3 mt-6")}>
               {[
-                { icon: Shield, label: t("hero.authentic"), color: "text-accent" },
-                { icon: Thermometer, label: t("hero.temperature"), color: "text-accent" },
-                { icon: Sparkles, label: t("hero.pharmacist_led"), color: "text-accent" },
+                { icon: Shield, label: isAr ? "أصالة مضمونة" : "100% Authentic" },
+                { icon: Leaf, label: isAr ? "خالٍ من القسوة" : "Cruelty-Free" },
+                { icon: Sparkles, label: isAr ? "بإشراف صيدلاني" : "Pharmacist-Led" },
               ].map((item) => (
                 <span
                   key={item.label}
-                  className="inline-flex items-center gap-1.5 text-xs font-body text-primary-foreground/70 border border-primary-foreground/15 backdrop-blur-sm rounded-full px-3 py-1"
+                  className="inline-flex items-center gap-1.5 text-xs font-body text-muted-foreground border border-border rounded-full px-3 py-1 bg-card/60"
                 >
-                  <item.icon className={`h-3 w-3 ${item.color}`} />
+                  <item.icon className="h-3 w-3 text-accent" />
                   {item.label}
                 </span>
               ))}
             </div>
 
-            {/* CTAs */}
-            <div className={`flex flex-col sm:flex-row gap-4 pt-2 ${dir === "rtl" ? "justify-end" : ""}`}>
-              <Link to="/products">
-                <Button
-                  size="lg"
-                  className="group bg-accent text-primary hover:bg-accent/90 text-sm uppercase tracking-widest px-8 h-12 font-semibold shadow-lg shadow-accent/20"
-                >
-                  {t("hero.cta_primary")}
-                  <ArrowRight className={`h-4 w-4 group-hover:translate-x-1 transition-transform ${dir === "rtl" ? "mr-2 rotate-180" : "ml-2"}`} />
-                </Button>
-              </Link>
-              <Link to="/products">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 text-sm uppercase tracking-widest px-8 h-12"
-                >
-                  {t("hero.cta_secondary")}
-                </Button>
-              </Link>
-            </div>
+            {/* Gold decorative line */}
+            <div className="mx-auto w-20 h-px bg-gradient-to-r from-transparent via-accent to-transparent my-8" />
+
+            {/* CTA */}
+            <Link to="/intelligence">
+              <Button
+                size="lg"
+                className="group bg-primary text-primary-foreground hover:bg-primary/90 border border-transparent hover:border-accent hover:shadow-lg hover:shadow-accent/20 text-sm uppercase tracking-widest px-10 h-14 font-semibold transition-all duration-400"
+              >
+                {isAr ? "ابدئي تحليل بشرتك المجاني" : "Start Free AI Skin Analysis"}
+                <ArrowRight
+                  className={cn(
+                    "h-4 w-4 transition-transform duration-300 group-hover:translate-x-1",
+                    dir === "rtl" ? "mr-2 rotate-180 group-hover:-translate-x-1" : "ml-2"
+                  )}
+                />
+              </Button>
+            </Link>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Bottom sanctuary label */}
-      <div className="absolute bottom-6 sm:bottom-10 right-6 sm:right-10 z-20">
-        <p className="text-primary-foreground/50 font-body text-[10px] sm:text-xs uppercase tracking-[0.3em]">
-          {t("hero.sanctuary")}
-        </p>
-      </div>
+      {/* Bottom gradient fade into page */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
     </section>
   );
 }
