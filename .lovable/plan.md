@@ -1,58 +1,50 @@
 
 
-## Analysis
+## Restore the "Morning Spa" Design Foundation
 
-After thorough review, the four named components (**BestSellersSection**, **DealOfTheDay**, **DriverAssignment**, **FeaturedCollection**) do not have TypeScript compilation errors. They correctly map Supabase `products` Row fields to their local interfaces. However, there are two real issues:
+The current homepage (`Index.tsx`) uses three components that conflict with the DESIGN_SYSTEM.md palette:
 
-### Issue 1: `is_bestseller` column missing from `products` table
+1. **`HeroSection.tsx`** — Gold particles on `#FFF8E1`, hardcoded hex colors, "Discover Your Ritual" layout
+2. **`CelestialFeaturedCollection.tsx`** — Dark `celestial-gradient` (merlot `#4A0404`) background
+3. **`BrandStory.tsx`** — Dark `asper-merlot` (#4A0404) background with gold text
 
-The `build_digital_tray` DB function (used by the AI Concierge regimen builder) references `is_bestseller` on the `products` table:
-
-```sql
-order by is_bestseller desc nulls last, is_hero desc nulls last ...
-```
-
-But the `products` table does NOT have an `is_bestseller` column (only `digital_tray_products` does). This causes a **runtime SQL error** whenever the concierge tries to build a 3-step regimen.
-
-### Issue 2: `cod_orders` table not in generated types
-
-`AdminOrders.tsx` and `DriverDashboard.tsx` use `(supabase as any).from("cod_orders")` to bypass TypeScript because the table isn't in the generated types. This is a type-safety gap, not a compilation error.
+The target design uses `asper-stone` (#F2EFEB) ivory backgrounds, `burgundy` (#6B2D3A) for authority, `rose-clay` for warmth, and `polished-gold` for accents — the "Morning Spa" language already defined in `DESIGN_SYSTEM.md` and partially implemented in `src/components/home/Hero.tsx`.
 
 ---
 
-## Plan
+### Implementation Steps
 
-### A. Add `is_bestseller` column to `products` table
+**1. Swap the Hero component**
+- Replace `HeroSection` import in `Index.tsx` with `src/components/home/Hero.tsx` (full-screen video + glassmorphism card, "Curated by Pharmacists" headline, trust micro-badges)
+- Remove the old `HeroSection.tsx` gold-particle component from the homepage render
 
-Apply migration:
+**2. Retheme `CelestialFeaturedCollection` to Morning Spa palette**
+- Change section background from `bg-celestial-gradient` (dark merlot) to `bg-asper-stone` or `bg-rose-clay-light`
+- Update text colors from `text-asper-ivory` / `text-asper-gold` to `text-asper-ink` / `text-burgundy`
+- Replace `GlassGoldProductCard` with `luxury-card` pattern (white cards, `shadow-maroon-glow`, polished-gold hover border)
+- Update gold accent lines to use design system tokens
 
-```sql
-ALTER TABLE public.products
-  ADD COLUMN IF NOT EXISTS is_bestseller boolean NOT NULL DEFAULT false;
-```
+**3. Retheme `BrandStory` to Morning Spa palette**
+- Change from `bg-asper-merlot` dark background to a warm split: `bg-asper-stone` with a `rose-clay-light` accent panel
+- Update headline from `text-asper-gold` to `text-burgundy` with `font-heading`
+- Change body text from `text-asper-ivory/80` to `text-asper-ink-muted`
+- Update feature list accent lines from `bg-asper-gold` to `bg-polished-gold`
 
-### B. Regenerate TypeScript types
+**4. Ensure Tailwind config has all DESIGN_SYSTEM.md tokens**
+- Add missing tokens to `tailwind.config.ts`: `asper-stone`, `asper-stone-light`, `asper-stone-dark`, `rose-clay`, `rose-clay-light`, `rose-clay-dark`, `polished-gold`, `asper-ink`, `asper-ink-muted`, `polished-white`
+- Add `shadow-maroon-glow` and `shadow-maroon-deep` custom shadows
+- Add `font-heading` alias mapping to Playfair Display
 
-After the migration, regenerate `src/integrations/supabase/types.ts` so the new column is available to TypeScript.
-
-### C. Refresh PostgREST schema cache
-
-```sql
-NOTIFY pgrst, 'reload schema';
-```
-
-This fixes the `build_digital_tray` runtime failure and makes the `is_bestseller` field available in TypeScript for any future component use.
+**5. Clean up CSS variables in `index.css`**
+- Verify `--background` maps to warm ivory (not pure white)
+- Ensure body base styles use `bg-asper-stone text-asper-ink`
 
 ---
 
-### Technical Detail
+### Technical Notes
 
-| Component | Status | Notes |
-|-----------|--------|-------|
-| BestSellersSection | No TS errors | Maps `pharmacist_note` to `description` correctly |
-| FeaturedCollection | No TS errors | Same mapping pattern |
-| DealOfTheDay | No TS errors | Accesses only existing columns |
-| DriverAssignment | No TS errors | Uses `user_roles` + `profiles` tables correctly |
-| `build_digital_tray` | **Runtime SQL error** | References missing `is_bestseller` on `products` |
-| AdminOrders / DriverDashboard | Type-safety gap | Uses `as any` cast for `cod_orders` |
+- The `src/components/home/Hero.tsx` already exists and is fully functional but unused on the homepage — it just needs to be swapped in
+- The Header and Footer already follow the Morning Spa palette (maroon nav bar, burgundy footer with gold accents) — no changes needed there
+- All hardcoded hex values (`#FFF8E1`, `#D4AF37`, `#4A0404`) in affected components will be replaced with Tailwind design tokens
+- The `celestial-gradient` background image in Tailwind config can remain for backward compatibility but will no longer be used on the homepage
 
