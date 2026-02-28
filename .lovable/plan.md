@@ -1,76 +1,58 @@
 
 
-## Summary
+## Analysis
 
-Three issues to fix:
+After thorough review, the four named components (**BestSellersSection**, **DealOfTheDay**, **DriverAssignment**, **FeaturedCollection**) do not have TypeScript compilation errors. They correctly map Supabase `products` Row fields to their local interfaces. However, there are two real issues:
 
-1. **ManyChat extraction** — Currently reads `data.text`. The user wants `messaging[0].message.text`. This aligns with ManyChat's actual webhook payload structure.
+### Issue 1: `is_bestseller` column missing from `products` table
 
-2. **Gorgias extraction** — Currently reads `body.messages[last].body_text`. The user wants `body.message.body_text` (singular `message` object, not array). Will add this as a fallback path.
+The `build_digital_tray` DB function (used by the AI Concierge regimen builder) references `is_bestseller` on the `products` table:
 
-3. **Old Supabase project ID** — Three source files and `config.toml` still reference the obsolete `rgehleqcubtmcwyipyvi`. Must update to `qqceibvalkoytafynwoc`.
+```sql
+order by is_bestseller desc nulls last, is_hero desc nulls last ...
+```
+
+But the `products` table does NOT have an `is_bestseller` column (only `digital_tray_products` does). This causes a **runtime SQL error** whenever the concierge tries to build a 3-step regimen.
+
+### Issue 2: `cod_orders` table not in generated types
+
+`AdminOrders.tsx` and `DriverDashboard.tsx` use `(supabase as any).from("cod_orders")` to bypass TypeScript because the table isn't in the generated types. This is a type-safety gap, not a compilation error.
 
 ---
 
-## Changes
+## Plan
 
-### A. Update `extractFromManyChat` in `supabase/functions/beauty-assistant/index.ts`
+### A. Add `is_bestseller` column to `products` table
 
-Add `messaging[0].message.text` as the primary extraction path:
+Apply migration:
 
-```typescript
-function extractFromManyChat(body: Record<string, unknown>): { message: string } {
-  // ManyChat webhook: messaging[0].message.text
-  const messaging = Array.isArray(body.messaging) ? body.messaging : [];
-  const firstMsg = messaging[0] as Record<string, unknown> | undefined;
-  const msgObj = firstMsg?.message as Record<string, unknown> | undefined;
-
-  const text =
-    typeof msgObj?.text === "string" ? msgObj.text
-    : typeof (body.data as any)?.text === "string" ? (body.data as any).text
-    : typeof (body as any).text === "string" ? (body as any).text
-    : typeof (body as any).message === "string" ? (body as any).message
-    : "";
-  return { message: text || "(No message)" };
-}
+```sql
+ALTER TABLE public.products
+  ADD COLUMN IF NOT EXISTS is_bestseller boolean NOT NULL DEFAULT false;
 ```
 
-### B. Update `extractFromGorgias` in `supabase/functions/beauty-assistant/index.ts`
+### B. Regenerate TypeScript types
 
-Add `body.message.body_text` as a fallback path (singular `message` object):
+After the migration, regenerate `src/integrations/supabase/types.ts` so the new column is available to TypeScript.
 
-```typescript
-function extractFromGorgias(body: Record<string, unknown>): { message: string } {
-  // Try body.messages[] array first
-  const messages = Array.isArray(body.messages) ? body.messages : [];
-  const last = messages.filter((m: unknown) => m && typeof m === "object").pop() as Record<string, unknown> | undefined;
-  // Try singular body.message object
-  const singleMsg = (body.message && typeof body.message === "object") ? body.message as Record<string, unknown> : undefined;
+### C. Refresh PostgREST schema cache
 
-  const text =
-    typeof last?.body_text === "string" ? last.body_text
-    : typeof last?.body_html === "string" ? last.body_html.replace(/<[^>]+>/g, "").trim()
-    : typeof singleMsg?.body_text === "string" ? singleMsg.body_text
-    : typeof singleMsg?.body_html === "string" ? (singleMsg.body_html as string).replace(/<[^>]+>/g, "").trim()
-    : typeof (body as any).body_text === "string" ? (body as any).body_text
-    : typeof (body as any).message === "string" ? (body as any).message
-    : "";
-  return { message: text || "(No message)" };
-}
+```sql
+NOTIFY pgrst, 'reload schema';
 ```
 
-### C. Fix old project ID references
+This fixes the `build_digital_tray` runtime failure and makes the `is_bestseller` field available in TypeScript for any future component use.
 
-| File | Line | Change |
-|------|------|--------|
-| `supabase/config.toml` | 1 | `project_id = "rgehleqcubtmcwyipyvi"` → `"qqceibvalkoytafynwoc"` |
-| `src/components/AIConcierge.tsx` | 25 | Fallback URL `rgehleq...` → `qqceib...` |
-| `src/pages/LabTools.tsx` | 14 | Fallback URL `rgehleq...` → `qqceib...` |
-| `src/pages/Intelligence.tsx` | 25 | Fallback URL `rgehleq...` → `qqceib...` |
+---
 
-All four files get the same string replacement: `rgehleqcubtmcwyipyvi` → `qqceibvalkoytafynwoc`.
+### Technical Detail
 
-### D. Redeploy edge function
-
-After updating `beauty-assistant/index.ts`, deploy it so the ManyChat and Gorgias fixes go live.
+| Component | Status | Notes |
+|-----------|--------|-------|
+| BestSellersSection | No TS errors | Maps `pharmacist_note` to `description` correctly |
+| FeaturedCollection | No TS errors | Same mapping pattern |
+| DealOfTheDay | No TS errors | Accesses only existing columns |
+| DriverAssignment | No TS errors | Uses `user_roles` + `profiles` tables correctly |
+| `build_digital_tray` | **Runtime SQL error** | References missing `is_bestseller` on `products` |
+| AdminOrders / DriverDashboard | Type-safety gap | Uses `as any` cast for `cod_orders` |
 
