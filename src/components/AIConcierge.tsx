@@ -166,6 +166,24 @@ export default function AIConcierge() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const deepLinkHandled = useRef(false);
+
+  // Deep link support: ?intent=acne&source=ig auto-opens with pre-filled concern
+  useEffect(() => {
+    if (deepLinkHandled.current) return;
+    const params = new URLSearchParams(window.location.search);
+    const intent = params.get("intent");
+    const source = params.get("source");
+    if (intent) {
+      deepLinkHandled.current = true;
+      setOpen(true);
+      // Auto-send after a brief delay to allow auth check
+      const intentText = `I need help with ${intent}. ${source ? `(via ${source})` : ""}`.trim();
+      setTimeout(() => {
+        setInput(intentText);
+      }, 500);
+    }
+  }, []);
 
   // Check auth state
   useEffect(() => {
