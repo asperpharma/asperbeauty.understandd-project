@@ -35,13 +35,13 @@ interface Product {
   tags: string[] | null;
   created_at: string;
   updated_at: string;
-  // Compat aliases
   category?: string;
   description?: string | null;
   volume_ml?: string | null;
   is_on_sale?: boolean | null;
   original_price?: number | null;
   discount_percent?: number | null;
+  [key: string]: unknown;
 }
 
 // Professional ProductCard Component - BeautyBox/iHerb Style

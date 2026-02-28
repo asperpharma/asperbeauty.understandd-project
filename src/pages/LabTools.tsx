@@ -201,7 +201,7 @@ function GiftRitualistTab() {
     let catalogText = "";
     try {
       const { fetchProducts, normalizePrice } = await import("@/lib/shopify");
-      const { products } = await fetchProducts(100);
+      const products = await fetchProducts(100);
       catalogText = products
         .map((p) => {
           const n = p.node;

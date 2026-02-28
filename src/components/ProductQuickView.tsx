@@ -28,16 +28,17 @@ interface Product {
   id: string;
   title: string;
   price: number;
-  description: string | null;
-  category: string;
+  description?: string | null;
+  category?: string;
   image_url: string | null;
-  brand: string | null;
-  volume_ml: string | null;
-  is_on_sale: boolean | null;
-  original_price: number | null;
-  discount_percent: number | null;
-  created_at: string;
-  updated_at: string;
+  brand?: string | null;
+  volume_ml?: string | null;
+  is_on_sale?: boolean | null;
+  original_price?: number | null;
+  discount_percent?: number | null;
+  created_at?: string;
+  updated_at?: string;
+  [key: string]: unknown;
 }
 
 interface ProductQuickViewProps {
