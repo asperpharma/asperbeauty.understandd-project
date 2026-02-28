@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-// Spotlight image placeholders (actual images not yet available)
-const skinCareSpotlight = "/placeholder.svg";
-const hairCareSpotlight = "/placeholder.svg";
-const makeUpSpotlight = "/placeholder.svg";
+const skinCareSpotlight = "https://images.unsplash.com/photo-1570194065650-d99fb4bedf0a?w=600&q=80";
+const hairCareSpotlight = "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&q=80";
+const makeUpSpotlight = "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600&q=80";
 
 const categories = [
   {

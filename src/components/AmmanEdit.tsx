@@ -3,11 +3,10 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatedSection } from "./AnimatedSection";
 import { LazyImage } from "./LazyImage";
 
-// Product placeholder images (actual images not yet available)
-const anthelios = "/placeholder.svg";
-const olaplex = "/placeholder.svg";
-const eucerin = "/placeholder.svg";
-const diorSauvage = "/placeholder.svg";
+const anthelios = "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80";
+const olaplex = "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80";
+const eucerin = "https://images.unsplash.com/photo-1570194065650-d99fb4bedf0a?w=400&q=80";
+const diorSauvage = "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80";
 
 const products = [
   {
