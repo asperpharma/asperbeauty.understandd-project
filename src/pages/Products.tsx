@@ -104,7 +104,7 @@ const Products = () => {
             Product Catalog
           </h1>
           <p className="mt-2 text-muted-foreground font-body">
-            Browse our curated collection of 3,000+ beauty & wellness products
+            Browse our curated collection of 4,000+ beauty & wellness products
           </p>
 
           <form onSubmit={handleSearch} className="mt-6 flex gap-2 max-w-lg">
