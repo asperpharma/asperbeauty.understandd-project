@@ -24,6 +24,32 @@ function getWebhookRoute(req: Request): "gorgias" | "manychat" | null {
   return null;
 }
 
+// ── Webhook Rate Limiter (in-memory, per-isolate) ──
+const WEBHOOK_RATE_LIMIT_MAX = 30; // max requests per window per IP+route
+const WEBHOOK_RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const webhookRateStore = new Map<string, { count: number; resetAt: number }>();
+
+function webhookRateLimit(ip: string, route: string): boolean {
+  const now = Date.now();
+  const key = `wh:${route}:${ip}`;
+  const entry = webhookRateStore.get(key);
+  if (!entry || entry.resetAt < now) {
+    webhookRateStore.set(key, { count: 1, resetAt: now + WEBHOOK_RATE_LIMIT_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= WEBHOOK_RATE_LIMIT_MAX) return false;
+  entry.count++;
+  return true;
+}
+
+// Periodic cleanup to prevent memory leaks (every 5 minutes)
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of webhookRateStore) {
+    if (entry.resetAt < now) webhookRateStore.delete(key);
+  }
+}, 5 * 60_000);
+
 // ── HMAC Signature Verification ──
 async function verifyWebhookSignature(
   rawBody: string,
@@ -318,6 +344,16 @@ serve(async (req) => {
         console.warn(`Invalid ${route} webhook signature`);
         return new Response(JSON.stringify({ error: "Invalid signature" }), {
           status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+        });
+      }
+
+      // Rate limit per IP + route
+      const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+        ?? req.headers.get("x-real-ip") ?? "unknown";
+      if (!webhookRateLimit(clientIp, route)) {
+        console.warn(`Webhook rate limit exceeded: ${route} from ${clientIp}`);
+        return new Response(JSON.stringify({ error: "Too many requests" }), {
+          status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json", "Retry-After": "60" },
         });
       }
 
