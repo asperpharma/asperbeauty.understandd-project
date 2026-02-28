@@ -24,6 +24,40 @@ function getWebhookRoute(req: Request): "gorgias" | "manychat" | null {
   return null;
 }
 
+// ── HMAC Signature Verification ──
+async function verifyWebhookSignature(
+  rawBody: string,
+  signature: string | null,
+  secret: string,
+): Promise<boolean> {
+  if (!signature || !secret) return false;
+  try {
+    // Strip optional "sha256=" prefix
+    const sigHex = signature.startsWith("sha256=") ? signature.slice(7) : signature;
+    const key = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"],
+    );
+    const mac = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(rawBody));
+    const expectedHex = Array.from(new Uint8Array(mac))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    // Constant-time comparison
+    if (sigHex.length !== expectedHex.length) return false;
+    let mismatch = 0;
+    for (let i = 0; i < sigHex.length; i++) {
+      mismatch |= sigHex.charCodeAt(i) ^ expectedHex.charCodeAt(i);
+    }
+    return mismatch === 0;
+  } catch (e) {
+    console.error("Signature verification failed:", e);
+    return false;
+  }
+}
+
 function extractFromGorgias(body: Record<string, unknown>): { message: string } {
   // Try body.messages[] array first
   const messages = Array.isArray(body.messages) ? body.messages : [];
@@ -259,11 +293,36 @@ serve(async (req) => {
 
   const route = getWebhookRoute(req);
 
-  // ——— Webhook Path (Gorgias / ManyChat) — no auth ———
+  // ——— Webhook Path (Gorgias / ManyChat) — signature-verified ———
   if (route === "gorgias" || route === "manychat") {
     try {
+      const rawBody = await req.text();
+
+      // Verify webhook signature
+      const webhookSecret = route === "gorgias"
+        ? Deno.env.get("GORGIAS_WEBHOOK_SECRET")
+        : Deno.env.get("MANYCHAT_WEBHOOK_SECRET");
+      const signature = route === "gorgias"
+        ? req.headers.get("x-gorgias-signature")
+        : req.headers.get("x-hub-signature-256") ?? req.headers.get("x-hub-signature");
+
+      if (!webhookSecret) {
+        console.error(`${route} webhook secret not configured`);
+        return new Response(JSON.stringify({ error: "Webhook not configured" }), {
+          status: 503, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+        });
+      }
+
+      const valid = await verifyWebhookSignature(rawBody, signature, webhookSecret);
+      if (!valid) {
+        console.warn(`Invalid ${route} webhook signature`);
+        return new Response(JSON.stringify({ error: "Invalid signature" }), {
+          status: 401, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+        });
+      }
+
       let body: Record<string, unknown> = {};
-      try { body = await req.json(); } catch { body = {}; }
+      try { body = JSON.parse(rawBody); } catch { body = {}; }
       const { message: userMessage } = route === "gorgias" ? extractFromGorgias(body) : extractFromManyChat(body);
 
       const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
