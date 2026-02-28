@@ -19,6 +19,9 @@ const ExpertTips = lazy(() => import("@/components/home/ExpertTips"));
 const PromoBanner = lazy(() => import("@/components/home/PromoBanner"));
 const SocialGallery = lazy(() => import("@/components/home/SocialGallery"));
 const Newsletter = lazy(() => import("@/components/home/Newsletter"));
+const HeritageSourcing = lazy(() => import("@/components/home/HeritageSourcing"));
+const VIPConcierge = lazy(() => import("@/components/home/VIPConcierge"));
+const ClinicalProof = lazy(() => import("@/components/home/ClinicalProof"));
 import ScrollProgress from "@/components/ScrollProgress";
 import CommercialTape from "@/components/CommercialTape";
 import AuthButton from "@/components/AuthButton";
@@ -248,6 +251,33 @@ const Index = () => {
       <div className="gold-divider" />
 
       <PharmacistPicks />
+
+      <div className="gold-divider" />
+
+      {/* Heritage & Sourcing — Dead Sea Wellness */}
+      <LazySection minHeight="400px">
+        <Suspense fallback={<div className="py-20" />}>
+          <HeritageSourcing />
+        </Suspense>
+      </LazySection>
+
+      <div className="gold-divider" />
+
+      {/* VIP Concierge & Subscription */}
+      <LazySection minHeight="400px">
+        <Suspense fallback={<div className="py-20" />}>
+          <VIPConcierge />
+        </Suspense>
+      </LazySection>
+
+      <div className="gold-divider" />
+
+      {/* Clinical Proof & Certification */}
+      <LazySection minHeight="250px">
+        <Suspense fallback={<div className="py-16" />}>
+          <ClinicalProof />
+        </Suspense>
+      </LazySection>
 
       <div className="gold-divider" />
 
