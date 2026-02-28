@@ -11,41 +11,41 @@
 
 @layer base {
   :root {
-    /* Canvas: White Marble / Soft Ivory — no pure #FFF */
-    --background: 40 20% 97%;
-    --foreground: 20 10% 15%;
+    /* Canvas: Soft Ivory (#F8F8FF) — no pure #FFF */
+    --background: 240 100% 99%;
+    --foreground: 20 6% 20%;
 
-    /* Card: Clean white on marble */
-    --card: 40 33% 98%;
-    --card-foreground: 20 10% 15%;
+    /* Card: Clean white on ivory */
+    --card: 240 100% 99.5%;
+    --card-foreground: 20 6% 20%;
 
-    --popover: 40 33% 98%;
-    --popover-foreground: 20 10% 15%;
+    --popover: 240 100% 99.5%;
+    --popover-foreground: 20 6% 20%;
 
-    /* Primary Action: Emerald Green #005C45 */
-    --primary: 163 100% 18%;
-    --primary-foreground: 40 20% 97%;
+    /* Primary Action: Deep Maroon (#800020) */
+    --primary: 345 100% 25%;
+    --primary-foreground: 240 100% 99%;
 
     /* Secondary: Soft ivory tint */
-    --secondary: 40 20% 95%;
-    --secondary-foreground: 163 100% 18%;
+    --secondary: 240 30% 96%;
+    --secondary-foreground: 345 100% 25%;
 
     /* Muted: Soft warm grey */
-    --muted: 40 12% 90%;
+    --muted: 240 12% 90%;
     --muted-foreground: 20 6% 35%;
 
-    /* Accent: Metallic Gold #C5A028 */
+    /* Accent: Metallic Gold (#C5A028) */
     --accent: 43 66% 46%;
-    --accent-foreground: 20 10% 15%;
+    --accent-foreground: 20 6% 20%;
 
     /* Polite Error: Soft Terracotta */
     --destructive: 15 60% 58%;
-    --destructive-foreground: 40 33% 98%;
+    --destructive-foreground: 240 100% 99%;
 
     /* Structure borders: subtle gold-tinted */
     --border: 40 15% 88%;
     --input: 40 15% 88%;
-    --ring: 163 100% 18%;
+    --ring: 345 100% 25%;
 
     --radius: 0.5rem;
 
@@ -59,58 +59,58 @@
     --gold-light: 43 55% 62%;
     --gold-dark: 43 70% 36%;
 
-    /* Science Lab zone: faint emerald tint */
-    --lab-zone: 163 15% 96%;
+    /* Science Lab zone: faint maroon tint */
+    --lab-zone: 345 10% 97%;
 
-    --sidebar-background: 40 20% 96%;
-    --sidebar-foreground: 20 10% 15%;
-    --sidebar-primary: 163 100% 18%;
-    --sidebar-primary-foreground: 40 20% 97%;
+    --sidebar-background: 240 30% 96%;
+    --sidebar-foreground: 20 6% 20%;
+    --sidebar-primary: 345 100% 25%;
+    --sidebar-primary-foreground: 240 100% 99%;
     --sidebar-accent: 43 66% 46%;
-    --sidebar-accent-foreground: 20 10% 15%;
+    --sidebar-accent-foreground: 20 6% 20%;
     --sidebar-border: 40 15% 88%;
-    --sidebar-ring: 163 100% 18%;
+    --sidebar-ring: 345 100% 25%;
   }
 
   .dark {
-    --background: 160 10% 7%;
+    --background: 345 10% 7%;
     --foreground: 40 20% 94%;
 
-    --card: 160 8% 10%;
+    --card: 345 8% 10%;
     --card-foreground: 40 20% 94%;
 
-    --popover: 160 8% 10%;
+    --popover: 345 8% 10%;
     --popover-foreground: 40 20% 94%;
 
-    --primary: 163 60% 40%;
-    --primary-foreground: 40 20% 97%;
+    --primary: 345 60% 40%;
+    --primary-foreground: 240 100% 99%;
 
-    --secondary: 160 8% 14%;
+    --secondary: 345 8% 14%;
     --secondary-foreground: 40 20% 94%;
 
-    --muted: 160 6% 14%;
-    --muted-foreground: 160 6% 65%;
+    --muted: 345 6% 14%;
+    --muted-foreground: 345 6% 65%;
 
     --accent: 43 66% 46%;
-    --accent-foreground: 160 10% 7%;
+    --accent-foreground: 345 10% 7%;
 
     --destructive: 15 50% 45%;
     --destructive-foreground: 40 20% 94%;
 
-    --border: 160 6% 18%;
-    --input: 160 6% 18%;
-    --ring: 163 60% 40%;
+    --border: 345 6% 18%;
+    --input: 345 6% 18%;
+    --ring: 345 60% 40%;
 
-    --lab-zone: 163 15% 10%;
+    --lab-zone: 345 15% 10%;
 
-    --sidebar-background: 160 10% 8%;
+    --sidebar-background: 345 10% 8%;
     --sidebar-foreground: 40 20% 94%;
-    --sidebar-primary: 163 60% 40%;
-    --sidebar-primary-foreground: 40 20% 97%;
-    --sidebar-accent: 160 8% 14%;
+    --sidebar-primary: 345 60% 40%;
+    --sidebar-primary-foreground: 240 100% 99%;
+    --sidebar-accent: 345 8% 14%;
     --sidebar-accent-foreground: 40 20% 94%;
-    --sidebar-border: 160 6% 18%;
-    --sidebar-ring: 163 60% 40%;
+    --sidebar-border: 345 6% 18%;
+    --sidebar-ring: 345 60% 40%;
   }
 }
 

@@ -57,30 +57,24 @@ export default {
           light: "hsl(var(--gold-light))",
           dark: "hsl(var(--gold-dark))",
         },
-        // ── DESIGN_SYSTEM.md — Clinical Luxury palette ──────────────────
-        // Primary canvas — white marble / soft ivory (no pure #FFF)
+        // ── DESIGN_SYSTEM.md — Medical Luxury palette ──────────────────
+        // Primary canvas — Soft Ivory (no pure #FFF)
         'asper-stone': {
-          DEFAULT: '#F9F9F7',
+          DEFAULT: '#F8F8FF',
           light: '#FDFCFA',
           dark: '#F0EDE8',
         },
-        // Nature accent — soft sage / botanical
-        'sage': {
-          DEFAULT: '#7BA68A',
-          light: '#A3C4AE',
-          dark: '#5A8A6A',
-        },
-        // Primary actions, nav, authority — Deep Emerald
-        'emerald': {
-          DEFAULT: '#005C45',
-          light: '#007A5E',
-          dark: '#003D2E',
+        // Primary actions, nav, authority — Deep Maroon
+        'maroon': {
+          DEFAULT: '#800020',
+          light: '#A0003A',
+          dark: '#600018',
         },
         // Accent only — borders, hover ("Midas Touch"), icons
         'polished-gold': '#C5A028',
-        'polished-white': '#FAF9F7',
-        // Primary text — no pure #000
-        'asper-ink': '#2C2825',
+        'polished-white': '#F8F8FF',
+        // Primary text — Dark Charcoal (no pure #000)
+        'asper-ink': '#333333',
         'asper-ink-muted': '#5C5652',
         // ────────────────────────────────────────────────────────────────
         "lab-zone": "hsl(var(--lab-zone))",
@@ -96,10 +90,8 @@ export default {
         },
       },
       boxShadow: {
-        'emerald-glow': '0 4px 20px -2px rgba(0, 92, 69, 0.12)',
-        'emerald-deep': '0 10px 25px -5px rgba(0, 92, 69, 0.25)',
-        'maroon-glow': '0 4px 20px -2px rgba(0, 92, 69, 0.12)',
-        'maroon-deep': '0 10px 25px -5px rgba(0, 92, 69, 0.25)',
+        'maroon-glow': '0 4px 20px -2px rgba(128, 0, 32, 0.12)',
+        'maroon-deep': '0 10px 25px -5px rgba(128, 0, 32, 0.25)',
       },
       ringColor: {
         DEFAULT: 'hsl(var(--gold))',

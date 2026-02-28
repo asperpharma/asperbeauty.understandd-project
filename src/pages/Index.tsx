@@ -8,6 +8,7 @@ import { IconNewArrivals, IconBestSellers, IconGiftSets } from "@/components/bra
 import { useLanguage } from "@/contexts/LanguageContext";
 import { lazy, Suspense } from "react";
 import Hero from "@/components/home/Hero";
+import BrandDiscoveryGrid from "@/components/home/BrandDiscoveryGrid";
 import ConciergeShowcase from "@/components/home/ConciergeShowcase";
 import ShopByConcern from "@/components/home/ShopByConcern";
 import PharmacistPicks from "@/components/home/PharmacistPicks";
@@ -135,6 +136,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Brand Discovery Grid — iHerb-inspired */}
+      <BrandDiscoveryGrid />
 
       <div className="gold-divider" />
 
