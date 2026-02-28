@@ -40,9 +40,14 @@ jobs:
           fi
 
           echo "Gathering lists of changed files..."
-          ADDED=$(jq -r '.commits[].added[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s .)
-          MODIFIED=$(jq -r '.commits[].modified[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s .)
-          REMOVED=$(jq -r '.commits[].removed[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s .)
+          # Debug: Show event structure (safely showing only keys, not sensitive data)
+          echo "Event payload keys:"
+          jq -r 'keys | @json' "$GITHUB_EVENT_PATH" || echo "Failed to parse event payload"
+          
+          # Safely extract file changes, handling cases where commits field may be missing
+          ADDED=$(jq -r '(.commits // []) | .[] | .added[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s . || echo '[]')
+          MODIFIED=$(jq -r '(.commits // []) | .[] | .modified[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s . || echo '[]')
+          REMOVED=$(jq -r '(.commits // []) | .[] | .removed[]?' "$GITHUB_EVENT_PATH" | sort | uniq | jq -R . | jq -s . || echo '[]')
           PAYLOAD=$(jq -n \
             --arg repo "${{ github.repository }}" \
             --arg commit "${{ github.sha }}" \
