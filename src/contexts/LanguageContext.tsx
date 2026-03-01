@@ -285,6 +285,18 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     document.documentElement.dir = isRTL ? "rtl" : "ltr";
     document.documentElement.lang = language;
+
+    // Update canonical URL
+    const canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    const base = "https://www.asperbeautyshop.com/";
+    const arUrl = `${base}?lang=ar`;
+    if (canonical) canonical.href = isRTL ? arUrl : base;
+
+    // Update hreflang self-referencing
+    const hrefEn = document.querySelector('link[hreflang="en"]') as HTMLLinkElement | null;
+    const hrefAr = document.querySelector('link[hreflang="ar"]') as HTMLLinkElement | null;
+    if (hrefEn) hrefEn.href = base;
+    if (hrefAr) hrefAr.href = arUrl;
   }, [language, isRTL]);
 
   return (
