@@ -3,8 +3,9 @@
 # Lovable: https://lovable.dev/projects/657fb572-13a5-4a3e-bac9-184d39fdf7e6
 #
 # On every push, sends lists of added/modified/removed files to Lovable via webhook.
-# SETUP: In GitHub repo → Settings → Secrets and variables → Actions, add:
+# SETUP (OPTIONAL): In GitHub repo → Settings → Secrets and variables → Actions, add:
 #   LOVABLE_WEBHOOK_URL = (webhook URL from Lovable for file sync)
+# Note: This workflow will skip silently if LOVABLE_WEBHOOK_URL is not configured.
 #
 name: Sync File Changes to Lovable
 
@@ -16,17 +17,13 @@ on:
 jobs:
   sync_files_to_lovable:
     runs-on: ubuntu-latest
+    # Skip this job if LOVABLE_WEBHOOK_URL is not configured
+    if: secrets.LOVABLE_WEBHOOK_URL != ''
     steps:
       - name: Filter commit file changes and send to Lovable
         env:
           LOVABLE_WEBHOOK_URL: ${{ secrets.LOVABLE_WEBHOOK_URL }}
         run: |
-          # Validate that LOVABLE_WEBHOOK_URL is set
-          if [ -z "$LOVABLE_WEBHOOK_URL" ]; then
-            echo "Error: LOVABLE_WEBHOOK_URL is not set"
-            echo "Please set the LOVABLE_WEBHOOK_URL secret in the repository settings to enable sync."
-            exit 1
-          fi
 
           # Debug: Show masked URL (only show protocol and domain)
           MASKED_URL=$(echo "$LOVABLE_WEBHOOK_URL" | sed -E 's|(https?://[^/]+).*|\1/...|')
