@@ -2,9 +2,53 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Shield, Sparkles } from "lucide-react";
 import asperLogo from "@/assets/asper-lotus-logo.png";
 
+const content = {
+  en: {
+    title: "Science Meets Luxury",
+    subtitle: "The Dual-Voice Philosophy of Asper Beauty",
+    drSami: {
+      name: "Dr. Sami",
+      role: "The Clinical Voice",
+      quote: "I provide clinical wellness guidance, grounded in pharmaceutical precision.",
+      description:
+        "Led by expert pharmacists, every product in our collection is rigorously vetted for safety, efficacy, and active ingredient integrity. We don't just sell skincare; we prescribe solutions for acne, rosacea, and barrier repair.",
+      badges: ["JFDA Authorized", "Pharmacist-Vetted", "Clinical Efficacy"],
+    },
+    msZain: {
+      name: "Ms. Zain",
+      role: "The Aesthetic Voice",
+      quote: "Beauty is a ritual, not a routine. Let me guide your glow.",
+      description:
+        "From the perfect morning radiance routine to curated evening indulgence, Ms. Zain transforms your daily regimen into an experience of texture, scent, and visible results.",
+      badges: ["Daily Radiance", "Personal Rituals", "Custom Routines"],
+    },
+  },
+  ar: {
+    title: "حيث يلتقي العلم بالفخامة",
+    subtitle: "فلسفة الصوتين في أسبر بيوتي",
+    drSami: {
+      name: "د. سامي",
+      role: "الصوت السريري",
+      quote: "أقدم إرشادات صحية سريرية مبنية على دقة صيدلانية.",
+      description:
+        "بقيادة صيادلة خبراء، كل منتج في مجموعتنا يخضع لفحص دقيق من حيث السلامة والفعالية وسلامة المكونات الفعّالة. نحن لا نبيع مستحضرات — بل نصف حلولاً لحب الشباب والوردية وإصلاح حاجز البشرة.",
+      badges: ["معتمد من JFDA", "فحص صيدلاني", "فعالية سريرية"],
+    },
+    msZain: {
+      name: "مِس زين",
+      role: "الصوت الجمالي",
+      quote: "الجمال طقسٌ وليس روتيناً. دعيني أرشد توهجك.",
+      description:
+        "من روتين الإشراقة الصباحية المثالي إلى التدليل المسائي المنسق، تحوّل مِس زين روتينك اليومي إلى تجربة من الملمس والعطر والنتائج المرئية.",
+      badges: ["إشراقة يومية", "طقوس شخصية", "روتين مخصص"],
+    },
+  },
+};
+
 const BrandStory = () => {
   const { language } = useLanguage();
   const isRTL = language === "ar";
+  const t = content[language];
 
   return (
     <section className="py-24 bg-card relative overflow-hidden">
@@ -12,25 +56,21 @@ const BrandStory = () => {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-24 bg-gradient-to-b from-transparent to-accent opacity-50" />
 
       <div className="container mx-auto px-6">
-        {/* Section heading */}
+        {/* Heading */}
         <div className="text-center mb-16">
           <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            {isRTL ? "ملاذ العلم والجمال" : "The Sanctuary of Science & Beauty"}
+            {t.title}
           </h2>
           <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            {isRTL
-              ? "دماغ واحد، صوتان — دقة سريرية وأناقة جمالية في خدمتك."
-              : "One Brain, Two Voices — clinical precision and aesthetic elegance, at your service."}
+            {t.subtitle}
           </p>
         </div>
 
         {/* Dual-persona columns */}
-        <div
-          className={`grid md:grid-cols-2 gap-10 max-w-5xl mx-auto mb-16 ${isRTL ? "direction-rtl" : ""}`}
-        >
+        <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto mb-16">
           {/* Dr. Sami — Clinical */}
           <div
-            className={`relative rounded-2xl border border-primary/20 bg-primary/5 p-8 space-y-5 ${isRTL ? "text-right" : "text-left"}`}
+            className={`rounded-2xl border border-primary/20 bg-primary/5 p-8 space-y-5 ${isRTL ? "text-right" : "text-left"}`}
           >
             <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
               <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
@@ -38,25 +78,26 @@ const BrandStory = () => {
               </div>
               <div>
                 <h3 className="font-heading text-xl font-bold text-foreground">
-                  {isRTL ? "د. سامي" : "Dr. Sami"}
+                  {t.drSami.name}
                 </h3>
                 <p className="text-xs font-body text-muted-foreground uppercase tracking-widest">
-                  {isRTL ? "الصوت السريري" : "The Clinical Voice"}
+                  {t.drSami.role}
                 </p>
               </div>
             </div>
 
-            <blockquote className="font-body text-muted-foreground leading-relaxed border-s-2 border-primary/30 ps-4 italic">
-              {isRTL
-                ? "كل منتج على رفوفنا خضع لفحص صيدلاني دقيق. نحن لا نبيع مستحضرات — نقدم حلولاً علمية لبشرتك."
-                : "Every product on our shelves undergoes rigorous pharmacist vetting. We don't sell cosmetics — we deliver scientific solutions for your skin."}
+            <blockquote
+              className={`font-body text-muted-foreground leading-relaxed italic ps-4 ${isRTL ? "border-e-2 border-primary/30 pe-4 ps-0" : "border-s-2 border-primary/30"}`}
+            >
+              "{t.drSami.quote}"
             </blockquote>
 
-            <div className="flex flex-wrap gap-2">
-              {(isRTL
-                ? ["مُختبر سريرياً", "مصادر موثوقة", "معتمد من JFDA"]
-                : ["Clinically Tested", "Trusted Sources", "JFDA Authorized"]
-              ).map((tag) => (
+            <p className="font-body text-sm text-muted-foreground leading-relaxed">
+              {t.drSami.description}
+            </p>
+
+            <div className={`flex flex-wrap gap-2 ${isRTL ? "justify-end" : ""}`}>
+              {t.drSami.badges.map((tag) => (
                 <span
                   key={tag}
                   className="px-3 py-1 text-xs font-body rounded-full bg-primary/10 text-primary border border-primary/15"
@@ -69,7 +110,7 @@ const BrandStory = () => {
 
           {/* Ms. Zain — Aesthetic */}
           <div
-            className={`relative rounded-2xl border border-accent/30 bg-accent/5 p-8 space-y-5 ${isRTL ? "text-right" : "text-left"}`}
+            className={`rounded-2xl border border-accent/30 bg-accent/5 p-8 space-y-5 ${isRTL ? "text-right" : "text-left"}`}
           >
             <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
               <div className="w-12 h-12 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center">
@@ -77,25 +118,26 @@ const BrandStory = () => {
               </div>
               <div>
                 <h3 className="font-heading text-xl font-bold text-foreground">
-                  {isRTL ? "مِس زين" : "Ms. Zain"}
+                  {t.msZain.name}
                 </h3>
                 <p className="text-xs font-body text-muted-foreground uppercase tracking-widest">
-                  {isRTL ? "الصوت الجمالي" : "The Aesthetic Voice"}
+                  {t.msZain.role}
                 </p>
               </div>
             </div>
 
-            <blockquote className="font-body text-muted-foreground leading-relaxed border-s-2 border-accent/40 ps-4 italic">
-              {isRTL
-                ? "الجمال طقسٌ وليس روتيناً. دعيني أرشدك إلى روتين صباحي يجعل بشرتك تتوهج من الداخل."
-                : "Beauty is a ritual, not a routine. Let me guide you to a morning regimen that makes your skin glow from within."}
+            <blockquote
+              className={`font-body text-muted-foreground leading-relaxed italic ps-4 ${isRTL ? "border-e-2 border-accent/40 pe-4 ps-0" : "border-s-2 border-accent/40"}`}
+            >
+              "{t.msZain.quote}"
             </blockquote>
 
-            <div className="flex flex-wrap gap-2">
-              {(isRTL
-                ? ["إشراقة يومية", "نصائح شخصية", "روتين مخصص"]
-                : ["Daily Radiance", "Personal Tips", "Custom Routine"]
-              ).map((tag) => (
+            <p className="font-body text-sm text-muted-foreground leading-relaxed">
+              {t.msZain.description}
+            </p>
+
+            <div className={`flex flex-wrap gap-2 ${isRTL ? "justify-end" : ""}`}>
+              {t.msZain.badges.map((tag) => (
                 <span
                   key={tag}
                   className="px-3 py-1 text-xs font-body rounded-full bg-accent/10 text-accent border border-accent/20"
