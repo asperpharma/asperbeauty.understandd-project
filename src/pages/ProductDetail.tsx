@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import pdpHowToUse from "@/assets/pdp-how-to-use.jpg";
+import pdpIngredients from "@/assets/pdp-ingredients.jpg";
+import pdpRegulatory from "@/assets/pdp-regulatory.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
@@ -251,7 +254,12 @@ const ProductDetail = () => {
                   </span>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="space-y-3 py-2 text-sm text-muted-foreground leading-relaxed">
+                  <div className="space-y-4 py-2">
+                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden mb-4">
+                      <img src={pdpHowToUse} alt="Skincare application ritual" className="w-full h-full object-cover" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-asper-ink/30 to-transparent" />
+                    </div>
+                    <div className="space-y-3 text-sm text-muted-foreground leading-relaxed">
                     <div className="flex items-start gap-3">
                       <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">1</span>
                       <p>{isArabic ? "نظفي البشرة جيداً وجففيها بلطف." : "Cleanse skin thoroughly and pat dry."}</p>
@@ -270,6 +278,7 @@ const ProductDetail = () => {
                         {product.regimen_step.replace(/_/g, " ")}
                       </div>
                     )}
+                    </div>
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -284,6 +293,10 @@ const ProductDetail = () => {
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="py-2">
+                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden mb-4">
+                      <img src={pdpIngredients} alt="Clinical botanical ingredients" className="w-full h-full object-cover" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-asper-ink/30 to-transparent" />
+                    </div>
                     {product.key_ingredients && product.key_ingredients.length > 0 ? (
                       <>
                         <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground mb-3">
@@ -320,7 +333,12 @@ const ProductDetail = () => {
                   </span>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="py-2 space-y-4 text-sm text-muted-foreground leading-relaxed">
+                  <div className="py-2 space-y-4">
+                    <div className="relative aspect-[4/3] rounded-lg overflow-hidden mb-4">
+                      <img src={pdpRegulatory} alt="Certification and authenticity seal" className="w-full h-full object-cover" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-asper-ink/30 to-transparent" />
+                    </div>
+                    <div className="text-sm text-muted-foreground leading-relaxed space-y-4">
                     <div className="p-3 bg-destructive/5 border border-destructive/20 rounded-lg">
                       <p className="font-medium text-foreground text-xs uppercase tracking-wider mb-2">
                         {isArabic ? "تحذيرات مهمة" : "Important Warnings"}
@@ -339,6 +357,7 @@ const ProductDetail = () => {
                           ? "قد يختلف تصميم العبوة عن الصورة المعروضة بسبب تحديثات الشركة المصنعة. المنتج والمكونات تبقى كما هي."
                           : "Packaging design may vary from the image shown due to manufacturer updates. The product and ingredients remain the same."}
                       </p>
+                    </div>
                     </div>
                   </div>
                 </AccordionContent>
