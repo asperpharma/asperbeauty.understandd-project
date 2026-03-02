@@ -44,7 +44,7 @@ const CSV_PATH =
 // Helpers
 // ---------------------------------------------------------------------------
 
-async function adminGraphQL(query: string, variables: Record<string, any> = {}) {
+async function adminGraphQL(query: string, variables: Record<string, unknown> = {}) {
   const res = await fetch(ADMIN_URL, {
     method: "POST",
     headers: {
@@ -68,7 +68,7 @@ async function adminGraphQL(query: string, variables: Record<string, any> = {}) 
 
   const json = await res.json();
   if (json.errors) {
-    throw new Error(json.errors.map((e: any) => e.message).join("; "));
+    throw new Error(json.errors.map((e: { message?: string }) => e.message ?? "").join("; "));
   }
   return json.data;
 }
@@ -311,7 +311,7 @@ async function syncProduct(product: ProductGroup, index: number) {
   });
   const existing = lookupData?.products?.edges?.[0]?.node;
 
-  const input: Record<string, any> = {
+  const input: Record<string, unknown> = {
     title: product.title,
     handle: product.handle,
     descriptionHtml: product.bodyHtml,
@@ -351,7 +351,7 @@ async function syncProduct(product: ProductGroup, index: number) {
     }));
 
   let productId: string;
-  let variantEdges: any[];
+  let variantEdges: { node: { id: string } }[];
 
   if (existing) {
     // UPDATE
@@ -382,7 +382,7 @@ async function syncProduct(product: ProductGroup, index: number) {
   // 2. Update variant prices/SKUs if needed (for updates, or if create didn't set them)
   if (existing && product.variants.length > 0 && variantEdges?.length > 0) {
     const variantUpdates = variantEdges
-      .map((edge: any, i: number) => {
+      .map((edge: { node: { id: string } }, i: number) => {
         const csvVariant = product.variants[i];
         if (!csvVariant) return null;
         return {
@@ -442,7 +442,7 @@ async function main() {
   console.log(`  Grouped into ${products.length} products; syncing ${toSync.length}\n`);
 
   const results = { created: 0, updated: 0, skipped: 0, errors: 0, dryRun: 0 };
-  const errorLog: any[] = [];
+  const errorLog: { handle: string; error: string }[] = [];
 
   for (let i = 0; i < toSync.length; i++) {
     try {
@@ -454,10 +454,11 @@ async function main() {
         results.errors++;
         errorLog.push(result);
       } else if (result.status === "dry-run") results.dryRun++;
-    } catch (err: any) {
+    } catch (err: unknown) {
       results.errors++;
-      errorLog.push({ handle: toSync[i].handle, error: err.message });
-      console.error(`  ❌ [${i + 1}] ${toSync[i].handle}: ${err.message}`);
+      const msg = err instanceof Error ? err.message : String(err);
+      errorLog.push({ handle: toSync[i].handle, error: msg });
+      console.error(`  ❌ [${i + 1}] ${toSync[i].handle}: ${msg}`);
     }
 
     // Throttle: 500ms between products
