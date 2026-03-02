@@ -228,8 +228,9 @@ This section provides real-world examples for the bulk-product-upload endpoint.
 
 **cURL Example:**
 ```bash
+# Note: Replace YOUR_SUPABASE_JWT_TOKEN with your actual JWT token (starts with "eyJ...")
 curl -X POST https://YOUR_PROJECT.supabase.co/functions/v1/bulk-product-upload \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Authorization: Bearer YOUR_SUPABASE_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "action": "categorize",
