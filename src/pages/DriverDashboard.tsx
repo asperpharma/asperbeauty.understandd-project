@@ -1,16 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 import { useAuth } from "@/hooks/useAuth";
-
-/** Parse the `items` JSON column from a cod_orders row into a typed array. */
-function parseOrderItems(row: Tables<"cod_orders">): OrderItem[] {
-  const raw = row.items;
-  if (Array.isArray(raw)) return raw as OrderItem[];
-  if (typeof raw === "string") return JSON.parse(raw) as OrderItem[];
-  return [];
-}
 import { useDriverAuditLog } from "@/hooks/useDriverAuditLog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -160,7 +151,7 @@ export default function DriverDashboard() {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("cod_orders")
         .select("*")
         .eq("driver_id", user.id)
@@ -168,9 +159,11 @@ export default function DriverDashboard() {
 
       if (error) throw error;
 
-      const typedOrders: DriverOrder[] = (data ?? []).map((order) => ({
+      const typedOrders: DriverOrder[] = (data || []).map((order) => ({
         ...order,
-        items: parseOrderItems(order),
+        items: Array.isArray(order.items)
+          ? (order.items as unknown as OrderItem[])
+          : JSON.parse(order.items as string) as OrderItem[],
       }));
 
       setOrders(typedOrders);
@@ -194,15 +187,16 @@ export default function DriverDashboard() {
     const oldStatus = currentOrder?.status || "unknown";
 
     try {
-      const updateData: TablesUpdate<"cod_orders"> = {
+      const updateData: Record<string, unknown> = {
         status: newStatus,
         delivery_notes: deliveryNote || null,
-        ...(newStatus === "delivered"
-          ? { delivered_at: new Date().toISOString() }
-          : {}),
       };
 
-      const { error } = await supabase
+      if (newStatus === "delivered") {
+        updateData.delivered_at = new Date().toISOString();
+      }
+
+      const { error } = await (supabase as any)
         .from("cod_orders")
         .update(updateData)
         .eq("id", orderId);

@@ -25,20 +25,37 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
 
-        // --- YOUR CUSTOM ASPER BRAND COLORS ---
-        asper: {
-          merlot: "#4A0404", // Deepest Burgundy (Main Backgrounds)
-          merlotLight: "#800020", // Lighter Maroon (Secondary/Gradients)
-          gold: "#D4AF37", // Metallic Gold (Primary Accents/Text)
-          goldLight: "#F3E5AB", // Champagne (Highlights/Hover states)
-          charcoal: "#1A1A1A", // Dark Text for light areas
-          ivory: "#F9F7F2", // Off-white for text on dark backgrounds
+        // --- DESIGN_SYSTEM.md Morning Spa Tokens (HSL via CSS vars) ---
+        "asper-stone": {
+          DEFAULT: "hsl(var(--asper-stone))",
+          light: "hsl(var(--asper-stone-light))",
+          dark: "hsl(var(--asper-stone-dark))",
         },
-        // Premium Pharmacy palette (verified science / trusted pharmacy)
-        maroon: "#800020", // Primary brand
-        "soft-ivory": "#F8F8FF", // Global background
-        "shiny-gold": "#C5A028", // Trust/accent (not bling)
-        "dark-charcoal": "#333333", // High readability text
+        "rose-clay": {
+          DEFAULT: "hsl(var(--rose-clay))",
+          light: "hsl(var(--rose-clay-light))",
+          dark: "hsl(var(--rose-clay-dark))",
+        },
+        "polished-gold": "hsl(var(--polished-gold))",
+        "polished-white": "hsl(var(--polished-white))",
+        "asper-ink": {
+          DEFAULT: "hsl(var(--asper-ink))",
+          muted: "hsl(var(--asper-ink-muted))",
+        },
+        // Legacy compat tokens
+        maroon: "hsl(var(--burgundy))",
+        "soft-ivory": "hsl(var(--asper-stone))",
+        "shiny-gold": "hsl(var(--polished-gold))",
+        "dark-charcoal": "hsl(var(--asper-ink))",
+        // Legacy pharmacy tokens (backward compat)
+        asper: {
+          merlot: "#4A0404",
+          merlotLight: "hsl(var(--burgundy))",
+          gold: "hsl(var(--polished-gold))",
+          goldLight: "hsl(var(--gold-light))",
+          charcoal: "hsl(var(--asper-ink))",
+          ivory: "hsl(var(--asper-stone))",
+        },
         // --------------------------------------
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -95,13 +112,13 @@ export default {
         },
       },
       fontFamily: {
-        // Defines your luxury font stack
         serif: ["Playfair Display", "serif"],
         sans: ["Montserrat", "sans-serif"],
         display: ["Playfair Display", "serif"],
+        heading: ["Playfair Display", "serif"],
         body: ["Montserrat", "Inter", "sans-serif"],
         script: ["Great Vibes", "cursive"],
-        arabic: ["Tajawal", "sans-serif"], // RTL / Arabic
+        arabic: ["Tajawal", "sans-serif"],
       },
       backgroundImage: {
         "celestial-gradient": "linear-gradient(to bottom, #4A0404, #2b0202)",
@@ -141,6 +158,10 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        "skeleton-breathe": {
+          "0%, 100%": { opacity: "0.45" },
+          "50%": { opacity: "0.9" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -150,6 +171,7 @@ export default {
         "fade-up": "fadeUp 0.8s ease-out forwards",
         "fade-in": "fadeIn 0.6s ease-out forwards",
         shimmer: "shimmer 2s linear infinite",
+        "skeleton-breathe": "skeleton-breathe 2s ease-in-out infinite",
       },
     },
   },

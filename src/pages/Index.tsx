@@ -1,8 +1,8 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
-import HeroSection from "@/components/HeroSection";
-import BrandStory from "@/components/BrandStory";
+import Hero from "@/components/home/Hero";
+import BrandStory from "@/components/home/BrandStory";
 import CelestialFeaturedCollection from "@/components/CelestialFeaturedCollection";
 import { Footer } from "@/components/Footer";
 import { PageLoadingSkeleton } from "@/components/PageLoadingSkeleton";
@@ -34,7 +34,7 @@ const FloatingSocials = lazy(() =>
 
 // Lightweight skeleton for lazy sections
 const SectionSkeleton = ({ height = "h-64" }: { height?: string }) => (
-  <div className={`${height} bg-cream animate-pulse`}>
+  <div className={`${height} bg-asper-stone animate-pulse`}>
     <div className="luxury-container py-12">
       <Skeleton className="h-8 w-48 mx-auto mb-8" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -73,7 +73,7 @@ const Index = () => {
     <div className="min-h-screen bg-background animate-fade-in">
       <Header />
       <main>
-        <HeroSection />
+        <Hero />
 
         {/* Featured Collection with Glass & Gold Cards */}
         <CelestialFeaturedCollection />
