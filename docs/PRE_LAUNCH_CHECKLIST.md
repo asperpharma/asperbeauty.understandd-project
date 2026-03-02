@@ -1,5 +1,14 @@
 # Pre-Launch Checklist
 
+> **Important:** Replace all placeholders in this documentation with your actual values:
+> - `REPLACE_WITH_PROJECT_ID` → Your Lovable project ID
+> - `YOUR_PROJECT` / `YOUR_SUPABASE_PROJECT` / `YOUR_PROJECT_REF` → Your Supabase project reference ID
+> - `YOUR_JWT_TOKEN` / `YOUR_SUPABASE_JWT_TOKEN` → Your JWT token from `supabase auth token`
+> - `YOUR_HEALTH_CHECKS_SECRET` → Your configured health checks secret (min 32 characters)
+> - `YOUR_SHOPIFY_ACCESS_TOKEN` → Your Shopify Admin API access token
+> - `your-store.myshopify.com` → Your Shopify store domain
+> - `YOUR_ANON_KEY` → Your Supabase anon key
+
 This checklist ensures all systems are configured and tested before launching the Asper Beauty Shop to production.
 
 ## Checklist Overview

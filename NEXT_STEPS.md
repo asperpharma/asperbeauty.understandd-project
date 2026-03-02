@@ -1,5 +1,12 @@
 # Next Steps: Deployment Flow
 
+> **Note:** Replace placeholders with your actual values:
+> - `YOUR_SUPABASE_PROJECT` → Your Supabase project reference ID
+> - `YOUR_SUPABASE_JWT_TOKEN` → Your JWT token from `supabase auth token`
+> - `YOUR_HEALTH_CHECKS_SECRET` → Your configured health checks secret
+> - `REPLACE_WITH_PROJECT_ID` → Your Lovable project ID
+> - `your-production-domain.com` → Your actual production domain
+
 ## Flow at a Glance
 
 This document outlines the deployment workflow for the Asper Beauty Shop from local development to production. Follow these steps to ensure a smooth deployment process.

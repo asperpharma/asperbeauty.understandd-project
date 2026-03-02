@@ -62,6 +62,12 @@ This project is built with:
 
 ## Production-Ready Checklist
 
+> **Note:** Before following this guide, replace all placeholders in this documentation:
+> - `REPLACE_WITH_PROJECT_ID` → Your actual Lovable project ID
+> - `YOUR_SUPABASE_PROJECT` → Your Supabase project reference ID
+> - `YOUR_JWT_TOKEN` / `YOUR_SUPABASE_JWT_TOKEN` → Your actual JWT token
+> - `your-store.myshopify.com` → Your actual Shopify store domain
+
 Before deploying to production, ensure you've completed all items in the [PRE_LAUNCH_CHECKLIST.md](docs/PRE_LAUNCH_CHECKLIST.md):
 
 - [ ] ✅ Development environment configured
