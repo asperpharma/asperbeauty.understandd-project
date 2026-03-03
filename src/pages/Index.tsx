@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
-import Hero from "@/components/home/Hero";
+import HeroSlider from "@/components/home/HeroSlider";
 import BrandStory from "@/components/home/BrandStory";
 import CelestialFeaturedCollection from "@/components/CelestialFeaturedCollection";
 import { Footer } from "@/components/Footer";
@@ -73,7 +73,7 @@ const Index = () => {
     <div className="min-h-screen bg-background animate-fade-in">
       <Header />
       <main>
-        <Hero />
+        <HeroSlider />
 
         {/* Featured Collection with Glass & Gold Cards */}
         <CelestialFeaturedCollection />
