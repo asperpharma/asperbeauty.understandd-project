@@ -75,6 +75,8 @@ export default function Profile() {
 
       toast({ title: "Profile updated", description: "Your changes have been saved." });
     } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast({ title: "Error", description: msg, variant: "destructive" });
       const message = err instanceof Error ? err.message : String(err);
       toast({ title: "Error", description: message, variant: "destructive" });
     } finally {

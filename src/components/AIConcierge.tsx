@@ -28,6 +28,7 @@ const CHAT_URL = `${SUPABASE_URL}/functions/v1/beauty-assistant`;
 function getTextContent(content: string | MessageContent[]): string {
   if (typeof content === "string") return content;
   return content
+    .filter((p): p is { type: "text"; text: string } => (p as { type: string }).type === "text")
     .filter((p): p is { type: "text"; text: string } => typeof p === "object" && p !== null && "type" in p && p.type === "text")
     .map((p) => p.text)
     .join(" ");
@@ -365,6 +366,10 @@ export default function AIConcierge() {
         onSafetyFlags: (flags) => setSafetyFlags(flags),
       });
     } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: `⚠️ ${msg}`, persona: currentPersona },
       const errMsg = e instanceof Error ? e.message : String(e);
       setMessages((prev) => [
         ...prev,

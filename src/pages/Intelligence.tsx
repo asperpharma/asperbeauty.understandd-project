@@ -53,6 +53,7 @@ async function streamChat({
   onDelta,
   onDone,
 }: {
+  messages: { role: string; content: string | Array<{ type: string; text?: string; image_url?: { url: string } }> }[];
   messages: { role: string; content: string | MessageContent[] }[];
   forcePersona?: string;
   onPersona: (p: string) => void;
@@ -154,6 +155,7 @@ export default function Intelligence() {
 
     const userText = inputValue.trim() || "Please analyze this image and recommend a routine.";
 
+    let userContent: string | Array<{ type: string; text?: string; image_url?: { url: string } }>;
     let userContent: string | MessageContent[];
     if (capturedImage) {
       userContent = [
@@ -192,6 +194,7 @@ export default function Intelligence() {
         .map((m) => ({ role: m.role, content: m.content }));
 
       // Add current message
+      apiMessages.push({ role: "user", content: userContent });
       apiMessages.push({ role: "user", content: userContent as string | MessageContent[] });
 
       await streamChat({
@@ -204,6 +207,10 @@ export default function Intelligence() {
         onDone: () => setIsLoading(false),
       });
     } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: `⚠️ ${msg}`, persona: detectedPersona },
       const errMsg = err instanceof Error ? err.message : String(err);
       setMessages((prev) => [
         ...prev,
