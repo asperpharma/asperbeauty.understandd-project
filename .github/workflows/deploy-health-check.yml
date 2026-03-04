@@ -43,7 +43,7 @@ jobs:
           SITE_URL: https://asperbeautyshop-com.lovable.app
 
       - name: Notify Discord (optional)
-        if: always() && secrets.DISCORD_WEBHOOK_URL != ''
+        if: always()
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
