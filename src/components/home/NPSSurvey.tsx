@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 export const NPSSurvey = () => {
-  const { language } = useLanguage();
+  const { language } = mmm
   const isArabic = language === "ar";
   const [selectedScore, setSelectedScore] = useState<number | null>(null);
   const [hasSubmitted, setHasSubmitted] = useState(false);

@@ -5,7 +5,7 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 const CATEGORIES = [
   {
     id: "perfume",
-    en: "Perfume",
+en: "Perfume",
     ar: "عطور",
     icon: "https://placehold.co/120x120/FAF7F2/800020?text=🌸",
     href: "/collections/perfume",

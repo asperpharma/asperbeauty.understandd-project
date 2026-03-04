@@ -1,5 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import Hero from "@/components/home/Hero";
 import { USPBar } from "@/components/home/USPBar";
@@ -88,6 +90,53 @@ const BESTSELLERS = [
 const Index = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch new arrivals
+  const { data: newArrivals = [] } = useQuery({
+    queryKey: ["new-arrivals"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(8);
+
+      if (error) throw error;
+      return (data || []).map((p) => ({
+        id: p.id,
+        title: p.title,
+        brand: p.brand,
+        price: p.price ?? 0,
+        image_url: p.image_url || "/placeholder.svg",
+        category: p.primary_concern,
+        tags: p.is_available_in_jordan === false ? ["Not available in your country"] : [],
+        is_new: true,
+      }));
+    },
+  });
+
+  // Fetch bestsellers
+  const { data: bestsellers = [] } = useQuery({
+    queryKey: ["bestsellers"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: true })
+        .limit(8);
+
+      if (error) throw error;
+      return (data || []).map((p) => ({
+        id: p.id,
+        title: p.title,
+        brand: p.brand,
+        price: p.price ?? 0,
+        image_url: p.image_url || "/placeholder.svg",
+        category: p.primary_concern,
+        is_on_sale: false,
+      }));
+    },
+  });
 
   useEffect(() => {
     const handleLoad = () => setIsLoading(false);
