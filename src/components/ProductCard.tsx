@@ -16,7 +16,7 @@ interface ProductCardProps {
   product: ShopifyProduct;
 }
 
-const getDNATag = (node: any) => {
+const getDNATag = (node: ShopifyProduct["node"]) => {
   const tags = node.tags || [];
   const vendor = (node.vendor || "").toLowerCase();
   if (tags.includes("best-seller") || tags.includes("bestseller"))
@@ -30,7 +30,7 @@ const getDNATag = (node: any) => {
   return null;
 };
 
-const getKeyBenefit = (node: any) => {
+const getKeyBenefit = (node: ShopifyProduct["node"]) => {
   const type = (node.productType || "").toLowerCase();
   if (type.includes("serum")) return "Advanced Treatment Serum";
   if (type.includes("moisturizer")) return "Hydration & Repair";
@@ -48,10 +48,10 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const { node } = product;
   const addItem = useCartStore((state) => state.addItem);
   const setCartOpen = useCartStore((state) => state.setOpen);
-  const { toggleItem, isWishlisted } = useWishlistStore();
+  const { toggleItem, isInWishlist } = useWishlistStore();
   const { language } = useLanguage();
 
-  const isWishlistedItem = isWishlisted(node.id);
+  const isWishlistedItem = isInWishlist(node.id);
   const dnaTag = getDNATag(node);
   const keyBenefit = getKeyBenefit(node);
   const firstImage = node.images?.edges?.[0]?.node;
@@ -84,7 +84,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleItem(node as any);
+    toggleItem(product);
     if (!isWishlistedItem) {
       toast.success("Added to wishlist", { description: node.title, position: "top-center" });
     }
