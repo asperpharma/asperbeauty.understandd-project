@@ -3,8 +3,13 @@
 # Lovable: https://lovable.dev/projects/657fb572-13a5-4a3e-bac9-184d39fdf7e6
 #
 # Sends issue/PR open, edit, reopen, close events to Lovable via webhook.
-# SETUP: In GitHub repo → Settings → Secrets and variables → Actions, add:
-#   LOVABLE_WEBHOOK_URL = (webhook URL from Lovable, if provided)
+# 
+# REQUIRED SETUP:
+#   1. In GitHub repo → Settings → Secrets and variables → Actions
+#   2. Add secret: LOVABLE_WEBHOOK_URL = (webhook URL from Lovable)
+#   3. See docs/GITHUB_SECRETS_SETUP.md for detailed instructions
+#
+# This workflow will FAIL if LOVABLE_WEBHOOK_URL is not configured.
 #
 name: Sync Issues and PRs to Lovable
 
@@ -22,16 +27,13 @@ jobs:
         env:
           LOVABLE_WEBHOOK_URL: ${{ secrets.LOVABLE_WEBHOOK_URL }}
         run: |
-          # Validate that LOVABLE_WEBHOOK_URL is set
+          # Skip gracefully when LOVABLE_WEBHOOK_URL is not configured
           if [ -z "$LOVABLE_WEBHOOK_URL" ]; then
             echo "Warning: LOVABLE_WEBHOOK_URL is not set"
-            echo "Skipping Lovable sync. To enable, set the LOVABLE_WEBHOOK_URL secret in repository settings."
+            echo "Please set the LOVABLE_WEBHOOK_URL secret in the repository settings to enable sync."
+            echo "Skipping Lovable sync (secret not configured)."
             exit 0
           fi
-
-          # Debug: Show masked URL (only show protocol and domain)
-          MASKED_URL=$(echo "$LOVABLE_WEBHOOK_URL" | sed -E 's|(https?://[^/]+).*|\1/...|')
-          echo "LOVABLE_WEBHOOK_URL=$MASKED_URL"
 
           # Validate URL format
           if ! echo "$LOVABLE_WEBHOOK_URL" | grep -qE '^https?://'; then
@@ -40,6 +42,10 @@ jobs:
             echo "Skipping Lovable sync."
             exit 0
           fi
+
+          # Debug: Show masked URL (only show protocol and domain)
+          MASKED_URL=$(echo "$LOVABLE_WEBHOOK_URL" | sed -E 's|(https?://[^/]+).*|\1/...|')
+          echo "LOVABLE_WEBHOOK_URL=$MASKED_URL"
 
           echo "Sending event to Lovable..."
           # Use GitHub event path JSON directly to avoid shell injection issues
