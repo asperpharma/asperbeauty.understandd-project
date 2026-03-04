@@ -445,4 +445,5 @@ The app is bilingual: **English** and **Arabic**. Arabic uses RTL layout.
 | `docs/COMMAND_PROTOCOL.md` | Slash command protocol (`/breakdown`, `/status`, `/pre-launch`, `/scaffold`, `/debug`) |
 | `docs/PROJECT_DNA.md` | Digital flagship strategy, product organization, visual language, SaaS vision |
 | `docs/DR_BOT_BLUEPRINT.md` | Dr. Bot architecture, operation rules, behavioral flows, deployment phases |
+| `docs/SUPABASE_MASTER_PROFILE.md` | Supabase project identity, architecture layers, database schema, security config |
 | `env.main-site.example` | Environment variable template |
