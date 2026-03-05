@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -124,7 +123,7 @@ function extractFromManyChat(body: Record<string, unknown>): { message: string }
   const msgObj = firstMsg?.message as Record<string, unknown> | undefined;
 
   const text =
-    typeof data?.text === "string" ? data.text
+    typeof msgObj?.text === "string" ? msgObj.text
     : typeof (body as Record<string, unknown>).text === "string" ? (body as Record<string, unknown>).text
     : typeof (body as Record<string, unknown>).message === "string" ? (body as Record<string, unknown>).message
     : "";
