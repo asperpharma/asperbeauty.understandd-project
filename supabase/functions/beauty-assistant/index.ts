@@ -355,14 +355,18 @@ serve(async (req) => {
     const lastText = typeof lastUserMessage === "string"
       ? lastUserMessage
       : Array.isArray(lastUserMessage)
-        ? lastUserMessage.filter((p: any) => p.type === "text").map((p: any) => p.text).join(" ")
+        ? lastUserMessage.filter((p: any) => p.type === "text").map((p: any) => p.text ?? "").join(" ")
         : "";
 
     const detectedConcernSlug = detectConcernSlug(lastText);
     const shopRoutinePath = detectedConcernSlug ? `/products?concern=${detectedConcernSlug}` : null;
 
-    // Fetch product context
-    const { productContext, matchedProducts } = await fetchProductContext(supabaseClient, lastText, detectedConcernSlug);
+    // Fetch product context with service role (bypasses RLS for server-side catalog reads)
+    const serviceClient = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+    const { productContext, matchedProducts } = await fetchProductContext(serviceClient, lastText, detectedConcernSlug);
 
     // Detect persona from user message
     const drSamiTriggers = /acne|rosacea|eczema|hyperpigment|pregnan|حامل|حمل|ingredient|مكونات|barrier|retinol|spf|sunscreen|allergy|حساسية|salicylic|medical|طبي|clinical|pharmacist|صيدلاني|supplement|dosage|safety/i;
