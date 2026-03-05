@@ -436,7 +436,7 @@ The app is bilingual: **English** and **Arabic**. Arabic uses RTL layout.
 | `README.md` | Project overview, setup, deployment guide |
 | `MAIN_PROJECT.md` | Full project vision, features, architecture |
 | `DESIGN_SYSTEM.md` | Brand identity, colour palette, typography, component guidelines |
-| `APPLY_TO_MAIN_SITE.md` | 9-step production deployment checklist |
+| `APPLY_TO_MAIN_SITE.md` | 6-step production deployment checklist |
 | `NEXT_STEPS.md` | Deployment workflow and Discord notification setup |
 | `.cursorrules` | Detailed AI developer guidelines (1000+ lines) |
 | `docs/DEPLOYMENT_TEMPLATE.md` | Full deployment guide with examples |
@@ -445,4 +445,6 @@ The app is bilingual: **English** and **Arabic**. Arabic uses RTL layout.
 | `docs/COMMAND_PROTOCOL.md` | Slash command protocol (`/breakdown`, `/status`, `/pre-launch`, `/scaffold`, `/debug`) |
 | `docs/PROJECT_DNA.md` | Digital flagship strategy, product organization, visual language, SaaS vision |
 | `docs/DR_BOT_BLUEPRINT.md` | Dr. Bot architecture, operation rules, behavioral flows, deployment phases |
+| `docs/SUPABASE_MASTER_PROFILE.md` | Supabase project identity, architecture layers, database schema, security config |
+| `docs/MASTER_CONNECTIONS.md` | All project IDs, URLs, social handles, endpoints, env vars — full integration map |
 | `env.main-site.example` | Environment variable template |
