@@ -2,6 +2,7 @@
 
 **Main site:** https://asperbeautyshop-com.lovable.app/  
 **Repo:** asperpharma/understand-project  
+**Lovable:** https://lovable.dev/projects/657fb572-13a5-4a3e-bac9-184d39fdf7e6/settings
 **Lovable:** https://lovable.dev/projects/657fb572-13a5-4a3e-bac9-184d39fdf7e6/settings  
 **Supabase project:** `qqceibvalkoytafynwoc`
 
@@ -41,6 +42,41 @@ Then open https://asperbeautyshop-com.lovable.app/ and spot-check: Home, Product
 
 ---
 
+## Perfect update in 4 steps (copy-paste)
+
+Do this whenever you want the **latest code live** on the main site.
+
+**1. Open a terminal in your understand-project folder.**  
+If you don't have it yet:
+```bash
+gh repo clone asperpharma/understand-project
+cd understand-project
+```
+
+**2. Get latest and install deps.**
+```bash
+git pull origin main
+npm install
+```
+
+**3. Deploy to the live site.**  
+(If you have no new changes, skip the commit; otherwise:)
+```bash
+git add .
+git commit -m "Your message"
+git push origin main
+```
+Lovable will build and deploy; the site updates in a few minutes at https://asperbeautyshop-com.lovable.app/
+
+**4. Verify.**
+```bash
+# From this VIP folder (Asper Shop ALL Files VIP):
+npm run health
+```
+Then open https://asperbeautyshop-com.lovable.app/ and spot-check: Home, Products, Cart, Beauty Assistant.
+
+---
+
 ## ⚠️ Manual overrides to clear blockers (100% Production Ready)
 
 Do these **in your dashboards** so the live site can use the Brain and Commerce Engine. Tick each when done.
@@ -53,18 +89,21 @@ Set (or confirm) these production variables:
 
 | Variable | Value to use |
 |----------|----------------|
+| `VITE_SUPABASE_URL` | `https://rgehleqcubtmcwyipyvi.supabase.co` |
 | `VITE_SUPABASE_URL` | `https://qqceibvalkoytafynwoc.supabase.co` |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | *(your anon/public key from Supabase)* |
 | `VITE_SHOPIFY_STORE_DOMAIN` | `lovable-project-milns.myshopify.com` |
 | `VITE_SHOPIFY_STOREFRONT_TOKEN` | *(your Storefront API token)* |
 | `VITE_SHOPIFY_API_VERSION` | `2025-07` |
 
+Also set if not already: `VITE_SUPABASE_PROJECT_ID` = `rgehleqcubtmcwyipyvi`, `VITE_SITE_URL` = `https://asperbeautyshop-com.lovable.app/`, `VITE_LOVABLE_URL` = `asperbeautyshop-com.lovable.app`.
 Also set if not already: `VITE_SUPABASE_PROJECT_ID` = `qqceibvalkoytafynwoc`, `VITE_SITE_URL` = `https://asperbeautyshop-com.lovable.app/`, `VITE_LOVABLE_URL` = `asperbeautyshop-com.lovable.app`.
 
 - [ ] All Lovable env vars saved; redeploy or push to `main` so build uses them
 
 ### Step 2 — Supabase Auth Redirects
 
+**Where:** <a href="https://supabase.com/dashboard/project/rgehleqcubtmcwyipyvi">Supabase Dashboard</a> → **Authentication** → **URL Configuration**
 **Where:** [Supabase Dashboard](https://supabase.com/dashboard/project/qqceibvalkoytafynwoc) → **Authentication** → **URL Configuration**
 
 - Under **Redirect URLs**, add:
@@ -85,6 +124,7 @@ Also set if not already: `VITE_SUPABASE_PROJECT_ID` = `qqceibvalkoytafynwoc`, `V
 
 ### Step 4 — Google Merchant Center
 
+- Log into <a href="https://merchant.google.com/">Google Merchant Center</a>.
 - Log into [Google Merchant Center](https://merchant.google.com/).
 - Confirm your Shopify product feed is syncing 5,000+ SKUs without critical errors.
 - Ensure product and storefront links point to `https://www.asperbeautyshop.com`.
@@ -118,6 +158,7 @@ Base URL for all: **https://www.asperbeautyshop.com/**
 ```bash
 cd path/to/understand-project
 git add .
+git commit -m "feat: complete apply_to_main_site checklist with deep links and schema"
 git commit -m "feat: complete apply_to_main_site checklist"
 git push origin main
 ```
@@ -139,8 +180,8 @@ Open https://www.asperbeautyshop.com/ and https://www.asperbeautyshop.com/health
 
 | Variable | Value | Purpose |
 |----------|--------|----------|
-| `VITE_SUPABASE_PROJECT_ID` | `qqceibvalkoytafynwoc` | Brain / Beauty Assistant project |
-| `VITE_SUPABASE_URL` | `https://qqceibvalkoytafynwoc.supabase.co` | Supabase API |
+| `VITE_SUPABASE_PROJECT_ID` | `rgehleqcubtmcwyipyvi` | Brain / Beauty Assistant project |
+| `VITE_SUPABASE_URL` | `https://rgehleqcubtmcwyipyvi.supabase.co` | Supabase API |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | *(your anon/public key)* | Frontend auth & Edge Function calls |
 | `VITE_SHOPIFY_STORE_DOMAIN` | `lovable-project-milns.myshopify.com` | 5000+ SKU catalog |
 | `VITE_SHOPIFY_STOREFRONT_TOKEN` | *(your Storefront API token)* | Storefront API |
@@ -257,6 +298,12 @@ node scripts/sync-shopify-catalog.js                       # full sync
 | Staging site | https://asperbeautyshop-com.lovable.app/ |
 | Lovable settings | https://lovable.dev/projects/657fb572-13a5-4a3e-bac9-184d39fdf7e6/settings |
 | GitHub repo | https://github.com/asperpharma/understand-project |
+| Supabase project | rgehleqcubtmcwyipyvi |
+| Env template | `env.main-site.example` (this folder) |
+| Design system | `DESIGN_SYSTEM.md` |
+| Single source of truth | `MAIN_PROJECT.md` |
+| Plan + CSV sync spec + Master Breakdown | `docs/PLAN_AND_SPEC.md` |
+| Test brain & chatbot | `TEST_BRAIN_AND_CHATBOT.md` — run `npm run test:brain` |
 | Supabase project | qqceibvalkoytafynwoc |
 | Env template | `env.main-site.example` |
 | Design system | `DESIGN_SYSTEM.md` |

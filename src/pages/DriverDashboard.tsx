@@ -196,7 +196,7 @@ export default function DriverDashboard() {
         updateData.delivered_at = new Date().toISOString();
       }
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("cod_orders")
         .update(updateData as never)
         .eq("id", orderId);
