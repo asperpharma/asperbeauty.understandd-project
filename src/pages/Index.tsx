@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
-import Hero from "@/components/home/Hero";
+import Hero from "@/components/home/HeroSlider";
 import { USPBar } from "@/components/home/USPBar";
 import { ProductSlider } from "@/components/home/ProductSlider";
 import { Footer } from "@/components/Footer";
@@ -109,7 +109,7 @@ const Index = () => {
         price: p.price ?? 0,
         image_url: p.image_url || "/placeholder.svg",
         category: p.primary_concern,
-        tags: p.is_available_in_jordan === false ? ["Not available in your country"] : [],
+        tags: [] as string[],
         is_new: true,
       }));
     },

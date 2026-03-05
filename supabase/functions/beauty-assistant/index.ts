@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -124,7 +123,7 @@ function extractFromManyChat(body: Record<string, unknown>): { message: string }
   const msgObj = firstMsg?.message as Record<string, unknown> | undefined;
 
   const text =
-    typeof data?.text === "string" ? data.text
+    typeof msgObj?.text === "string" ? msgObj.text
     : typeof (body as Record<string, unknown>).text === "string" ? (body as Record<string, unknown>).text
     : typeof (body as Record<string, unknown>).message === "string" ? (body as Record<string, unknown>).message
     : "";
@@ -559,8 +558,15 @@ serve(async (req) => {
     const detectedConcernSlug = detectConcernSlug(lastText);
     const shopRoutinePath = detectedConcernSlug ? `/products?concern=${detectedConcernSlug}` : null;
 
-    // Fetch product context
-    const { productContext, matchedProducts } = await fetchProductContext(supabaseClient, lastText, detectedConcernSlug);
+    // Fetch product context using service role key for unrestricted catalog access.
+    // The products table uses RLS; service role bypasses those policies so the edge
+    // function can always return relevant product recommendations regardless of the
+    // calling user's permissions.
+    const serviceClient = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+    const { productContext, matchedProducts } = await fetchProductContext(serviceClient, lastText, detectedConcernSlug);
 
     // Detect persona from user message
     // Dual-Persona detection — Dr. Sami (clinical) vs Ms. Zain (beauty/aesthetic)
