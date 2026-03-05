@@ -236,10 +236,10 @@ export default function HeroSlider() {
     (e: React.KeyboardEvent) => {
       if (e.key === "ArrowRight") {
         e.preventDefault();
-        dir === "rtl" ? goPrev() : goNext();
+        if (dir === "rtl") { goPrev(); } else { goNext(); }
       } else if (e.key === "ArrowLeft") {
         e.preventDefault();
-        dir === "rtl" ? goNext() : goPrev();
+        if (dir === "rtl") { goNext(); } else { goPrev(); }
       }
     },
     [dir, goNext, goPrev],
