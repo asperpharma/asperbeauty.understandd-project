@@ -186,3 +186,4 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     </>
   );
 };
+

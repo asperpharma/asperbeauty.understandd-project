@@ -53,7 +53,6 @@ const FloatingSocials = lazy(() =>
     default: m.FloatingSocials,
   }))
 );
-const DermoBrands = lazy(() => import("@/components/home/DermoBrands"));
 
 // Lightweight skeleton for lazy sections
 const SectionSkeleton = ({ height = "h-64" }: { height?: string }) => (
@@ -168,23 +167,18 @@ const Index = () => {
         {/* 2. USP Bar — Trust Signals */}
         <USPBar />
 
-        {/* 2.5. Dermocosmetic Brands — Clickable Squares */}
-        <Suspense fallback={<SectionSkeleton height="h-48" />}>
-          <DermoBrands />
-        </Suspense>
-
         {/* 3. Product Slider — Just Landed / What's New */}
         <ProductSlider
           title={{ en: "Just Landed! What's New", ar: "وصل حديثاً! الجديد لدينا" }}
           subtitle={{ en: "New Arrivals", ar: "وصل حديثاً" }}
-          products={NEW_ARRIVALS}
+          products={newArrivals.length > 0 ? newArrivals : NEW_ARRIVALS}
         />
 
         {/* 4. Product Slider — Bestsellers */}
         <ProductSlider
           title={{ en: "Bestsellers — Niche Approved", ar: "الأكثر مبيعاً — اختيار الخبراء" }}
           subtitle={{ en: "Most Loved", ar: "الأكثر حباً" }}
-          products={BESTSELLERS}
+          products={bestsellers.length > 0 ? bestsellers : BESTSELLERS}
         />
 
         {/* 5. Editorial Spotlight — WANTED! Hero Products */}
@@ -241,3 +235,4 @@ const Index = () => {
 };
 
 export default Index;
+

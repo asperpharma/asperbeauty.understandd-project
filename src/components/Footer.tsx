@@ -109,7 +109,7 @@ export const Footer = () => {
               <a href="https://wa.me/962790656666" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="WhatsApp">
                 <WhatsAppIcon className="w-4 h-4" />
               </a>
-              <a href="https://twitter.com/asperbeautyshop" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="X (Twitter)">
+              <a href="https://x.com/asperbeautyshop" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="X (Twitter)">
                 <XIcon className="w-4 h-4" />
               </a>
               <a href="https://www.youtube.com/@asperbeautyshop" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="YouTube">
@@ -369,3 +369,5 @@ export const Footer = () => {
     </footer>
   );
 };
+
+

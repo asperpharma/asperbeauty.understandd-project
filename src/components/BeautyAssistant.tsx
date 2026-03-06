@@ -509,15 +509,15 @@ export const BeautyAssistant = () => {
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 ${
           isRTL ? "left-6" : "right-6"
-        } z-50 flex items-center gap-3 px-5 py-3 bg-white border-2 border-gold rounded-full shadow-lg hover:shadow-xl transition-all duration-400 group ${
+        } z-50 flex items-center gap-3 px-5 py-3 bg-white border-2 border-[#C5A028] rounded-full shadow-lg hover:shadow-xl transition-all duration-400 group ${
           isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
         }`}
         aria-label="Open beauty assistant"
       >
-        <div className="w-8 h-8 rounded-full bg-burgundy flex items-center justify-center">
-          <Stethoscope className="w-4 h-4 text-gold" />
+        <div className="w-8 h-8 rounded-full bg-[#800020] flex items-center justify-center">
+          <Stethoscope className="w-4 h-4 text-[#C5A028]" />
         </div>
-        <span className="font-body text-sm font-medium text-burgundy whitespace-nowrap">
+        <span className="font-body text-sm font-medium text-[#800020] whitespace-nowrap">
           {t.buttonText}
         </span>
       </button>
@@ -526,37 +526,37 @@ export const BeautyAssistant = () => {
       <div
         className={`fixed bottom-6 ${
           isRTL ? "left-6" : "right-6"
-        } z-50 w-[400px] max-w-[calc(100vw-3rem)] bg-white rounded-2xl shadow-2xl border border-gold/30 overflow-hidden transition-all duration-400 ${
+        } z-50 w-[400px] max-w-[calc(100vw-3rem)] bg-white rounded-2xl shadow-2xl border border-[#C5A028]/30 overflow-hidden transition-all duration-400 ${
           isOpen
             ? "scale-100 opacity-100"
             : "scale-95 opacity-0 pointer-events-none"
         }`}
       >
         {/* Header - Deep Burgundy */}
-        <div className="bg-burgundy p-4 flex items-center justify-between">
+        <div className="bg-[#800020] p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
-              <Stethoscope className="w-5 h-5 text-gold" />
+              <Stethoscope className="w-5 h-5 text-[#C5A028]" />
             </div>
             <div>
               <h3 className="font-display text-base font-semibold text-white">
                 {t.title}
               </h3>
-              <p className="text-xs text-gold/90 font-body">{t.subtitle}</p>
+              <p className="text-xs text-[#C5A028]/90 font-body">{t.subtitle}</p>
             </div>
           </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsOpen(false)}
-            className="text-gold hover:bg-gold/20"
+            className="text-[#C5A028] hover:bg-gold/20"
           >
             <X className="w-5 h-5" />
           </Button>
         </div>
 
         {/* Messages */}
-        <ScrollArea className="h-[320px] p-4 bg-cream/30" ref={scrollRef}>
+        <ScrollArea className="h-[320px] p-4 bg-[#F8F8FF]/30" ref={scrollRef}>
           <div className="space-y-4">
             {messages.map((msg, idx) => (
               <div key={idx} className="space-y-3">
@@ -568,8 +568,8 @@ export const BeautyAssistant = () => {
                   <div
                     className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
                       msg.role === "user"
-                        ? "bg-burgundy text-white rounded-br-sm"
-                        : "bg-white border border-gold/20 text-foreground rounded-bl-sm shadow-sm"
+                        ? "bg-[#800020] text-white rounded-br-sm"
+                        : "bg-white border border-[#C5A028]/20 text-foreground rounded-bl-sm shadow-sm"
                     }`}
                   >
                     <p className="text-sm leading-relaxed whitespace-pre-wrap font-body">
@@ -582,7 +582,7 @@ export const BeautyAssistant = () => {
                 {msg.role === "assistant" && msg.products &&
                   msg.products.length > 0 && (
                   <div className="space-y-2 ml-2">
-                    <p className="text-[10px] text-gold font-medium uppercase tracking-wider">
+                    <p className="text-[10px] text-[#C5A028] font-medium uppercase tracking-wider">
                       {language === "ar"
                         ? "المنتجات الموصى بها"
                         : "Recommended Products"}
@@ -613,7 +613,7 @@ export const BeautyAssistant = () => {
                         <Link
                           to={msg.shopRegimenPath}
                           onClick={() => setIsOpen(false)}
-                          className="inline-flex items-center justify-center gap-2 w-full py-2 px-3 rounded-lg bg-burgundy text-gold text-xs font-medium border border-gold/30 hover:bg-burgundy/90 transition-colors"
+                          className="inline-flex items-center justify-center gap-2 w-full py-2 px-3 rounded-lg bg-[#800020] text-[#C5A028] text-xs font-medium border border-[#C5A028]/30 hover:bg-[#800020]/90 transition-colors"
                         >
                           {language === "ar"
                             ? "اعرض روتيني في المتجر"
@@ -626,7 +626,7 @@ export const BeautyAssistant = () => {
                           setSaveRoutineMsgIdx(
                             saveRoutineMsgIdx === idx ? null : idx,
                           )}
-                        className="w-full py-2 px-3 rounded-lg border border-gold/40 text-burgundy text-xs font-medium hover:bg-gold/10 transition-colors"
+                        className="w-full py-2 px-3 rounded-lg border border-[#C5A028]/40 text-[#800020] text-xs font-medium hover:bg-gold/10 transition-colors"
                       >
                         {language === "ar"
                           ? "احفظ روتيني وأرسله لي"
@@ -634,7 +634,7 @@ export const BeautyAssistant = () => {
                       </button>
                     </div>
                     {saveRoutineMsgIdx === idx && (
-                      <div className="mt-2 p-3 rounded-lg bg-cream/50 border border-gold/20 space-y-2">
+                      <div className="mt-2 p-3 rounded-lg bg-[#F8F8FF]/50 border border-[#C5A028]/20 space-y-2">
                         <Input
                           type="email"
                           placeholder={language === "ar"
@@ -659,7 +659,7 @@ export const BeautyAssistant = () => {
                             disabled={saveSaving ||
                               (!saveEmail.trim() && !saveWhatsapp.trim())}
                             onClick={() => submitSaveRoutine(idx)}
-                            className="flex-1 bg-burgundy text-gold text-xs"
+                            className="flex-1 bg-[#800020] text-[#C5A028] text-xs"
                           >
                             {saveSaving
                               ? (language === "ar"
@@ -675,7 +675,7 @@ export const BeautyAssistant = () => {
                               setSaveEmail("");
                               setSaveWhatsapp("");
                             }}
-                            className="border-gold/40 text-xs"
+                            className="border-[#C5A028]/40 text-xs"
                           >
                             {language === "ar" ? "إلغاء" : "Cancel"}
                           </Button>
@@ -691,7 +691,7 @@ export const BeautyAssistant = () => {
                     <Link
                       to={msg.shopRegimenPath}
                       onClick={() => setIsOpen(false)}
-                      className="inline-flex items-center justify-center gap-2 w-full py-2 px-3 rounded-lg bg-burgundy text-gold text-xs font-medium border border-gold/30 hover:bg-burgundy/90 transition-colors"
+                      className="inline-flex items-center justify-center gap-2 w-full py-2 px-3 rounded-lg bg-[#800020] text-[#C5A028] text-xs font-medium border border-[#C5A028]/30 hover:bg-[#800020]/90 transition-colors"
                     >
                       {language === "ar"
                         ? "اعرض روتيني في المتجر"
@@ -703,14 +703,14 @@ export const BeautyAssistant = () => {
                         setSaveRoutineMsgIdx(
                           saveRoutineMsgIdx === idx ? null : idx,
                         )}
-                      className="w-full py-2 px-3 rounded-lg border border-gold/40 text-burgundy text-xs font-medium hover:bg-gold/10 transition-colors"
+                      className="w-full py-2 px-3 rounded-lg border border-[#C5A028]/40 text-[#800020] text-xs font-medium hover:bg-gold/10 transition-colors"
                     >
                       {language === "ar"
                         ? "احفظ روتيني وأرسله لي"
                         : "Save My Routine"}
                     </button>
                     {saveRoutineMsgIdx === idx && (
-                      <div className="p-3 rounded-lg bg-cream/50 border border-gold/20 space-y-2">
+                      <div className="p-3 rounded-lg bg-[#F8F8FF]/50 border border-[#C5A028]/20 space-y-2">
                         <Input
                           type="email"
                           placeholder={language === "ar"
@@ -735,7 +735,7 @@ export const BeautyAssistant = () => {
                             disabled={saveSaving ||
                               (!saveEmail.trim() && !saveWhatsapp.trim())}
                             onClick={() => submitSaveRoutine(idx)}
-                            className="flex-1 bg-burgundy text-gold text-xs"
+                            className="flex-1 bg-[#800020] text-[#C5A028] text-xs"
                           >
                             {saveSaving
                               ? (language === "ar"
@@ -751,7 +751,7 @@ export const BeautyAssistant = () => {
                               setSaveEmail("");
                               setSaveWhatsapp("");
                             }}
-                            className="border-gold/40 text-xs"
+                            className="border-[#C5A028]/40 text-xs"
                           >
                             {language === "ar" ? "إلغاء" : "Cancel"}
                           </Button>
@@ -764,8 +764,8 @@ export const BeautyAssistant = () => {
             ))}
             {isLoading && messages[messages.length - 1]?.role === "user" && (
               <div className="flex justify-start">
-                <div className="bg-white border border-gold/20 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
-                  <Loader2 className="w-5 h-5 animate-spin text-gold" />
+                <div className="bg-white border border-[#C5A028]/20 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
+                  <Loader2 className="w-5 h-5 animate-spin text-[#C5A028]" />
                 </div>
               </div>
             )}
@@ -774,14 +774,14 @@ export const BeautyAssistant = () => {
 
         {/* Quick Prompts */}
         {messages.length <= 1 && (
-          <div className="px-4 pb-3 pt-2 bg-cream/30 border-t border-gold/10">
+          <div className="px-4 pb-3 pt-2 bg-[#F8F8FF]/30 border-t border-[#C5A028]/10">
             <div className="flex flex-wrap gap-2">
               {prompts.map((prompt, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleQuickPrompt(prompt.message)}
                   disabled={isLoading}
-                  className="px-3 py-1.5 text-xs font-body bg-white border border-gold/30 rounded-full text-burgundy hover:bg-gold hover:text-burgundy hover:border-gold transition-all duration-300 disabled:opacity-50"
+                  className="px-3 py-1.5 text-xs font-body bg-white border border-[#C5A028]/30 rounded-full text-[#800020] hover:bg-gold hover:text-[#800020] hover:border-[#C5A028] transition-all duration-300 disabled:opacity-50"
                 >
                   {prompt.label}
                 </button>
@@ -792,11 +792,11 @@ export const BeautyAssistant = () => {
 
         {/* Analyze step: detected concern + diagnostic script + "See My Regimen" CTA */}
         {detectedLabel && input.trim() && (
-          <div className="px-4 pb-3 pt-2 border-t border-gold/10 bg-cream/20 space-y-2">
-            <p className="text-[10px] text-gold font-medium uppercase tracking-wider">
+          <div className="px-4 pb-3 pt-2 border-t border-[#C5A028]/10 bg-[#F8F8FF]/20 space-y-2">
+            <p className="text-[10px] text-[#C5A028] font-medium uppercase tracking-wider">
               {language === "ar" ? "تم التعرف على الاهتمام" : "Detected concern"}
             </p>
-            <span className="inline-block px-2 py-1 rounded-md bg-gold/10 text-burgundy text-xs font-body">
+            <span className="inline-block px-2 py-1 rounded-md bg-gold/10 text-[#800020] text-xs font-body">
               {detectedLabel}
             </span>
             {diagnosticScript && (
@@ -809,7 +809,7 @@ export const BeautyAssistant = () => {
                   size="sm"
                   onClick={() => handleSend()}
                   disabled={isLoading}
-                  className="w-full bg-burgundy hover:bg-burgundy/90 text-gold border border-gold/30"
+                  className="w-full bg-[#800020] hover:bg-[#800020]/90 text-[#C5A028] border border-[#C5A028]/30"
                 >
                   {language === "ar" ? "اعرض روتيني" : "See My Regimen"}
                 </Button>
@@ -819,7 +819,7 @@ export const BeautyAssistant = () => {
         )}
 
         {/* Input */}
-        <div className="p-4 border-t border-gold/20 bg-white">
+        <div className="p-4 border-t border-[#C5A028]/20 bg-white">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -831,7 +831,7 @@ export const BeautyAssistant = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={t.placeholder}
-              className="flex-1 rounded-full bg-cream/50 border-gold/30 focus-visible:ring-gold font-body text-sm"
+              className="flex-1 rounded-full bg-[#F8F8FF]/50 border-[#C5A028]/30 focus-visible:ring-gold font-body text-sm"
               disabled={isLoading}
               dir={isRTL ? "rtl" : "ltr"}
             />
@@ -839,9 +839,9 @@ export const BeautyAssistant = () => {
               type="submit"
               size="icon"
               disabled={!input.trim() || isLoading}
-              className="rounded-full bg-burgundy hover:bg-burgundy-light shrink-0"
+              className="rounded-full bg-[#800020] hover:bg-[#800020]-light shrink-0"
             >
-              <Send className="w-4 h-4 text-gold" />
+              <Send className="w-4 h-4 text-[#C5A028]" />
             </Button>
           </form>
         </div>
@@ -851,3 +851,4 @@ export const BeautyAssistant = () => {
 };
 
 export default BeautyAssistant;
+

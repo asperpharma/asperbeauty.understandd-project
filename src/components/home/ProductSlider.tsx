@@ -93,7 +93,7 @@ export const ProductSlider = ({
                 className="group flex-shrink-0 w-64 lg:w-72"
               >
                 {/* Product Card */}
-                <div className="rounded-xl overflow-hidden border border-border bg-card hover:border-polished-gold/40 hover:shadow-lg transition-all duration-400">
+                <div className="rounded-xl overflow-hidden border border-border bg-white gold-stitch-hover hover:shadow-maroon-glow transition-all duration-400">
                   {/* Image */}
                   <div className="relative aspect-[3/4] bg-secondary overflow-hidden">
                     <img
@@ -124,7 +124,7 @@ export const ProductSlider = ({
                         "group-hover:text-polished-gold transition-colors duration-300"
                       )}
                     >
-                      {isArabic ? "تسوق الآن" : "Shop Now"}
+                      {isArabic ? "تسوق الآن" : "Add to Regimen"}
                       <ChevronRight className="w-3 h-3" />
                     </span>
                   </div>
@@ -139,3 +139,4 @@ export const ProductSlider = ({
     </section>
   );
 };
+

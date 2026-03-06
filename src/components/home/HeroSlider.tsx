@@ -25,7 +25,7 @@ const slides: Slide[] = [
   /* ---- Slide 1 — "Beauty Deals" ---- */
   {
     id: 1,
-    bg: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1920&q=80",
+    bg: "/src/assets/hero-sanctuary.jpg",
     overlayClass: "bg-white/20",
     href: "/offers",
     render: (isAr) => (
@@ -63,7 +63,7 @@ const slides: Slide[] = [
   /* ---- Slide 2 — "Wonder Women Edit" ---- */
   {
     id: 2,
-    bg: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1920&q=80",
+    bg: "/src/assets/asper-shelf-display.png",
     overlayClass: "bg-gradient-to-r from-black/50 via-black/30 to-transparent",
     href: "/collections",
     render: (isAr) => (
@@ -108,7 +108,7 @@ const slides: Slide[] = [
         {/* CTA */}
         <Link
           to="/collections"
-          className="mt-6 inline-flex items-center gap-2 bg-white text-asper-ink px-6 py-2.5 text-xs sm:text-sm font-sans uppercase tracking-[0.2em] hover:bg-white/90 transition-colors duration-300"
+          className="mt-6 inline-flex items-center gap-2 bg-[#800020] text-white px-6 py-2.5 text-xs sm:text-sm font-sans uppercase tracking-[0.2em] hover:bg-[#800020]/90 transition-colors duration-300"
         >
           {isAr ? "تسوق الآن" : "SHOP NOW"}
         </Link>
@@ -119,7 +119,7 @@ const slides: Slide[] = [
   /* ---- Slide 3 — "Inside the Studio" ---- */
   {
     id: 3,
-    bg: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1920&q=80",
+    bg: "/src/assets/skincare-closeup.png",
     overlayClass: "bg-black/40",
     href: "/collections",
     render: (isAr) => (
@@ -154,7 +154,7 @@ const slides: Slide[] = [
         {/* CTA — solid black button */}
         <Link
           to="/collections"
-          className="mt-6 inline-flex items-center gap-2 bg-asper-ink text-white px-8 py-3 text-xs sm:text-sm font-sans uppercase tracking-[0.2em] hover:bg-asper-ink/80 transition-colors duration-300"
+          className="mt-6 inline-flex items-center gap-2 bg-[#800020] text-white px-8 py-3 text-xs sm:text-sm font-sans uppercase tracking-[0.2em] hover:bg-[#800020]/90 transition-colors duration-300"
         >
           {isAr ? "اكتشف الآن" : "DISCOVER NOW!"}
         </Link>
@@ -340,3 +340,4 @@ export default function HeroSlider() {
     </section>
   );
 }
+

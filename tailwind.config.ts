@@ -26,7 +26,7 @@ export default {
         foreground: "hsl(var(--foreground))",
 
         // --- DESIGN_SYSTEM.md Clinical Luxury palette (HSL via CSS vars) ---
-        "asper-stone": {
+        "asper-emerald": "#005C45",`n        "asper-stone": {
           DEFAULT: "hsl(var(--asper-stone))",
           light: "hsl(var(--asper-stone-light))",
           dark: "hsl(var(--asper-stone-dark))",
@@ -49,8 +49,8 @@ export default {
         },
         // Legacy compat tokens
         maroon: "hsl(var(--burgundy))",
-        "soft-ivory": "hsl(var(--asper-stone))",
-        "shiny-gold": "hsl(var(--polished-gold))",
+        "soft-ivory": "#F8F8FF",
+        "shiny-gold": "#C5A028",
         "dark-charcoal": "hsl(var(--asper-ink))",
         // Legacy pharmacy tokens (backward compat)
         asper: {
@@ -199,3 +199,5 @@ export default {
   // eslint-disable-next-line @typescript-eslint/no-require-imports -- tailwind plugin
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+
+
