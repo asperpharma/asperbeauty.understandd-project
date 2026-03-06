@@ -1,89 +1,73 @@
-# Welcome to your Lovable project
+# Asper Beauty Shop
+
+**Update:** 2026-03-04-lzdy
+
+## Download
+
+To download or clone this project locally:
+
+```sh
+git clone https://github.com/asperpharma/understand-project.git
+cd understand-project
+npm i
+```
+
+Then run `npm run dev` to start the development server. See [Available scripts](#available-scripts) for more commands.
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/657fb572-13a5-4a3e-bac9-184d39fdf7e6
+- **Site:** [https://www.asperbeautyshop.com](https://www.asperbeautyshop.com)
+- **Stack:** Vite, TypeScript, React, shadcn-ui, Tailwind CSS
+- **Website design:** See [WEBSITE-DESIGN.md](WEBSITE-DESIGN.md) (tokens, components, RTL, Dr. Bot).
+- **Apply to main site and all channels:** See [docs/APPLY_AND_RUN.md](docs/APPLY_AND_RUN.md) (run commands, all sites, social, webhooks). Full checklist: [APPLY_TO_MAIN_SITE.md](APPLY_TO_MAIN_SITE.md).
 
-## How can I edit this code?
+## SNC (sync) and applyToAllProfiles
 
-There are several ways of editing your application.
+**SNC (sync)** — `npm run sync` (frontend + brain); plus `npm run health` (frontend + brain), `npm run brain` (edge function only).
 
-**Use Lovable**
+**applyToAllProfiles** — In **User** `settings.json` (File → Preferences → Settings → Open Settings JSON), add:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/657fb572-13a5-4a3e-bac9-184d39fdf7e6) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone https://github.com/asperpharma/understand-project.git
-
-# Step 2: Navigate to the project directory.
-cd understand-project
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```json
+"workbench.settings.applyToAllProfiles": [
+  "workbench.editorAssociations",
+  "chat.mcp.access",
+  "npm.scriptExplorerAction",
+  "update.channel",
+  "stash-push:command"
+]
 ```
 
-**Edit a file directly in GitHub**
+**commitDirectlyWarning** — Use a feature branch and PR when branch protection applies; see PUSH-BLOCKER.md if push is blocked.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Available scripts
 
-**Use GitHub Codespaces**
+**SNC:** `npm run sync` | `npm run health` | `npm run brain` (see above).
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+| Command                    | What it does                  |
+| -------------------------- | ----------------------------- |
+| `npm run dev`              | Start Vite dev server         |
+| `npm run build`            | Production build              |
+| `npm run build:dev`        | Build in development mode     |
+| `npm run lint`             | Run ESLint                    |
+| `npm run lint:fix`         | ESLint with auto-fix          |
+| `npm run typecheck`        | TypeScript check (no emit)    |
+| `npm run check`            | Lint + typecheck              |
+| `npm run check:all`        | Lint + typecheck + build      |
+| `npm run preview`          | Serve production build        |
+| `npm run test`             | Run Vitest once               |
+| `npm run test:watch`       | Vitest watch mode             |
+| `npm run test:bulk-upload` | Bulk upload validation script |
+| `npm run health`           | Frontend + brain health check |
+| `npm run brain`            | Brain (Beauty Assistant) only |
+| `npm run sync`             | Frontend + brain sync check   |
 
-**Use Claude Code**
+## Lovable project
 
-[Claude Code](https://docs.anthropic.com/en/docs/claude-code) is an agentic coding tool from Anthropic that lets you work with Claude directly from your terminal or IDE.
+- **Project ID:** `657fb572-13a5-4a3e-bac9-184d39fdf7e6`
+- **Live staging:** https://asperbeautyshop-com.lovable.app/
+- Visit [Lovable](https://lovable.dev/projects/657fb572-13a5-4a3e-bac9-184d39fdf7e6) and click **Share → Publish** to deploy.
 
-Install the extension:
 
-```sh
-npm install -g @anthropic-ai/claude-code
-```
-
-Then start a session in your project directory:
-
-```sh
-cd understand-project
-claude
-```
-
-Claude Code can read, edit, and create files, run terminal commands, and assist with complex multi-step coding tasks — all while keeping you in control.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## Production-Ready Checklist
-
-### Quick Deploy
-
-Simply open [Lovable](https://lovable.dev/projects/657fb572-13a5-4a3e-bac9-184d39fdf7e6) and click on Share -> Publish.
 
 ### Required Setup
 
@@ -302,3 +286,57 @@ For more bulk product upload examples and complete payload structures, see [docs
 - **[docs/DEPLOYMENT_TEMPLATE.md](docs/DEPLOYMENT_TEMPLATE.md)** - Deployment templates, environment variables, concrete bulk-product-upload sample payloads
 - **[docs/PRE_LAUNCH_CHECKLIST.md](docs/PRE_LAUNCH_CHECKLIST.md)** - Pre-deployment checklist including §5 secrets configuration and POST response interpretation
 - **[.github/workflows/deploy-health-check.yml](.github/workflows/deploy-health-check.yml)** - Automated health checks on deployment
+
+## Health & Connectivity Scripts
+
+Quickly verify that the frontend and the Beauty Assistant edge function are reachable:
+
+| Command | What it checks |
+|---------|----------------|
+| `npm run health` | Frontend `/health` endpoint |
+| `npm run brain` | Beauty Assistant (edge function) |
+| `npm run sync:check` | Frontend + Beauty Assistant together |
+
+```sh
+# Full connectivity check
+npm run sync:check
+```
+
+## Development Environment
+
+**applyToAllProfiles** — Cursor/VS Code user setting so chosen options apply to every profile. In **User** `settings.json` (File → Preferences → Settings → Open Settings JSON), add:
+
+```json
+"workbench.settings.applyToAllProfiles": [
+  "workbench.editorAssociations",
+  "chat.mcp.access",
+  "npm.scriptExplorerAction",
+  "update.channel"
+]
+```
+
+Include `update.channel` if you want the same update channel (e.g. stable) across all profiles.
+
+**commitDirectlyWarning** — Avoid committing directly to the default branch when branch protection applies; use a feature branch and PR instead.
+
+## Available Scripts
+
+| Command | What it does |
+|---------|--------------|
+| `npm run dev` | Start Vite dev server |
+| `npm run build` | Production build |
+| `npm run build:dev` | Build in development mode |
+| `npm run lint` | Run ESLint |
+| `npm run lint:fix` | ESLint with auto-fix |
+| `npm run typecheck` | TypeScript check (no emit) |
+| `npm run check` | Lint + typecheck |
+| `npm run check:all` | Lint + typecheck + build |
+| `npm run preview` | Serve production build |
+| `npm run test` | Run Vitest once |
+| `npm run test:watch` | Vitest watch mode |
+| `npm run health` | Frontend `/health` check |
+| `npm run brain` | Beauty Assistant connectivity check |
+| `npm run sync:check` | Frontend + brain sync check |
+| `npm run sync` | Sync Shopify product catalog to Supabase |
+| `npm run sync:dry` | Sync dry-run (no writes) |
+| `npm run sync:publish` | Sync + publish |
