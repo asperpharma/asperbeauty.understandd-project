@@ -48,6 +48,9 @@ const TrustBanner = lazy(() =>
 const ScrollToTop = lazy(() =>
   import("@/components/ScrollToTop").then((m) => ({ default: m.ScrollToTop }))
 );
+const DermoBrands = lazy(() =>
+  import("@/components/home/DermoBrands").then((m) => ({ default: m.DermoBrands }))
+);
 const FloatingSocials = lazy(() =>
   import("@/components/FloatingSocials").then((m) => ({
     default: m.FloatingSocials,
@@ -166,6 +169,11 @@ const Index = () => {
 
         {/* 2. USP Bar — Trust Signals */}
         <USPBar />
+
+        {/* 2b. Dermocosmetic Brands Grid */}
+        <Suspense fallback={<SectionSkeleton height="h-48" />}>
+          <DermoBrands />
+        </Suspense>
 
         {/* 3. Product Slider — Just Landed / What's New */}
         <ProductSlider
