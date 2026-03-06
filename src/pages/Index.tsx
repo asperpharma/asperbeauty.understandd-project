@@ -53,6 +53,7 @@ const FloatingSocials = lazy(() =>
     default: m.FloatingSocials,
   }))
 );
+const DermoBrands = lazy(() => import("@/components/home/DermoBrands"));
 
 // Lightweight skeleton for lazy sections
 const SectionSkeleton = ({ height = "h-64" }: { height?: string }) => (
