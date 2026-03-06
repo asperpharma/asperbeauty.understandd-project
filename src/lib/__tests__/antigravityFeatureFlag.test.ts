@@ -8,7 +8,8 @@ import { describe, it, expect, vi, afterEach } from "vitest";
  */
 
 /** Helper type for patching globalThis.window in tests. */
-type GlobalWithWindow = typeof globalThis & { window?: unknown };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GlobalWithWindow = typeof globalThis & { window?: any };
 
 describe("FEATURE_ANTIGRAVITY flag", () => {
   it("defaults to false when VITE_FEATURE_ANTIGRAVITY env var is absent", async () => {
@@ -38,7 +39,7 @@ describe("runAntigravityDiagnostic()", () => {
     const originalWindowProcess = (globalThis as GlobalWithWindow & { window?: { process?: unknown } }).window?.process;
 
     // Set up a window object without a .process property
-    (globalThis as GlobalWithWindow).window = {};
+    (globalThis as GlobalWithWindow).window = {} as unknown;
 
     vi.stubEnv("VITE_FEATURE_ANTIGRAVITY", "true");
     vi.resetModules();
