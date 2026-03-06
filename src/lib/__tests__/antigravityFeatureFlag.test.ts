@@ -8,7 +8,8 @@ import { describe, it, expect, vi, afterEach } from "vitest";
  */
 
 /** Helper type for patching globalThis.window in tests. */
-type GlobalWithWindow = typeof globalThis & { window?: unknown };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GlobalWithWindow = typeof globalThis & { window?: any };
 
 describe("FEATURE_ANTIGRAVITY flag", () => {
   it("defaults to false when VITE_FEATURE_ANTIGRAVITY env var is absent", async () => {
