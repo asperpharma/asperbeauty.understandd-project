@@ -594,14 +594,16 @@ export const BeautyAssistant = () => {
                       />
                     ))}
                     <DigitalTray
+                      concern={msg.shopRegimenPath?.replace(/^\/concerns\//, "").replace(/^\/products\?concern=/, "").trim()}
                       products={(msg.trayProducts ?? msg.products).map((
-                        p: { id: string; title?: string; price?: number | string; image_url?: string | null; brand?: string | null; category?: string | null; original_price?: number | null },
+                        p: { id: string; title?: string; price?: number | string; image_url?: string | null; brand?: string | null; category?: string
+                    | null; original_price?: number | null },
                       ) => ({
                         id: p.id,
-                        title: p.title,
+                        title: p.title || "",
                         price: typeof p.price === "number"
                           ? p.price
-                          : parseFloat(p.price) || 0,
+                          : parseFloat(p.price || "0") || 0,
                         image_url: p.image_url ?? null,
                         brand: p.brand ?? null,
                         category: p.category ?? null,
