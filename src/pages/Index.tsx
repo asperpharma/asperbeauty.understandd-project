@@ -48,6 +48,9 @@ const TrustBanner = lazy(() =>
 const ScrollToTop = lazy(() =>
   import("@/components/ScrollToTop").then((m) => ({ default: m.ScrollToTop }))
 );
+const DermoBrands = lazy(() =>
+  import("@/components/home/DermoBrands").then((m) => ({ default: m.DermoBrands }))
+);
 const FloatingSocials = lazy(() =>
   import("@/components/FloatingSocials").then((m) => ({
     default: m.FloatingSocials,
