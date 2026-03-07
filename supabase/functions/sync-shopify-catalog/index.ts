@@ -216,7 +216,7 @@ Deno.serve(async (req) => {
             image_url: p.images.edges[0].node.url,
             primary_concern,
             regimen_step,
-            inventory_total: p.totalInventory ?? 0,
+            inventory_total: p.availableForSale ? 10 : 0,
             tags: p.tags,
           };
 
