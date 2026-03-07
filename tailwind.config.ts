@@ -168,8 +168,8 @@ export default {
           to: { opacity: "1" },
         },
         shimmer: {
-          "0%": { backgroundPosition: "-200% 0" },
-          "100%": { backgroundPosition: "200% 0" },
+          "0%": { transform: "translateX(-100%) skewX(-20deg)" },
+          "100%": { transform: "translateX(200%) skewX(-20deg)" },
         },
         "skeleton-breathe": {
           "0%, 100%": { opacity: "0.45" },
@@ -190,7 +190,7 @@ export default {
         "spin-slow": "spin-slow 20s linear infinite",
         "fade-up": "fadeUp 0.8s ease-out forwards",
         "fade-in": "fadeIn 0.6s ease-out forwards",
-        shimmer: "shimmer 2s linear infinite",
+        shimmer: "shimmer 1.5s ease-in-out infinite",
         "skeleton-breathe": "skeleton-breathe 2s ease-in-out infinite",
         shake: "shake 0.5s ease-in-out",
       },
