@@ -66,6 +66,7 @@ export default function Profile() {
   const [skinType, setSkinType] = useState<string | null>(null);
   const [routine, setRoutine] = useState<Record<string, unknown> | null>(null);
   const [consultationCount, setConsultationCount] = useState(0);
+  const [ledgerEntries, setLedgerEntries] = useState<import("@/components/AsperAccessCard").LedgerEntry[]>([]);
 
   useEffect(() => {
     if (!user) return;
@@ -98,13 +99,27 @@ export default function Profile() {
         setRoutine(concierge.recommended_routine as Record<string, unknown>);
       }
 
-      // Consultation count
-      const { count } = await supabase
+      // Consultations — count + recent for ledger
+      const { data: recentConsultations, count } = await supabase
         .from("consultations")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id);
+        .select("id, channel, regimen, created_at", { count: "exact" })
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(3);
 
       setConsultationCount(count ?? 0);
+
+      if (recentConsultations && recentConsultations.length > 0) {
+        setLedgerEntries(
+          recentConsultations.map((c) => {
+            const regimen = c.regimen as Record<string, unknown> | null;
+            const title = (regimen?.title as string) || (c.channel === "whatsapp" ? "WhatsApp Consultation" : "Clinical Consultation");
+            const persona = (regimen?.persona as string) || (c.channel === "whatsapp" ? "ms_zain" : "dr_sami");
+            return { persona, title, date: c.created_at };
+          })
+        );
+      }
+
       setLoadingProfile(false);
     };
 
@@ -244,6 +259,7 @@ export default function Profile() {
               <AsperAccessCard
                 name={displayName || user.user_metadata?.full_name || "Guest"}
                 protocol={skinConcern ? skinConcern.replace("Concern_", "").toUpperCase() : "HYDRATION"}
+                ledger={ledgerEntries}
               />
               <button
                 className="mt-2 py-3 px-8 font-body text-xs font-semibold uppercase tracking-[0.15em] text-white flex items-center justify-center gap-2 transition-all duration-300 bg-foreground hover:bg-foreground/90"
