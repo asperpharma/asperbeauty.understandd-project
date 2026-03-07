@@ -97,9 +97,9 @@ export default function DualPersonaTriage() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, delay: 0.15, ease: LUXURY_EASE }}
           >
-            <Link
-              to="/skin-concerns"
-              className="group relative bg-asper-stone p-10 md:p-14 border border-polished-gold/30 flex flex-col items-center text-center transition-all duration-500 hover:shadow-2xl hover:shadow-polished-gold/10 hover:-translate-y-1 cursor-pointer overflow-hidden block"
+            <button
+              onClick={() => navigate("/?intent=hydration&source=ms-zain")}
+              className="group relative bg-asper-stone p-10 md:p-14 border border-polished-gold/30 flex flex-col items-center text-center transition-all duration-500 hover:shadow-2xl hover:shadow-polished-gold/10 hover:-translate-y-1 cursor-pointer overflow-hidden w-full"
             >
               {/* Luxury Shimmer Beam */}
               <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-polished-gold/10 to-transparent group-hover:animate-[shimmer_1.5s_infinite] skew-x-[-20deg]" />
@@ -132,7 +132,7 @@ export default function DualPersonaTriage() {
                 {isAr ? "ابدئي استشارة الجمال" : "START BEAUTY CONSULTATION"}
                 <ArrowRight size={16} className={cn(dir === "rtl" && "rotate-180")} />
               </span>
-            </Link>
+            </button>
           </motion.div>
         </div>
       </div>
