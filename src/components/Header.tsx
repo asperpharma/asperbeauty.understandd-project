@@ -304,7 +304,7 @@ export const Header = () => {
                 type="button"
                 onClick={() => window.dispatchEvent(new CustomEvent("open-beauty-assistant"))}
                 className={cn("hidden md:block p-2 transition-colors", iconColor, textColorHover)}
-                aria-label={language === "ar" ? "استشارة الصيدلي" : "Ask the Pharmacist"}
+                aria-label={language === "ar" ? "Dr.Bot" : "Dr.Bot"}
               >
                 <MessageCircle className="h-5 w-5" />
               </button>
