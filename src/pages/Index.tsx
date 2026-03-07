@@ -61,6 +61,9 @@ const EliteBrandShowcase = lazy(() =>
 const ClinicalTruthBanner = lazy(() =>
   import("@/components/home/ClinicalTruthBanner")
 );
+const ContextualSocialProof = lazy(() =>
+  import("@/components/home/ContextualSocialProof")
+);
 const FloatingSocials = lazy(() =>
   import("@/components/FloatingSocials").then((m) => ({
     default: m.FloatingSocials,
@@ -206,6 +209,9 @@ const Index = () => {
         </Suspense>
 
         {/* ═══ ZONE 6: Contextual Social Proof & Editorial (Validation) ═══ */}
+        <Suspense fallback={<SectionSkeleton height="h-96" />}>
+          <ContextualSocialProof />
+        </Suspense>
         <Suspense fallback={<SectionSkeleton height="h-96" />}>
           <EditorialSpotlight />
         </Suspense>
