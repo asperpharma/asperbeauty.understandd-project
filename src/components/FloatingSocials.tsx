@@ -121,7 +121,7 @@ export const FloatingSocials = () => {
             href={social.url}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group flex items-center bg-foreground/90 text-cream transition-all duration-300 ${social.color} hover:text-white`}
+            className={`group flex items-center ${social.bg} text-white hover:opacity-90 transition-all duration-300`}
             aria-label={social.name}
           >
             <div className="w-10 h-10 flex items-center justify-center">
