@@ -371,6 +371,19 @@ const ProductDetail = () => {
                   </div>
                 </AccordionContent>
               </AccordionItem>
+
+              {/* Reviews with Contextual Social Proof */}
+              <AccordionItem value="reviews" className="border-border">
+                <AccordionTrigger className="text-sm font-medium uppercase tracking-widest hover:no-underline py-5">
+                  <span className="flex items-center gap-2">
+                    <Star className="w-4 h-4 text-polished-gold" />
+                    {isArabic ? "التقييمات" : "Reviews"}
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ProductReviews productId={product.id} />
+                </AccordionContent>
+              </AccordionItem>
             </Accordion>
           </div>
         </div>
