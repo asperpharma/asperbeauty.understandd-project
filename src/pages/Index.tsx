@@ -102,45 +102,51 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const { data: newArrivals = [] } = useQuery({
-    queryKey: ["new-arrivals"],
+    queryKey: ["new-arrivals-premium"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
         .select("*")
         .order("created_at", { ascending: false })
-        .limit(8);
+        .limit(30);
       if (error) throw error;
-      return (data || []).map((p) => ({
-        id: p.id,
-        title: p.title,
-        brand: p.brand,
-        price: p.price ?? 0,
-        image_url: p.image_url || "/placeholder.svg",
-        category: p.primary_concern,
-        tags: [] as string[],
-        is_new: true,
-      }));
+      return (data || [])
+        .filter((p) => isHomepageBrand(p.brand))
+        .slice(0, 8)
+        .map((p) => ({
+          id: p.id,
+          title: p.title,
+          brand: p.brand,
+          price: p.price ?? 0,
+          image_url: p.image_url || "/placeholder.svg",
+          category: p.primary_concern,
+          tags: [] as string[],
+          is_new: true,
+        }));
     },
   });
 
   const { data: bestsellers = [] } = useQuery({
-    queryKey: ["bestsellers"],
+    queryKey: ["bestsellers-premium"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
         .select("*")
         .order("created_at", { ascending: true })
-        .limit(8);
+        .limit(30);
       if (error) throw error;
-      return (data || []).map((p) => ({
-        id: p.id,
-        title: p.title,
-        brand: p.brand,
-        price: p.price ?? 0,
-        image_url: p.image_url || "/placeholder.svg",
-        category: p.primary_concern,
-        is_on_sale: false,
-      }));
+      return (data || [])
+        .filter((p) => isHomepageBrand(p.brand))
+        .slice(0, 8)
+        .map((p) => ({
+          id: p.id,
+          title: p.title,
+          brand: p.brand,
+          price: p.price ?? 0,
+          image_url: p.image_url || "/placeholder.svg",
+          category: p.primary_concern,
+          is_on_sale: false,
+        }));
     },
   });
 
