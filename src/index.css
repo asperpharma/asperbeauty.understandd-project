@@ -871,3 +871,24 @@ body::before {
   border-color: hsl(var(--polished-gold));
   box-shadow: 0 0 0 3px hsl(var(--polished-gold) / 0.2);
 }
+
+body { background-color: #F8F8FF; color: #1A1A1A; }
+
+.gold-stitch-hover {
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.gold-stitch-hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid #C5A028;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.gold-stitch-hover:hover::after {
+  opacity: 1;
+}
+

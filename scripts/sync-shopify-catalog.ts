@@ -129,6 +129,13 @@ function slugify(text: string): string {
  * Normalize a product type into a consistent tag for frontend filtering.
  * E.g. "Skin Care" → "skincare", "Hair Care" → "haircare"
  */
+function getGoogleCategory(type: string): string {
+  const t = type.toLowerCase();
+  if (t.includes('skincare')) return 'Health & Beauty > Personal Care > Cosmetics > Skin Care';
+  if (t.includes('makeup')) return 'Health & Beauty > Personal Care > Cosmetics > Makeup';
+  if (t.includes('hair')) return 'Health & Beauty > Personal Care > Hair Care';
+  return 'Health & Beauty > Personal Care > Cosmetics';
+}
 function normalizeTag(type: string): string {
   return type.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
 }
@@ -783,3 +790,4 @@ main().catch((err) => {
   console.error("Fatal error:", err);
   process.exit(1);
 });
+

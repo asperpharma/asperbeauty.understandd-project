@@ -20,6 +20,7 @@ import { Footer } from "@/components/Footer";
 import { ProductQuickView } from "@/components/ProductQuickView";
 import { ProductSearchFilters, type FilterState } from "@/components/ProductSearchFilters";
 import { cn } from "@/lib/utils";
+import { mapCategoryToConcerns } from "@/lib/categoryHierarchy";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Product = Tables<"products">;
@@ -256,7 +257,14 @@ export default function Shop() {
         if (!matches) return false;
       }
       if (filters.brands.length > 0 && (!product.brand || !filters.brands.includes(product.brand))) return false;
-      if (filters.skinConcerns.length > 0 && !filters.skinConcerns.includes(product.primary_concern)) return false;
+      
+      // Unify Categories and Concerns: Map global categories to their medical concern tags
+      const activeConcerns = [...filters.skinConcerns];
+      filters.categories.forEach(catId => {
+        activeConcerns.push(...mapCategoryToConcerns(catId));
+      });
+
+      if (activeConcerns.length > 0 && (!product.primary_concern || !activeConcerns.includes(product.primary_concern))) return false;
       const price = product.price ?? 0;
       if (price < filters.priceRange[0] || price > filters.priceRange[1]) return false;
       return true;

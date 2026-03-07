@@ -82,7 +82,7 @@ const socialLinks = [
   {
     name: "X",
     icon: XIcon,
-    url: "https://twitter.com/asperbeautyshop",
+    url: "https://x.com/asperbeautyshop",
     color: "hover:bg-black",
   },
   {
@@ -137,3 +137,5 @@ export const FloatingSocials = () => {
     </div>
   );
 };
+
+

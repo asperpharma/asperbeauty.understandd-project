@@ -101,7 +101,7 @@ export const Header = () => {
             <div className="flex items-center gap-4">
               <button
                 type="button"
-                className="lg:hidden p-2 text-asper-ink hover:text-burgundy"
+                className="lg:hidden p-2 text-[#800020] hover:text-[#C5A028] hover:text-burgundy"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               >
@@ -111,7 +111,7 @@ export const Header = () => {
                 <span className="font-display text-2xl font-bold text-burgundy tracking-tight">
                   ASPER
                 </span>
-                <span className="text-[10px] font-body tracking-[0.2em] text-asper-ink uppercase">
+                <span className="text-[10px] font-body tracking-[0.2em] text-[#800020] hover:text-[#C5A028] uppercase">
                   {language === "ar" ? "متجر الجمال" : "Beauty Shop"}
                 </span>
               </Link>
@@ -127,7 +127,7 @@ export const Header = () => {
               >
                 <Link
                   to="/brands"
-                  className="flex items-center gap-1 font-body text-sm font-medium text-asper-ink hover:text-burgundy transition-colors py-8"
+                  className="flex items-center gap-1 font-body text-sm font-medium text-[#800020] hover:text-[#C5A028] hover:text-burgundy transition-colors py-8"
                 >
                   {language === "ar" ? "العلامات" : "Brands"}{" "}
                   <ChevronDown className="h-3 w-3" />
@@ -140,10 +140,10 @@ export const Header = () => {
                         to={brand.href}
                         className="flex items-center justify-between p-3 rounded-md hover:bg-asper-stone group/item transition-colors"
                       >
-                        <span className="font-display font-medium text-asper-ink group-hover/item:text-burgundy">
+                        <span className="font-display font-medium text-[#800020] hover:text-[#C5A028] group-hover/item:text-burgundy">
                           {brand.name}
                         </span>
-                        <span className="text-xs text-asper-ink-muted uppercase tracking-wider">
+                        <span className="text-xs text-[#800020] hover:text-[#C5A028]-muted uppercase tracking-wider">
                           {brand.label}
                         </span>
                       </Link>
@@ -168,7 +168,7 @@ export const Header = () => {
               >
                 <Link
                   to="/skin-concerns"
-                  className="flex items-center gap-1 font-body text-sm font-medium text-asper-ink hover:text-burgundy transition-colors py-8"
+                  className="flex items-center gap-1 font-body text-sm font-medium text-[#800020] hover:text-[#C5A028] hover:text-burgundy transition-colors py-8"
                 >
                   {language === "ar" ? "مشاكل البشرة" : "Skin Concerns"}{" "}
                   <ChevronDown className="h-3 w-3" />
@@ -187,7 +187,7 @@ export const Header = () => {
                         className="flex items-center gap-3 p-2 rounded-md hover:bg-asper-stone group/item transition-colors"
                       >
                         <span className="text-lg">{concern.icon}</span>
-                        <span className="font-display font-medium text-asper-ink group-hover/item:text-burgundy">
+                        <span className="font-display font-medium text-[#800020] hover:text-[#C5A028] group-hover/item:text-burgundy">
                           {concern.name}
                         </span>
                       </Link>
@@ -206,7 +206,7 @@ export const Header = () => {
 
               <Link
                 to="/best-sellers"
-                className="font-body text-sm font-medium text-asper-ink hover:text-burgundy transition-colors"
+                className="font-body text-sm font-medium text-[#800020] hover:text-[#C5A028] hover:text-burgundy transition-colors"
               >
                 {language === "ar" ? "الأكثر مبيعاً" : "Best Sellers"}
               </Link>
@@ -222,7 +222,7 @@ export const Header = () => {
             <div className="flex items-center gap-2 md:gap-4">
               {/* Desktop Search */}
               <div className="hidden md:flex items-center bg-polished-white/50 border border-rose-clay-light/40 rounded-full px-3 py-1.5 focus-within:border-polished-gold focus-within:ring-1 focus-within:ring-polished-gold transition-all w-48 focus-within:w-64">
-                <Search className="h-4 w-4 text-asper-ink-muted flex-shrink-0" />
+                <Search className="h-4 w-4 text-[#800020] hover:text-[#C5A028]-muted flex-shrink-0" />
                 <input
                   ref={searchInputRef}
                   type="text"
@@ -230,7 +230,7 @@ export const Header = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setSearchFocused(true)}
                   placeholder={language === "ar" ? "ابحث في آلاف المنتجات..." : "Search 5,000+ items..."}
-                  className="bg-transparent border-none outline-none text-xs ml-2 w-full placeholder:text-asper-ink-muted text-asper-ink font-body"
+                  className="bg-transparent border-none outline-none text-xs ml-2 w-full placeholder:text-[#800020] hover:text-[#C5A028]-muted text-[#800020] hover:text-[#C5A028] font-body"
                   dir={isRTL ? "rtl" : "ltr"}
                 />
               </div>
@@ -242,7 +242,7 @@ export const Header = () => {
               />
               <button
                 type="button"
-                className="md:hidden p-2 text-asper-ink hover:text-burgundy"
+                className="md:hidden p-2 text-[#800020] hover:text-[#C5A028] hover:text-burgundy"
                 onClick={() => setMobileSearchFocused(true)}
                 aria-label="Search"
               >
@@ -252,14 +252,14 @@ export const Header = () => {
               <button
                 type="button"
                 onClick={() => window.dispatchEvent(new CustomEvent("open-beauty-assistant"))}
-                className="hidden md:block p-2 text-asper-ink hover:text-burgundy transition-colors"
+                className="hidden md:block p-2 text-[#800020] hover:text-[#C5A028] hover:text-burgundy transition-colors"
                 aria-label={language === "ar" ? "استشارة الصيدلي" : "Ask the Pharmacist"}
               >
                 <MessageCircle className="h-5 w-5" />
               </button>
               <Link
                 to={user ? "/account" : "/auth"}
-                className="hidden md:block p-2 text-asper-ink hover:text-burgundy transition-colors"
+                className="hidden md:block p-2 text-[#800020] hover:text-[#C5A028] hover:text-burgundy transition-colors"
                 aria-label={user ? "Account" : "Sign in"}
               >
                 <User className="h-5 w-5" />
@@ -267,7 +267,7 @@ export const Header = () => {
               <button
                 type="button"
                 onClick={() => setWishlistOpen(true)}
-                className="hidden md:block relative p-2 text-asper-ink hover:text-burgundy transition-colors"
+                className="hidden md:block relative p-2 text-[#800020] hover:text-[#C5A028] hover:text-burgundy transition-colors"
                 aria-label="Wishlist"
               >
                 <Heart className="h-5 w-5" />
@@ -280,7 +280,7 @@ export const Header = () => {
               <button
                 type="button"
                 onClick={() => setCartOpen(true)}
-                className="relative p-2 text-asper-ink hover:text-burgundy transition-colors group"
+                className="relative p-2 text-[#800020] hover:text-[#C5A028] hover:text-burgundy transition-colors group"
                 aria-label="Cart"
               >
                 <ShoppingBag className="h-5 w-5" />
@@ -305,11 +305,11 @@ export const Header = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               onBlur={() => {}}
               placeholder={language === "ar" ? "ابحث في المنتجات..." : "Search 5,000+ items..."}
-              className="w-full px-4 py-2 pl-10 rounded-full border border-rose-clay-light/40 text-asper-ink font-body text-sm"
+              className="w-full px-4 py-2 pl-10 rounded-full border border-rose-clay-light/40 text-[#800020] hover:text-[#C5A028] font-body text-sm"
               dir={isRTL ? "rtl" : "ltr"}
               autoFocus
             />
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-asper-ink-muted" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#800020] hover:text-[#C5A028]-muted" />
           </div>
           <SearchDropdown
             isOpen={mobileSearchFocused}
@@ -344,7 +344,7 @@ export const Header = () => {
                     key={b.name}
                     to={b.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block py-2 text-asper-ink border-b border-rose-clay-light/20 font-body"
+                    className="block py-2 text-[#800020] hover:text-[#C5A028] border-b border-rose-clay-light/20 font-body"
                   >
                     {b.name}
                   </Link>
@@ -366,7 +366,7 @@ export const Header = () => {
                     key={c.name}
                     to={c.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block py-2 text-asper-ink border-b border-rose-clay-light/20 font-body"
+                    className="block py-2 text-[#800020] hover:text-[#C5A028] border-b border-rose-clay-light/20 font-body"
                   >
                     {c.name}
                   </Link>
@@ -378,7 +378,7 @@ export const Header = () => {
                   window.dispatchEvent(new CustomEvent("open-beauty-assistant"));
                   setIsMobileMenuOpen(false);
                 }}
-                className="flex items-center gap-2 w-full py-2 text-asper-ink font-body border-b border-rose-clay-light/20 text-left"
+                className="flex items-center gap-2 w-full py-2 text-[#800020] hover:text-[#C5A028] font-body border-b border-rose-clay-light/20 text-left"
               >
                 <MessageCircle className="h-4 w-4 text-burgundy" />
                 {language === "ar" ? "اسأل الصيدلي" : "Ask the Pharmacist"}
@@ -401,7 +401,7 @@ export const Header = () => {
                 <Link
                   to={user ? "/account" : "/auth"}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="font-body text-asper-ink"
+                  className="font-body text-[#800020] hover:text-[#C5A028]"
                 >
                   {user
                     ? (language === "ar" ? "حسابي" : "My Account")
@@ -421,3 +421,4 @@ export const Header = () => {
     </header>
   );
 };
+

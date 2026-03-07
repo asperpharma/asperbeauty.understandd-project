@@ -200,7 +200,13 @@ const ProductDetail = () => {
 
             {/* Pharmacist Note (brief) */}
             {product.pharmacist_note && (
-              <p className="text-muted-foreground leading-relaxed mb-8 font-light">{product.pharmacist_note}</p>
+              <div className="mb-8 p-6 bg-[#F8F8FF] border-l-4 border-[#800020] rounded-r-xl shadow-sm">
+                <div className="flex items-center gap-2 mb-3 text-[#800020]">
+                  <Stethoscope className="w-5 h-5" />
+                  <span className="text-xs font-bold uppercase tracking-widest">{isArabic ? "ملاحظة الصيدلاني" : "Pharmacist Clinical Note"}</span>
+                </div>
+                <p className="text-muted-foreground leading-relaxed font-light italic">"{product.pharmacist_note}"</p>
+              </div>
             )}
 
             {/* Clinical Badge */}
@@ -394,3 +400,4 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+

@@ -248,3 +248,4 @@ export const LuxuryProductCard = ({ product }: { product: ProductProps }) => {
 };
 
 export default LuxuryProductCard;
+

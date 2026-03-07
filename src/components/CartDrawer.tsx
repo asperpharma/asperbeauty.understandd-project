@@ -102,11 +102,11 @@ export const CartDrawer = () => {
       <SheetContent
         className={`w-full sm:max-w-md flex flex-col h-full bg-background p-0 ${
           isRTL ? "border-r border-l-0" : "border-l"
-        } border-gold/20`}
+        } border-[#C5A028]/20`}
         side={isRTL ? "left" : "right"}
       >
         {/* Header */}
-        <SheetHeader className="flex-shrink-0 px-6 pt-6 pb-4 border-b border-gold/20">
+        <SheetHeader className="flex-shrink-0 px-6 pt-6 pb-4 border-b border-[#C5A028]/20">
           <div className="flex items-center justify-between">
             {checkoutMode === "cod" && (
               <button
@@ -136,7 +136,7 @@ export const CartDrawer = () => {
             <div className="mt-4">
               <div className="h-1 bg-muted rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gold transition-all duration-500 ease-out rounded-full"
+                  className="h-full bg-[#C5A028] transition-all duration-500 ease-out rounded-full"
                   style={{ width: `${shippingProgress}%` }}
                 />
               </div>
@@ -272,7 +272,7 @@ export const CartDrawer = () => {
                     </div>
 
                     {/* Footer - Pinned to Bottom */}
-                    <div className="flex-shrink-0 p-6 border-t border-gold/20 bg-background">
+                    <div className="flex-shrink-0 p-6 border-t border-[#C5A028]/20 bg-background">
                       {/* Subtotal */}
                       <div className="flex justify-between items-center mb-4">
                         <span className="text-muted-foreground">
@@ -293,7 +293,7 @@ export const CartDrawer = () => {
                             isLoading ||
                             !getCheckoutUrl()
                           }
-                          className="w-full py-3 border-2 border-foreground text-foreground font-medium text-sm tracking-wide uppercase transition-all hover:bg-foreground hover:text-background disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                          className="w-full py-3 border-2 border-[#800020] text-[#800020] font-medium text-sm tracking-wide uppercase transition-all hover:bg-[#800020] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                           {isLoading
                             ? <Loader2 className="w-4 h-4 animate-spin" />
@@ -309,7 +309,7 @@ export const CartDrawer = () => {
                         <button
                           onClick={() => setCheckoutMode("cod")}
                           disabled={items.length === 0 || isLoading}
-                          className="w-full py-3.5 bg-foreground text-background font-medium text-sm tracking-wide uppercase transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                          className="w-full py-3.5 bg-[#800020] text-white hover:bg-[#800020]/90 font-medium text-sm tracking-wide uppercase transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                           <Truck className="w-4 h-4" />
                           {isArabic
@@ -327,3 +327,4 @@ export const CartDrawer = () => {
     </Sheet>
   );
 };
+
