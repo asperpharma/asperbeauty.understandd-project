@@ -104,6 +104,7 @@ const App = () => {
                 <Route path="/philosophy" element={<Philosophy />} />
                 <Route path="/intelligence" element={<AsperIntelligence />} />
                 <Route path="/health" element={<Health />} />
+                <Route path="/portal/regimen/:id" element={<RegimenPortal />} />
                 <Route path="/admin/bulk-upload" element={<BulkUpload />} />
                 <Route path="/admin/orders" element={<AdminOrders />} />
                 <Route path="/admin/products" element={<ManageProducts />} />
