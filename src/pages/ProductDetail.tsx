@@ -18,6 +18,7 @@ import {
   ShieldCheck,
   ShoppingBag,
   Sparkles,
+  Star,
 } from "lucide-react";
 import { ShareButtons } from "@/components/ShareButtons";
 import { StickyAddToCart } from "@/components/StickyAddToCart";
