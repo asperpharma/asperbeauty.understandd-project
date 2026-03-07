@@ -168,8 +168,8 @@ export default {
           to: { opacity: "1" },
         },
         shimmer: {
-          "0%": { backgroundPosition: "-200% 0" },
-          "100%": { backgroundPosition: "200% 0" },
+          "0%": { transform: "translateX(-100%) skewX(-20deg)" },
+          "100%": { transform: "translateX(200%) skewX(-20deg)" },
         },
         "skeleton-breathe": {
           "0%, 100%": { opacity: "0.45" },
