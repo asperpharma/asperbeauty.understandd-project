@@ -73,9 +73,6 @@ const App = () => {
               <Suspense fallback={null}>
                 <BeautyAssistant />
               </Suspense>
-              <Suspense fallback={null}>
-                <ChatBot />
-              </Suspense>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/chat" element={<Index />} />
