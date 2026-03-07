@@ -61,6 +61,9 @@ const EliteBrandShowcase = lazy(() =>
 const ClinicalTruthBanner = lazy(() =>
   import("@/components/home/ClinicalTruthBanner")
 );
+const ContextualSocialProof = lazy(() =>
+  import("@/components/home/ContextualSocialProof")
+);
 const FloatingSocials = lazy(() =>
   import("@/components/FloatingSocials").then((m) => ({
     default: m.FloatingSocials,
