@@ -150,14 +150,18 @@ Deno.serve(async (req) => {
     const storefrontToken = Deno.env.get("SHOPIFY_STOREFRONT_ACCESS_TOKEN")!;
 
     const authHeader = req.headers.get("authorization") ?? "";
-    const token = authHeader.replace("Bearer ", "");
+    const bearerToken = authHeader.replace("Bearer ", "").trim();
 
-    // Allow service_role key or validate admin user
+    // Use service_role for DB operations
     const supabase = createClient(supabaseUrl, serviceKey);
 
-    if (token !== serviceKey) {
-      const userClient = createClient(supabaseUrl, token || serviceKey);
-      const { data: { user }, error: authErr } = await userClient.auth.getUser(token);
+    // Validate caller: must be admin user or internal service call
+    if (bearerToken && bearerToken !== serviceKey) {
+      const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+      const userClient = createClient(supabaseUrl, anonKey, {
+        global: { headers: { Authorization: `Bearer ${bearerToken}` } },
+      });
+      const { data: { user }, error: authErr } = await userClient.auth.getUser();
       if (authErr || !user) {
         return new Response(JSON.stringify({ error: "Unauthorized" }), {
           status: 401,
