@@ -189,7 +189,7 @@ Deno.serve(async (req) => {
 
     let synced = 0, skipped = 0, failed = 0;
     const errors: string[] = [];
-    let cursor: string | undefined;
+    let cursor: string | undefined = url.searchParams.get("after") ?? undefined;
     let fetched = 0;
 
     while (fetched < limit) {
