@@ -82,7 +82,7 @@ query($first: Int!, $after: String) {
     edges {
       node {
         id handle title vendor productType tags
-        totalInventory
+        availableForSale
         priceRange { minVariantPrice { amount currencyCode } }
         images(first: 1) { edges { node { url } } }
       }
@@ -97,7 +97,7 @@ interface ShopifyNode {
   vendor: string;
   productType: string;
   tags: string[];
-  totalInventory: number;
+  availableForSale: boolean;
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
   images: { edges: Array<{ node: { url: string } }> };
 }
