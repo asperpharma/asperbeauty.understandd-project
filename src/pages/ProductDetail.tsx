@@ -20,6 +20,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { ShareButtons } from "@/components/ShareButtons";
+import { StickyAddToCart } from "@/components/StickyAddToCart";
+import { ProductReviews } from "@/components/ProductReviews";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
