@@ -43,9 +43,6 @@ const BeautyAssistant = lazy(() =>
   import("@/components/BeautyAssistant").then((m) => ({ default: m.BeautyAssistant })),
 );
 
-const ChatBot = lazy(() =>
-  import("@/components/ChatBot").then((m) => ({ default: m.ChatBot })),
-);
 
 const queryClient = new QueryClient();
 
