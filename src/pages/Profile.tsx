@@ -27,9 +27,9 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import asperLogo from "@/assets/asper-lotus-logo.png";
+import AsperAccessCard from "@/components/AsperAccessCard";
 import mirrorHero from "@/assets/protocol-mirror-hero.jpg";
 import nexusHero from "@/assets/protocol-nexus-hero.jpg";
-import walletCard from "@/assets/wallet-card-preview.jpg";
 
 const LUXURY_EASE = [0.19, 1, 0.22, 1] as const;
 
