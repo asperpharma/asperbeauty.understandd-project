@@ -11,6 +11,7 @@ import { ShopByProtocol } from "@/components/home/ShopByProtocol";
 import { Footer } from "@/components/Footer";
 import { PageLoadingSkeleton } from "@/components/PageLoadingSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
+import { isHomepageBrand } from "@/constants/premiumBrands";
 
 // Lazy load below-the-fold components
 const EditorialSpotlight = lazy(() =>
