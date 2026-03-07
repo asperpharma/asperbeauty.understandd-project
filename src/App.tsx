@@ -105,6 +105,7 @@ const App = () => {
                 <Route path="/wishlist" element={<Wishlist />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/account" element={<Account />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/philosophy" element={<Philosophy />} />
                 <Route path="/intelligence" element={<AsperIntelligence />} />
                 <Route path="/health" element={<Health />} />
