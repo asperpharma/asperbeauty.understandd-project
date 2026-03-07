@@ -37,6 +37,7 @@ import AdminAuditLogs from "./pages/AdminAuditLogs";
 import AsperIntelligence from "./pages/AsperIntelligence";
 import BrandIntelligenceDashboard from "./pages/BrandIntelligenceDashboard";
 import Health from "./pages/Health";
+import RegimenPortal from "./pages/RegimenPortal";
 import { RequireAdmin } from "./components/RequireAdmin";
 
 const BeautyAssistant = lazy(() =>
