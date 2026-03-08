@@ -128,11 +128,37 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
+/* Inline SVG persona avatars — transparent, no white box */
+const DrSamiAvatar = ({ size = 28 }: { size?: number }) => (
+  <div
+    className="rounded-full border border-polished-gold bg-transparent p-1 flex items-center justify-center shrink-0"
+    style={{ width: size, height: size }}
+  >
+    <svg width={size * 0.55} height={size * 0.55} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2v20M8 6c0-1.5 1.8-3 4-3s4 1.5 4 3-1.8 3-4 3-4-1.5-4-3zM8 10c0-1.5 1.8-3 4-3s4 1.5 4 3-1.8 3-4 3-4-1.5-4-3z" stroke="hsl(var(--polished-gold))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M9 22h6" stroke="hsl(var(--polished-gold))" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  </div>
+);
+
+const MsZainAvatar = ({ size = 28 }: { size?: number }) => (
+  <div
+    className="rounded-full border border-polished-gold bg-transparent p-1 flex items-center justify-center shrink-0"
+    style={{ width: size, height: size }}
+  >
+    <svg width={size * 0.55} height={size * 0.55} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 22c-2-4-6-8-6-12a6 6 0 0112 0c0 4-4 8-6 12z" stroke="hsl(var(--polished-gold))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M12 22c-4-2-8-4-9-8 2 0 5 1 9 8zM12 22c4-2 8-4 9-8-2 0-5 1-9 8z" stroke="hsl(var(--polished-gold))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  </div>
+);
+
 const personaConfig = {
   dr_sami: {
     name: "Dr. Sami",
     subtitle: "Clinical Authority",
     icon: Shield,
+    avatar: DrSamiAvatar,
     color: "text-primary",
     bgColor: "bg-primary/10",
     shape: "clip-hexagon",
@@ -142,6 +168,7 @@ const personaConfig = {
     name: "Ms. Zain",
     subtitle: "Beauty Concierge",
     icon: Heart,
+    avatar: MsZainAvatar,
     color: "text-gold",
     bgColor: "bg-gold/10",
     shape: "rounded-full",
