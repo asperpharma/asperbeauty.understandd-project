@@ -187,19 +187,23 @@ export default function MixedMediaHero() {
           </Link>
         </div>
 
-        {/* Image grid — 2 cols */}
-        <div className="grid grid-cols-2">
-          <div className="aspect-square overflow-hidden">
-            <img src={heroDiscovery} alt="Serum discovery" className="w-full h-full object-cover" />
-          </div>
-          <div className="aspect-square overflow-hidden">
-            <img src={heroRosewater} alt="Rosewater ritual" className="w-full h-full object-cover" />
-          </div>
+        {/* Landscape image */}
+        <div className="w-full aspect-[16/9] overflow-hidden">
+          <img src={heroDiscovery} alt="Serum discovery" className="w-full h-full object-cover" />
         </div>
 
-        {/* Full-width hero image */}
-        <div className="w-full aspect-[3/2] overflow-hidden">
-          <img src={heroSerums} alt="Golden serums on marble" className="w-full h-full object-cover" />
+        {/* Second video */}
+        <div className="relative w-full aspect-[16/9] overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            disablePictureInPicture
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="/videos/hero-skincare-ritual.mp4" type="video/mp4" />
+          </video>
         </div>
       </div>
 
