@@ -55,43 +55,36 @@ export const BeautyAssistant = () => {
       <AnimatePresence>
         {!isOpen && (
           <motion.div
-            initial={{ y: 150, opacity: 0 }}
+            initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 150, opacity: 0, transition: { duration: 0.3 } }}
-            transition={{ type: "spring", stiffness: 260, damping: 20, delay: 1 }}
-            className="fixed bottom-0 right-4 sm:right-12 z-[100] flex flex-col items-end group"
-            style={{ isolation: "isolate" }}
+            exit={{ y: 100, opacity: 0, transition: { duration: 0.3 } }}
+            transition={{ type: "spring", stiffness: 260, damping: 22, delay: 1 }}
+            className="fixed bottom-6 right-4 sm:right-8 z-[100] cursor-pointer group"
+            onClick={() => setIsOpen(true)}
           >
-            {/* Speech Bubble */}
-            <motion.div
-              animate={{ y: [0, -5, 0] }}
-              transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-              className="bg-polished-white text-asper-ink px-6 py-4 rounded-2xl rounded-br-none shadow-2xl mb-4 border border-polished-gold/20 relative cursor-pointer"
-              onClick={() => setIsOpen(true)}
-            >
-              <div className="flex items-center gap-3">
-                <Sparkles className="h-4 w-4 text-polished-gold" />
-                <span className="text-sm font-semibold tracking-wide">
-                  {isAr ? "مرحباً، أنا د. سامي. كيف يمكنني مساعدتك؟" : "Hi, I'm Dr. Sami. How can I help?"}
+            <div className="flex items-center gap-3 bg-background/90 backdrop-blur-xl border border-polished-gold/25 rounded-full pl-2 pr-5 py-2 shadow-[0_8px_40px_-10px_rgba(0,0,0,0.15)] transition-all duration-500 group-hover:shadow-[0_12px_50px_-8px_rgba(197,160,40,0.3)] group-hover:border-polished-gold/50 group-hover:scale-105">
+              {/* Realistic avatar */}
+              <div className="relative shrink-0">
+                <div className="w-11 h-11 rounded-full overflow-hidden border border-polished-gold/40">
+                  <img 
+                    src="/dr-sami-head.png" 
+                    alt="Dr. Sami" 
+                    className="w-full h-full object-cover object-top"
+                  />
+                </div>
+                {/* Online dot */}
+                <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-background" />
+              </div>
+
+              {/* Elegant text */}
+              <div className="flex flex-col">
+                <span className="font-display text-sm font-semibold tracking-wide text-foreground leading-tight">
+                  {isAr ? "د. سامي" : "Dr. Sami"}
+                </span>
+                <span className="text-[10px] uppercase tracking-[0.15em] text-polished-gold/80 font-body">
+                  {isAr ? "استشارة مباشرة" : "Beauty Consultant"}
                 </span>
               </div>
-              <div className="absolute -bottom-3 right-6 w-0 h-0 border-l-[12px] border-l-transparent border-t-[12px] border-t-polished-white border-r-[12px] border-r-transparent filter drop-shadow-md"></div>
-            </motion.div>
-
-            {/* Dr. Sami Head Icon */}
-            <div 
-              className="relative w-20 h-20 sm:w-24 sm:h-24 cursor-pointer overflow-visible transition-all duration-500 hover:-translate-y-2 hover:scale-110"
-              onClick={() => setIsOpen(true)}
-            >
-              <div className="w-full h-full rounded-full border-2 border-polished-gold/60 shadow-[0_8px_30px_-5px_rgba(197,160,40,0.4)] overflow-hidden bg-polished-white">
-                <img 
-                  src="/dr-sami-head.png" 
-                  alt="Dr. Sami" 
-                  className="w-full h-full object-cover object-top"
-                />
-              </div>
-              {/* Pulse ring */}
-              <div className="absolute inset-0 rounded-full border-2 border-polished-gold/30 animate-ping" />
             </div>
           </motion.div>
         )}
