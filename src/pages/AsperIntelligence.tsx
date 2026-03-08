@@ -446,7 +446,7 @@ export default function AsperIntelligence() {
                   {capturedImage && (
                     <button
                       onClick={() => handleSendMessage()}
-                      className="mt-6 w-full bg-[#800020] text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl hover:scale-[1.02] transition-transform"
+                      className="mt-6 w-full bg-maroon text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl hover:scale-[1.02] transition-transform"
                     >
                       Run Strategic Scan
                     </button>
