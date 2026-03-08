@@ -70,7 +70,7 @@ export function ScienceMeetsStyle() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7, ease: LUXURY_EASE }}
-            className="group bg-card rounded-none p-8 md:p-10 shadow-sm border border-transparent hover:border-accent hover:shadow-xl transition-all duration-500 relative overflow-hidden"
+            className="group bg-white rounded-none p-8 md:p-10 shadow-sm hover:shadow-xl hover:-translate-y-2 border border-transparent hover:border-accent transition-all duration-700 relative overflow-hidden"
           >
             {/* Subtle clinical gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent pointer-events-none" />
@@ -117,13 +117,13 @@ export function ScienceMeetsStyle() {
                   >
                     <Link
                       to={`/shop?brand=${encodeURIComponent(brand.slug)}`}
-                      className="flex items-center justify-center p-4 md:p-5 rounded-lg bg-asper-stone-light/60 hover:bg-card hover:shadow-md border border-transparent hover:border-accent/40 transition-all duration-500"
+                      className="group/card flex items-center justify-center p-6 md:p-8 rounded-xl bg-white shadow-sm hover:shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:-translate-y-2 border-2 border-transparent hover:border-accent will-change-transform transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] cursor-pointer"
                       aria-label={brand.name}
                     >
                       <img
                         src={brand.logo}
                         alt={`${brand.name} logo`}
-                        className="w-16 md:w-20 h-auto max-h-12 md:max-h-16 object-contain mix-blend-multiply opacity-70 grayscale group-hover:opacity-90 hover:!opacity-100 hover:!grayscale-0 hover:scale-110 transition-all duration-500"
+                        className="w-20 md:w-28 h-auto max-h-14 md:max-h-20 object-contain mix-blend-multiply grayscale opacity-60 group-hover/card:grayscale-0 group-hover/card:opacity-100 group-hover/card:scale-105 will-change-transform transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
                         loading="lazy"
                       />
                     </Link>
@@ -148,7 +148,7 @@ export function ScienceMeetsStyle() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7, ease: LUXURY_EASE, delay: 0.1 }}
-            className="group bg-card rounded-none p-8 md:p-10 shadow-sm border border-transparent hover:border-accent hover:shadow-xl transition-all duration-500 relative overflow-hidden"
+            className="group bg-white rounded-none p-8 md:p-10 shadow-sm hover:shadow-xl hover:-translate-y-2 border border-transparent hover:border-accent transition-all duration-700 relative overflow-hidden"
           >
             {/* Warm editorial gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-accent/[0.03] to-transparent pointer-events-none" />
@@ -195,13 +195,13 @@ export function ScienceMeetsStyle() {
                   >
                     <Link
                       to={`/shop?brand=${encodeURIComponent(brand.slug)}`}
-                      className="flex items-center justify-center p-4 md:p-5 rounded-lg bg-asper-stone-light/60 hover:bg-card hover:shadow-md border border-transparent hover:border-accent/40 transition-all duration-500"
+                      className="group/card flex items-center justify-center p-6 md:p-8 rounded-xl bg-white shadow-sm hover:shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:-translate-y-2 border-2 border-transparent hover:border-accent will-change-transform transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] cursor-pointer"
                       aria-label={brand.name}
                     >
                       <img
                         src={brand.logo}
                         alt={`${brand.name} logo`}
-                        className="w-16 md:w-20 h-auto max-h-12 md:max-h-16 object-contain mix-blend-multiply opacity-70 grayscale group-hover:opacity-90 hover:!opacity-100 hover:!grayscale-0 hover:scale-110 transition-all duration-500"
+                        className="w-20 md:w-28 h-auto max-h-14 md:max-h-20 object-contain mix-blend-multiply grayscale opacity-60 group-hover/card:grayscale-0 group-hover/card:opacity-100 group-hover/card:scale-105 will-change-transform transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
                         loading="lazy"
                       />
                     </Link>
