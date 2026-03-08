@@ -84,7 +84,7 @@ export const BeautyAssistant = () => {
 
             {/* Mini Doctor Character */}
             <div 
-              className="relative w-40 h-40 sm:w-56 sm:h-56 cursor-pointer overflow-visible transition-all duration-500 hover:-translate-y-4 hover:scale-110 drop-shadow-[0_20px_35px_rgba(0,0,0,0.3)]"
+              className="relative w-40 h-40 sm:w-56 sm:h-56 cursor-pointer overflow-visible transition-all duration-500 hover:-translate-y-4 hover:scale-110 drop-shadow-[0_20px_35px_rgba(0,0,0,0.3)] bg-transparent"
               onClick={() => setIsOpen(true)}
             >
               {/* Cutout character image (no background) */}
