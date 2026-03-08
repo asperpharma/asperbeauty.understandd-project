@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ShieldCheck, Award, CheckCircle, Stethoscope } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
-import asperLogo from "@/assets/asper-logo-burgundy.png";
+import { AsperWordmark } from "@/components/ui/AsperWordmark";
 
 
 // Brand-accurate social media icon components
@@ -90,7 +90,7 @@ export const Footer = () => {
           {/* Column 1 - Brand Identity */}
           <div>
             <Link to="/" className="inline-block mb-6">
-              <img src={asperLogo} alt="Asper Beauty Shop" className="h-16 rounded" />
+              <AsperWordmark size="lg" className="text-polished-white" />
             </Link>
             <p className="font-body text-asper-stone-light mb-6">
               {isArabic ? "إعادة تعريف الجمال في الأردن." : "Redefining Beauty in Jordan."}
