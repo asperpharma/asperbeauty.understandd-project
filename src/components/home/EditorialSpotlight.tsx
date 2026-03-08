@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import alchemistHero from "@/assets/alchemist-touch-hero.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { cn } from "@/lib/utils";
@@ -20,8 +21,8 @@ export const EditorialSpotlight = () => {
             <div className="lg:col-span-3 relative group">
               <div className="relative overflow-hidden aspect-[4/5] lg:aspect-[3/4] shadow-2xl">
                 <img
-                  src="/editorial-showcase-1.jpg"
-                  alt="Asper Beauty Editorial"
+                  src={alchemistHero}
+                  alt="The Alchemist's Touch — Gold serum on marble"
                   className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
                   loading="lazy"
                 />
