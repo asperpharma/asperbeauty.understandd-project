@@ -69,8 +69,16 @@ export function ShopifyProductCard({ product, enrichment }: Props) {
             <Package className="h-16 w-16 text-muted-foreground/40" />
           )}
 
+          {/* Bestseller Badge */}
+          {enrichment?.gold_stitch_tier && (
+            <span className="absolute top-3 left-3 z-10 flex items-center gap-1 bg-accent text-accent-foreground px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest shadow-md">
+              <Sparkles className="h-3 w-3" />
+              Bestseller
+            </span>
+          )}
+
           {/* Clinical Badge */}
-          {enrichment?.clinical_badge && (
+          {enrichment?.clinical_badge && !enrichment?.gold_stitch_tier && (
             <span className="absolute top-3 left-3 z-10 flex items-center gap-1 rounded-full bg-background/90 backdrop-blur-sm px-2 py-0.5 text-[10px] font-medium text-foreground shadow-sm">
               <Shield className="h-3 w-3 text-primary" />
               {enrichment.clinical_badge}
