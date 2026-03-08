@@ -117,13 +117,13 @@ export function ScienceMeetsStyle() {
                   >
                     <Link
                       to={`/shop?brand=${encodeURIComponent(brand.slug)}`}
-                      className="flex items-center justify-center p-4 md:p-5 rounded-lg bg-asper-stone-light/60 hover:bg-card hover:shadow-md border border-transparent hover:border-accent/40 transition-all duration-500"
+                      className="group/card flex items-center justify-center p-6 md:p-8 rounded-xl bg-white shadow-sm hover:shadow-xl hover:-translate-y-2 border border-transparent hover:border-accent transition-all duration-700 cursor-pointer"
                       aria-label={brand.name}
                     >
                       <img
                         src={brand.logo}
                         alt={`${brand.name} logo`}
-                        className="w-16 md:w-20 h-auto max-h-12 md:max-h-16 object-contain mix-blend-multiply opacity-70 grayscale group-hover:opacity-90 hover:!opacity-100 hover:!grayscale-0 hover:scale-110 transition-all duration-500"
+                        className="w-20 md:w-28 h-auto max-h-14 md:max-h-20 object-contain mix-blend-multiply grayscale opacity-60 group-hover/card:grayscale-0 group-hover/card:opacity-100 group-hover/card:scale-105 transition-all duration-700"
                         loading="lazy"
                       />
                     </Link>
@@ -195,13 +195,13 @@ export function ScienceMeetsStyle() {
                   >
                     <Link
                       to={`/shop?brand=${encodeURIComponent(brand.slug)}`}
-                      className="flex items-center justify-center p-4 md:p-5 rounded-lg bg-asper-stone-light/60 hover:bg-card hover:shadow-md border border-transparent hover:border-accent/40 transition-all duration-500"
+                      className="group/card flex items-center justify-center p-6 md:p-8 rounded-xl bg-white shadow-sm hover:shadow-xl hover:-translate-y-2 border border-transparent hover:border-accent transition-all duration-700 cursor-pointer"
                       aria-label={brand.name}
                     >
                       <img
                         src={brand.logo}
                         alt={`${brand.name} logo`}
-                        className="w-16 md:w-20 h-auto max-h-12 md:max-h-16 object-contain mix-blend-multiply opacity-70 grayscale group-hover:opacity-90 hover:!opacity-100 hover:!grayscale-0 hover:scale-110 transition-all duration-500"
+                        className="w-20 md:w-28 h-auto max-h-14 md:max-h-20 object-contain mix-blend-multiply grayscale opacity-60 group-hover/card:grayscale-0 group-hover/card:opacity-100 group-hover/card:scale-105 transition-all duration-700"
                         loading="lazy"
                       />
                     </Link>
