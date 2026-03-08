@@ -152,7 +152,7 @@ export default function AmbientVideoHero() {
       >
         <img
           src={luxuryHeroDisplay}
-          alt="Golden serum texture macro close-up"
+          alt="Luxury beauty products on marble display with red silk"
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Subtle gradient overlay for depth */}

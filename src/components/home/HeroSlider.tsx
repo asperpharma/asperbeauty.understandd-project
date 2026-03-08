@@ -64,7 +64,7 @@ const slides: Slide[] = [
   /* ---- Slide 2 — "Wonder Women Edit" ---- */
   {
     id: 2,
-    bg: "/src/assets/asper-shelf-display.png",
+    bg: luxurySliderDisplay,
     overlayClass: "bg-gradient-to-r from-black/50 via-black/30 to-transparent",
     href: "/collections",
     render: (isAr) => (

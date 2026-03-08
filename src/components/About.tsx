@@ -99,27 +99,13 @@ export const About = () => {
           {/* Visual */}
           <div className="order-1 lg:order-2">
             <div className="relative">
-              <div className="aspect-[4/5] bg-taupe rounded overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-taupe to-taupe-dark">
-                  <div className="text-center p-8">
-                    <span
-                      className="font-display text-6xl"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, hsl(46 100% 45%), hsl(46 100% 65%))",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                        opacity: 0.5,
-                      }}
-                    >
-                      A
-                    </span>
-                    <p className="luxury-subheading text-charcoal-light mt-4">
-                      Premium Beauty
-                    </p>
-                  </div>
-                </div>
+              <div className="aspect-[4/5] rounded overflow-hidden">
+                <img
+                  src={aboutVisual}
+                  alt="Luxury beauty products curated by pharmacists"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
               </div>
               {/* Decorative element */}
               <div className="absolute -bottom-6 -left-6 w-32 h-32 border border-gold/30" />
