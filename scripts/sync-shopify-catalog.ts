@@ -791,3 +791,12 @@ main().catch((err) => {
   process.exit(1);
 });
 
+
+function normalizeProductType(type: string): string {
+  if (!type) return 'Uncategorized';
+  const t = type.toLowerCase();
+  if (t.includes('cream') || t.includes('serum')) return 'Skin Care';
+  if (t.includes('mascara') || t.includes('lipstick')) return 'Makeup';
+  if (t.includes('perfume') || t.includes('fragrance')) return 'Fragrance';
+  return type;
+}

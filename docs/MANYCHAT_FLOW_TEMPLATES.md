@@ -100,3 +100,22 @@ The AI Brain returns a `v2` ManyChat response. You do **not** need to map fields
 5.  Set the message to **Arabic/English** based on user preference.
 
 *Last updated: March 6, 2026.*
+
+---
+
+## 7. Template: 'Surprise Soon' Campaign Broadcaster
+*Use this to trigger the omnichannel blast for the new Medical Luxury teaser.*
+
+**Request Body (JSON):**
+``json
+{
+  "messenger_id": "{{user_id}}",
+  "message": "SEND_TEASER_CAMPAIGN_01",
+  "intent": "campaign_broadcast",
+  "payload": {
+    "image_prompt": "Professional product photography of elegant lady holding a lipstick near her face. Clinical high-key lighting, minimalist medical spa background, soft shadows, sharp focus on product texture, 8k resolution, photorealistic, clean Soft Ivory background. Text overlay: 'Something Beautiful is Coming... Surprise Soon'",
+    "caption": "? Something Beautiful is Coming... At Asper Beauty Shop, we believe in the harmony of Science and Style. We are preparing a special surprise that redefines Medical Luxury. Stay tuned as we unveil the next chapter of your beauty ritual. Experience the Asper Shine soon. ?",
+    "target_channels": ["instagram_story", "whatsapp_status", "facebook_post"]
+  }
+}
+``

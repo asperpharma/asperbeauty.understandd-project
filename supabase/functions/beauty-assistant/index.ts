@@ -49,7 +49,7 @@ function extractFromGorgias(body: Record<string, unknown>): { message: string } 
 
 function extractFromManyChat(body: Record<string, unknown>): { message: string } {
   const data = body.data as Record<string, unknown> | undefined;
-  return { message: (data?.text as string) || (body as any).message || "" };
+  return { message: (data?.text as string) || (body as Record<string, unknown>).message || "" };
 }
 
 function detectConcernSlug(text: string): string | null {
@@ -65,12 +65,12 @@ function detectConcernSlug(text: string): string | null {
   return null;
 }
 
-function formatProduct(p: any): string {
+function formatProduct(p: Record<string, unknown>): string {
   return `- **${p.title}** (${p.brand}) | ${p.price} JOD | Step: ${p.regimen_step?.replace("Step_", "")} | Note: ${p.pharmacist_note || "Pharmacist-curated"}`;
 }
 
-async function fetchProductContext(supabase: any, userMessage: string, slug: string | null) {
-  let matched: any[] = [];
+async function fetchProductContext(supabase: ReturnType<typeof createClient>, userMessage: string, slug: string | null) {
+  let matched: Record<string, unknown>[] = [];
   if (slug) {
     const enums = CONCERN_MAPPING[slug] || [];
     const { data } = await supabase.from("products").select("*").in("primary_concern", enums).gt("inventory_total", 0).limit(6);
@@ -92,6 +92,17 @@ You operate in **Controlled AI Mode** as a Digital Dermatologist Assistant.
 ## YOUR DUAL-PERSONA
 1. **DR. SAMI (The Voice of Science)**: Used for clinical, safety, and ingredient queries. Intro: "As your clinical pharmacist..."
 2. **MS. ZAIN (The Voice of Luxury)**: Used for aesthetic, lifestyle, and ritual queries. Intro: "Welcome to your personal beauty ritual..."
+
+## LANGUAGE & MIRRORING
+1. **STRICT MIRRORING**: Always respond in the EXACT language the customer uses. If they speak Arabic, respond in premium Arabic (Tajawal font style). If English, use elegant English.
+2. **BILINGUAL SALES**: Use persuasive marketing terminology native to the chosen language (e.g., "??????? ??????" for Arabic sales).
+
+## SALES & MARKETING INTELLIGENCE
+You are a high-performance Sales Consultant. Your goal is to maximize Basket Value (AOV) and Conversion.
+1. **THE UPSELL**: Never recommend just one product. Recommend a 3-step Regimen (Cleanser + Treatment + Protection).
+2. **THE CLOSER**: Always end with a call-to-action (CTA). Example: "Would you like me to add this personalized tray to your bag?"
+3. **MARKETING HOOKS**: Mention "Same-day Concierge Delivery in Amman" and "Free Shipping on orders over 50 JOD."
+4. **SCARCITY & TRUST**: Use terms like "Top-rated by our clinical team" and "Highly requested in our Amman boutique."
 
 ## CORE MISSION
 - Increase conversion by providing expert, trustworthy guidance.
@@ -129,7 +140,7 @@ serve(async (req) => {
   try {
     const route = getWebhookRoute(req);
     let userMessage = "";
-    let messages: any[] = [];
+    let messages: Record<string, unknown>[] = [];
 
     if (route) {
       const body = await req.json();
@@ -179,3 +190,7 @@ serve(async (req) => {
     return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });
+
+
+
+

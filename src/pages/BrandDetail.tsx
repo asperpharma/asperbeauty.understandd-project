@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -66,10 +66,10 @@ const BrandDetail = () => {
         <Header />
         <div className="flex flex-col items-center justify-center min-h-[60vh] pt-36">
           <h1 className="font-display text-2xl text-foreground mb-4">
-            {isArabic ? "العلامة التجارية غير موجودة" : "Brand Not Found"}
+            {isArabic ? "Ø§Ù„Ø¹Ù„Ø§Ù…Ø© Ø§Ù„ØªØ¬Ø§Ø±ÙŠØ© ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯Ø©" : "Brand Not Found"}
           </h1>
           <Link to="/brands" className="text-primary hover:underline text-sm">
-            {isArabic ? "تصفح العلامات التجارية" : "Browse Brands"}
+            {isArabic ? "ØªØµÙØ­ Ø§Ù„Ø¹Ù„Ø§Ù…Ø§Øª Ø§Ù„ØªØ¬Ø§Ø±ÙŠØ©" : "Browse Brands"}
           </Link>
         </div>
         <Footer />
@@ -82,9 +82,9 @@ const BrandDetail = () => {
     "@context": "https://schema.org",
     "@type": "Brand",
     name: brand.name,
-    description: brand.description || `${brand.name} — Pharmacist-curated beauty at Asper Beauty Shop`,
+    description: brand.description || `${brand.name} â€” Pharmacist-curated beauty at Asper Beauty Shop`,
     image: brand.image_url,
-    url: `https://asperbeautyshop-com.lovable.app/brands/${brand.slug}`,
+    url: `https://www.asperbeautyshop.com/brands/${brand.slug}`,
   };
 
   return (
@@ -127,11 +127,11 @@ const BrandDetail = () => {
             <div className="flex items-center gap-3 mt-6">
               <Badge variant="outline" className="border-polished-gold/50 text-polished-gold text-xs tracking-wider gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                {isArabic ? "موزع معتمد" : "Authorized Retailer"}
+                {isArabic ? "Ù…ÙˆØ²Ø¹ Ù…Ø¹ØªÙ…Ø¯" : "Authorized Retailer"}
               </Badge>
               <Badge variant="outline" className="border-polished-gold/50 text-polished-gold text-xs tracking-wider gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
-                {isArabic ? "أصالة مضمونة" : "100% Authentic"}
+                {isArabic ? "Ø£ØµØ§Ù„Ø© Ù…Ø¶Ù…ÙˆÙ†Ø©" : "100% Authentic"}
               </Badge>
             </div>
           </div>
@@ -142,11 +142,11 @@ const BrandDetail = () => {
       <div className="container mx-auto max-w-7xl px-4 py-6">
         <nav className="flex items-center gap-2 text-sm">
           <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">
-            {isArabic ? "الرئيسية" : "Home"}
+            {isArabic ? "Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©" : "Home"}
           </Link>
           <span className="text-muted-foreground">/</span>
           <Link to="/brands" className="text-muted-foreground hover:text-primary transition-colors">
-            {isArabic ? "العلامات التجارية" : "Brands"}
+            {isArabic ? "Ø§Ù„Ø¹Ù„Ø§Ù…Ø§Øª Ø§Ù„ØªØ¬Ø§Ø±ÙŠØ©" : "Brands"}
           </Link>
           <span className="text-muted-foreground">/</span>
           <span className="text-foreground font-medium">{brand.name}</span>
@@ -157,17 +157,17 @@ const BrandDetail = () => {
       <section className="container mx-auto max-w-7xl px-4 pb-20">
         <div className="flex items-center justify-between mb-8">
           <h2 className="font-display text-2xl font-semibold text-foreground">
-            {isArabic ? `منتجات ${brand.name}` : `${brand.name} Products`}
+            {isArabic ? `Ù…Ù†ØªØ¬Ø§Øª ${brand.name}` : `${brand.name} Products`}
           </h2>
           <span className="text-sm text-muted-foreground font-body">
-            {products.length} {isArabic ? "منتج" : "products"}
+            {products.length} {isArabic ? "Ù…Ù†ØªØ¬" : "products"}
           </span>
         </div>
 
         {products.length === 0 ? (
           <div className="py-16 text-center">
             <p className="text-muted-foreground font-body">
-              {isArabic ? "لا توجد منتجات متاحة حالياً" : "No products available at this time"}
+              {isArabic ? "Ù„Ø§ ØªÙˆØ¬Ø¯ Ù…Ù†ØªØ¬Ø§Øª Ù…ØªØ§Ø­Ø© Ø­Ø§Ù„ÙŠØ§Ù‹" : "No products available at this time"}
             </p>
           </div>
         ) : (
@@ -183,7 +183,7 @@ const BrandDetail = () => {
                   />
                   {p.is_bestseller && (
                     <Badge className="absolute top-3 left-3 bg-polished-gold text-asper-ink text-[10px] tracking-wider">
-                      {isArabic ? "الأكثر مبيعاً" : "Bestseller"}
+                      {isArabic ? "Ø§Ù„Ø£ÙƒØ«Ø± Ù…Ø¨ÙŠØ¹Ø§Ù‹" : "Bestseller"}
                     </Badge>
                   )}
                   {/* Shimmer beam */}
@@ -212,7 +212,7 @@ const BrandDetail = () => {
               to={`/shop?brand=${encodeURIComponent(brand.name)}`}
               className="inline-flex items-center gap-2 text-sm font-body font-medium text-primary hover:text-primary/80 transition-colors uppercase tracking-wider"
             >
-              {isArabic ? "تصفح جميع المنتجات" : "View All Products"}
+              {isArabic ? "ØªØµÙØ­ Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª" : "View All Products"}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -225,3 +225,4 @@ const BrandDetail = () => {
 };
 
 export default BrandDetail;
+

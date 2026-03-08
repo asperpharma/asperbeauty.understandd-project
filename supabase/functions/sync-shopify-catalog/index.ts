@@ -126,11 +126,11 @@ async function fetchShopifyPage(
 
   if (!res.ok) throw new Error(`Shopify ${res.status}: ${await res.text()}`);
   const json = await res.json();
-  if (json.errors) throw new Error(json.errors.map((e: any) => e.message).join("; "));
+  if (json.errors) throw new Error(json.errors.map((e: { message: string }) => e.message).join("; "));
 
   const data = json.data.products;
   return {
-    products: data.edges.map((e: any) => e.node),
+    products: data.edges.map((e: { node: unknown }) => e.node),
     hasNext: data.pageInfo.hasNextPage,
     endCursor: data.pageInfo.endCursor,
   };
@@ -268,3 +268,6 @@ Deno.serve(async (req) => {
     );
   }
 });
+
+
+
