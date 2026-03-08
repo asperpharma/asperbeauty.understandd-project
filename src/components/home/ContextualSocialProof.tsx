@@ -72,7 +72,7 @@ export default function ContextualSocialProof() {
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-4">
+          <h2 className="text-3xl md:text-4xl font-display text-foreground mb-4">
             {isAr
               ? "نتائج سريرية. روتين حقيقي."
               : "Clinical Results. Real Routines."}
