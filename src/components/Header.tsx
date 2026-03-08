@@ -129,7 +129,7 @@ export const Header = () => {
                   src={asperLogoHorizontal}
                   alt="Asper Beauty Shop"
                   className={cn(
-                    "h-10 w-auto object-contain transition-all duration-500",
+                    "h-14 w-auto object-contain transition-all duration-500",
                     isTransparent && "brightness-0 invert"
                   )}
                 />
