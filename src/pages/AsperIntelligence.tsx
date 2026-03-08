@@ -472,7 +472,7 @@ export default function AsperIntelligence() {
                             {item.title}
                           </p>
                         </div>
-                        <span className="text-[10px] font-black text-[#800020] whitespace-nowrap">
+                        <span className="text-[10px] font-black text-maroon whitespace-nowrap">
                           {item.price} JOD
                         </span>
                       </div>
