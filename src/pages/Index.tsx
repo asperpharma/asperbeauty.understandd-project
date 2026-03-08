@@ -52,6 +52,11 @@ const DermoBrands = lazy(() =>
 const EliteBrandShowcase = lazy(() =>
   import("@/components/home/EliteBrandShowcase")
 );
+const ScienceMeetsStyle = lazy(() =>
+  import("@/components/home/ScienceMeetsStyle").then((m) => ({
+    default: m.ScienceMeetsStyle,
+  }))
+);
 const ClinicalTruthBanner = lazy(() =>
   import("@/components/home/ClinicalTruthBanner")
 );
@@ -174,6 +179,11 @@ const Index = () => {
         {/* ═══ DermoBrands Bar — Right below hero ═══ */}
         <Suspense fallback={<SectionSkeleton height="h-16" />}>
           <DermoBrands />
+        </Suspense>
+
+        {/* ═══ Science Meets Style Split Showcase ═══ */}
+        <Suspense fallback={<SectionSkeleton height="h-96" />}>
+          <ScienceMeetsStyle />
         </Suspense>
 
         {/* ═══ ZONE 2: Dual-Persona Triage (AI Gatekeeper) ═══ */}
