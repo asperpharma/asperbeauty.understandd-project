@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ShieldCheck, Sun, Moon, Info, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -245,7 +245,7 @@ export default function RegimenPortal() {
           id: s.product.id,
           title: s.product.title,
           price: s.product.price,
-          image: s.product.image_url || "/placeholder.svg",
+          image: s.product.image_url || "/editorial-showcase-2.jpg",
           quantity: 1,
         });
       }
@@ -311,7 +311,7 @@ export default function RegimenPortal() {
               "{portalData.clinicalNote}"
             </p>
             <p className="font-body text-[10px] text-primary font-bold uppercase mt-2 tracking-widest text-right">
-              — {portalData.prescribedBy}
+              â€” {portalData.prescribedBy}
             </p>
           </div>
         )}

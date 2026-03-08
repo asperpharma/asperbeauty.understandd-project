@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import {
   Grid3X3,
@@ -25,7 +25,7 @@ import type { Tables } from "@/integrations/supabase/types";
 
 type Product = Tables<"products">;
 
-/** Luxury pricing display — currency small & top-aligned, integer large in maroon, decimals small */
+/** Luxury pricing display â€” currency small & top-aligned, integer large in maroon, decimals small */
 const LuxuryPrice = ({ amount, currency = "JOD" }: { amount: number | null; currency?: string }) => {
   const val = (amount ?? 0).toFixed(2);
   const [integer, decimal] = val.split(".");
@@ -38,7 +38,7 @@ const LuxuryPrice = ({ amount, currency = "JOD" }: { amount: number | null; curr
   );
 };
 
-// ─── Product Card with Gold Stitch ─────────────────────────────
+// â”€â”€â”€ Product Card with Gold Stitch â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const ShopProductCard = ({
   product,
   onQuickView,
@@ -50,7 +50,7 @@ const ShopProductCard = ({
 }) => {
   const { locale } = useLanguage();
   const addItem = useCartStore((s) => s.addItem);
-  const imageUrl = product.image_url || "/placeholder.svg";
+  const imageUrl = product.image_url || "/editorial-showcase-2.jpg";
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -75,7 +75,7 @@ const ShopProductCard = ({
       quantity: 1,
       selectedOptions: [],
     });
-    toast.success(locale === "ar" ? "تمت الإضافة" : "Excellent choice", {
+    toast.success(locale === "ar" ? "ØªÙ…Øª Ø§Ù„Ø¥Ø¶Ø§ÙØ©" : "Excellent choice", {
       description: product.title,
       position: "top-center",
     });
@@ -106,7 +106,7 @@ const ShopProductCard = ({
             <LuxuryPrice amount={product.price} />
             <Button onClick={handleAddToCart} size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs btn-ripple">
               <ShoppingBag className="w-3.5 h-3.5 me-1" />
-              {locale === "ar" ? "إضافة" : "Add"}
+              {locale === "ar" ? "Ø¥Ø¶Ø§ÙØ©" : "Add"}
             </Button>
           </div>
         </div>
@@ -129,7 +129,7 @@ const ShopProductCard = ({
 
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-background flex items-center justify-center p-4">
-        {imageUrl && imageUrl !== "/placeholder.svg" ? (
+        {imageUrl && imageUrl !== "/editorial-showcase-2.jpg" ? (
           <img
             src={imageUrl}
             alt={product.title}
@@ -190,26 +190,26 @@ const ShopProductCard = ({
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-xs uppercase tracking-wide btn-ripple"
         >
           <ShoppingBag className="w-3.5 h-3.5 me-1.5" />
-          {locale === "ar" ? "أضف للسلة" : "Add to Cart"}
+          {locale === "ar" ? "Ø£Ø¶Ù Ù„Ù„Ø³Ù„Ø©" : "Add to Cart"}
         </Button>
       </div>
     </article>
   );
 };
 
-// ─── Concern Ambition Pills ───────────────────────────────────
+// â”€â”€â”€ Concern Ambition Pills â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const AMBITION_PILLS = [
-  { id: "Concern_Acne", icon: "💊", labelEn: "Acne Care", labelAr: "علاج حب الشباب" },
-  { id: "Concern_AntiAging", icon: "⏰", labelEn: "Anti-Aging", labelAr: "مكافحة الشيخوخة" },
-  { id: "Concern_Hydration", icon: "💧", labelEn: "Hydration", labelAr: "ترطيب" },
-  { id: "Concern_Sensitivity", icon: "🌿", labelEn: "Sensitive Skin", labelAr: "بشرة حساسة" },
-  { id: "Concern_Pigmentation", icon: "🌟", labelEn: "Dark Spots", labelAr: "البقع الداكنة" },
-  { id: "Concern_SunProtection", icon: "☀️", labelEn: "Sun Protection", labelAr: "حماية من الشمس" },
-  { id: "Concern_Brightening", icon: "✨", labelEn: "Brightening", labelAr: "إشراقة" },
-  { id: "Concern_Dryness", icon: "🛡️", labelEn: "Dryness", labelAr: "جفاف" },
+  { id: "Concern_Acne", icon: "ðŸ’Š", labelEn: "Acne Care", labelAr: "Ø¹Ù„Ø§Ø¬ Ø­Ø¨ Ø§Ù„Ø´Ø¨Ø§Ø¨" },
+  { id: "Concern_AntiAging", icon: "â°", labelEn: "Anti-Aging", labelAr: "Ù…ÙƒØ§ÙØ­Ø© Ø§Ù„Ø´ÙŠØ®ÙˆØ®Ø©" },
+  { id: "Concern_Hydration", icon: "ðŸ’§", labelEn: "Hydration", labelAr: "ØªØ±Ø·ÙŠØ¨" },
+  { id: "Concern_Sensitivity", icon: "ðŸŒ¿", labelEn: "Sensitive Skin", labelAr: "Ø¨Ø´Ø±Ø© Ø­Ø³Ø§Ø³Ø©" },
+  { id: "Concern_Pigmentation", icon: "ðŸŒŸ", labelEn: "Dark Spots", labelAr: "Ø§Ù„Ø¨Ù‚Ø¹ Ø§Ù„Ø¯Ø§ÙƒÙ†Ø©" },
+  { id: "Concern_SunProtection", icon: "â˜€ï¸", labelEn: "Sun Protection", labelAr: "Ø­Ù…Ø§ÙŠØ© Ù…Ù† Ø§Ù„Ø´Ù…Ø³" },
+  { id: "Concern_Brightening", icon: "âœ¨", labelEn: "Brightening", labelAr: "Ø¥Ø´Ø±Ø§Ù‚Ø©" },
+  { id: "Concern_Dryness", icon: "ðŸ›¡ï¸", labelEn: "Dryness", labelAr: "Ø¬ÙØ§Ù" },
 ];
 
-// ─── Shop Page ────────────────────────────────────────────────
+// â”€â”€â”€ Shop Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function Shop() {
   const { locale } = useLanguage();
   const [products, setProducts] = useState<Product[]>([]);
@@ -282,10 +282,10 @@ export default function Shop() {
               CURATED CATALOG
             </Badge>
             <h1 className="font-heading text-3xl md:text-5xl font-bold mb-3">
-              {locale === "ar" ? "تسوق جميع المنتجات" : "Shop All Products"}
+              {locale === "ar" ? "ØªØ³ÙˆÙ‚ Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª" : "Shop All Products"}
             </h1>
             <p className="text-primary-foreground/70 text-sm md:text-base font-body max-w-lg mx-auto">
-              {locale === "ar" ? "اكتشف أفضل منتجات العناية بالبشرة والجمال" : "Pharmacist-curated skincare and beauty, guaranteed authentic."}
+              {locale === "ar" ? "Ø§ÙƒØªØ´Ù Ø£ÙØ¶Ù„ Ù…Ù†ØªØ¬Ø§Øª Ø§Ù„Ø¹Ù†Ø§ÙŠØ© Ø¨Ø§Ù„Ø¨Ø´Ø±Ø© ÙˆØ§Ù„Ø¬Ù…Ø§Ù„" : "Pharmacist-curated skincare and beauty, guaranteed authentic."}
             </p>
           </div>
         </div>
@@ -296,7 +296,7 @@ export default function Shop() {
             <div className="flex items-center gap-2 mb-3">
               <Sparkles className="w-4 h-4 text-accent" />
               <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground font-body">
-                {locale === "ar" ? "تسوّقي حسب هدفك" : "Shop by Concern"}
+                {locale === "ar" ? "ØªØ³ÙˆÙ‘Ù‚ÙŠ Ø­Ø³Ø¨ Ù‡Ø¯ÙÙƒ" : "Shop by Concern"}
               </span>
             </div>
             <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-hide">
@@ -333,7 +333,7 @@ export default function Shop() {
             <div className="flex-1">
               <div className="flex items-center justify-between mb-6">
                 <p className="text-sm text-muted-foreground font-body">
-                  {locale === "ar" ? `${filteredProducts.length} منتج` : `${filteredProducts.length} products`}
+                  {locale === "ar" ? `${filteredProducts.length} Ù…Ù†ØªØ¬` : `${filteredProducts.length} products`}
                 </p>
                 <div className="flex items-center gap-1 bg-card rounded-lg border border-border p-1">
                   <button
@@ -367,10 +367,10 @@ export default function Shop() {
                 <div className="text-center py-20 bg-card rounded-xl border border-border">
                   <Package className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
                   <p className="text-muted-foreground mb-4 font-body">
-                    {locale === "ar" ? "لا توجد منتجات مطابقة للفلاتر" : "No products match your filters"}
+                    {locale === "ar" ? "Ù„Ø§ ØªÙˆØ¬Ø¯ Ù…Ù†ØªØ¬Ø§Øª Ù…Ø·Ø§Ø¨Ù‚Ø© Ù„Ù„ÙÙ„Ø§ØªØ±" : "No products match your filters"}
                   </p>
                   <Button variant="outline" className="border-accent text-accent hover:bg-accent/10" onClick={() => setFilters({ searchQuery: "", categories: [], subcategories: [], brands: [], skinConcerns: [], priceRange: [0, 200], onSaleOnly: false })}>
-                    {locale === "ar" ? "مسح الفلاتر" : "Clear Filters"}
+                    {locale === "ar" ? "Ù…Ø³Ø­ Ø§Ù„ÙÙ„Ø§ØªØ±" : "Clear Filters"}
                   </Button>
                 </div>
               )}

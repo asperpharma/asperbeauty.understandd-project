@@ -1,10 +1,7 @@
 const fs = require('fs');
-const cleanedCsvPath = 'C:\\Users\\C-R\\Desktop\\ABS\\Asper All form Productts\\Asper_Catalog_CLEANED.csv';
-const perfCsvPath = 'C:\\Users\\C-R\\Desktop\\shopify-import Perf.csv';
+const fullFixPath = 'C:\\Users\\C-R\\Desktop\\ABS\\Asper All form Productts\\Asper_Catalo with full fix.csv';
+const cleanedPath = 'C:\\Users\\C-R\\Desktop\\ABS\\Asper All form Productts\\Asper_Catalog_CLEANED.csv';
 const outputPath = 'C:\\Users\\C-R\\Desktop\\ABS\\understand-project\\catalog-sync.sql';
-
-const CLINICAL_BRANDS = ['Vichy', 'La Roche-Posay', 'Eucerin', 'Bioderma', 'CeraVe', 'Sesderma', 'Heliocare', 'Avène', 'ISDIN', 'Uriage', 'Filorga', 'Ducray', 'Aderma', 'Mustela'];
-const AESTHETIC_TYPES = ['Concealer', 'Foundation', 'Mascara', 'Lipstick', 'Makeup', 'Fragrance', 'Perfume'];
 
 function parseCSVLine(line) {
   const result = [];
@@ -31,66 +28,70 @@ function parseCSVLine(line) {
 }
 
 try {
-  console.log('Finalizing Medical Luxury Catalog with Hero Assets...');
-  const imageMap = new Map();
-  const perfData = fs.readFileSync(perfCsvPath, 'utf8');
-  const perfLines = perfData.split('\n');
-  const perfHeaders = parseCSVLine(perfLines[0].trim());
-  const hIdx = perfHeaders.indexOf('Handle');
-  const iIdx = perfHeaders.indexOf('Image Src');
+  console.log('Synchronizing prices using Correct Shopify Catalog (CSCSVC)...');
+  
+  // 1. Build Price Map from "Full Fix" CSV
+  const priceMap = new Map();
+  const fullFixData = fs.readFileSync(fullFixPath, 'utf8');
+  const ffLines = fullFixData.split('\n');
+  const ffHeaders = parseCSVLine(ffLines[0].trim());
+  const ffHandleIdx = ffHeaders.indexOf('handle');
+  const ffPriceIdx = ffHeaders.indexOf('variants/0/price');
 
-  for (let i = 1; i < perfLines.length; i++) {
-    const line = perfLines[i].trim();
+  for (let i = 1; i < ffLines.length; i++) {
+    const line = ffLines[i].trim();
     if (!line) continue;
     const row = parseCSVLine(line);
-    if (row[hIdx] && row[iIdx]) {
-      imageMap.set(row[hIdx], row[iIdx]);
+    if (row[ffHandleIdx]) {
+      priceMap.set(row[ffHandleIdx], parseFloat(row[ffPriceIdx]) || 0);
     }
   }
+  console.log(`Loaded ${priceMap.size} correct prices from Full Fix CSV.`);
 
-  const data = fs.readFileSync(cleanedCsvPath, 'utf8');
-  const lines = data.split('\n');
-  const headers = parseCSVLine(lines[0].trim());
-
-  const vendorIdx = headers.indexOf('vendor');
-  const titleIdx = headers.indexOf('title');
-  const priceIdx = headers.indexOf('variants/0/price');
-  const handleIdx = headers.indexOf('handle');
-  const imageIdx = headers.indexOf('images/0/src');
-  const typeIdx = headers.indexOf('productType');
-  const inventoryIdx = headers.indexOf('variants/0/inventoryQuantity');
+  // 2. Process Cleaned Catalog and Inject Correct Prices
+  const cleanedData = fs.readFileSync(cleanedPath, 'utf8');
+  const cLines = cleanedData.split('\n');
+  const cHeaders = parseCSVLine(cLines[0].trim());
+  
+  const hIdx = cHeaders.indexOf('handle');
+  const tIdx = cHeaders.indexOf('title');
+  const vIdx = cHeaders.indexOf('vendor');
+  const iIdx = cHeaders.indexOf('images/0/src');
+  const invIdx = cHeaders.indexOf('variants/0/inventoryQuantity');
 
   let sql = 'INSERT INTO public.products (id, title, brand, price, handle, image_url, ai_persona_lead, primary_concern, regimen_step, inventory_total) VALUES\n';
   let values = [];
 
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i].trim();
+  for (let i = 1; i < cLines.length; i++) {
+    const line = cLines[i].trim();
     if (!line) continue;
     const row = parseCSVLine(line);
-    if (row.length < headers.length - 10) continue;
+    if (row.length < 10) continue;
 
-    const title = row[titleIdx] || '';
-    const brand = row[vendorIdx] || 'Generic';
-    const handle = row[handleIdx] || 'sku-' + i;
-    let imageUrl = imageMap.get(handle) || row[imageIdx] || '';
-    let priceVal = parseFloat(row[priceIdx]) || 0;
-    if (priceVal > 300 && Number.isInteger(priceVal)) { priceVal = priceVal / 100; }
-
-    const type = row[typeIdx] || '';
-    const inventory = parseInt(row[inventoryIdx]) || 0;
-    const persona = CLINICAL_BRANDS.some(cb => brand.toLowerCase().includes(cb.toLowerCase())) ? 'dr_sami' : 'ms_zain';
+    const handle = row[hIdx];
+    const correctPrice = priceMap.get(handle) || parseFloat(row[cHeaders.indexOf('variants/0/price')]) || 0;
     
+    // Final logic: Ensure price is decimal-corrected
+    let price = correctPrice;
+    if (price > 300 && Number.isInteger(price)) price = price / 100;
+
+    const title = row[tIdx] || '';
+    const brand = row[vIdx] || 'Generic';
+    const imageUrl = row[iIdx] || '';
+    const inventory = parseInt(row[invIdx]) || 0;
+    const persona = ['Vichy', 'La Roche-Posay', 'Eucerin', 'Bioderma', 'CeraVe'].some(cb => brand.includes(cb)) ? 'dr_sami' : 'ms_zain';
+
     const safeTitle = title.replace(/'/g, "''").replace(/\\/g, "");
     const safeBrand = brand.replace(/'/g, "''").replace(/\\/g, "");
 
-    values.push(`('${handle}', '${safeTitle}', '${safeBrand}', ${priceVal}, '${handle}', '${imageUrl}', '${persona}', 'Concern_Hydration', 'Step_3_Protection', ${inventory})`);
+    values.push(`('${handle}', '${safeTitle}', '${safeBrand}', ${price}, '${handle}', '${imageUrl}', '${persona}', 'Concern_Hydration', 'Step_3_Protection', ${inventory})`);
     if (values.length >= 5000) break;
   }
 
-  const conflictClause = ' ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, price = EXCLUDED.price, inventory_total = EXCLUDED.inventory_total, image_url = CASE WHEN EXCLUDED.image_url != \'\' THEN EXCLUDED.image_url ELSE products.image_url END;';
+  const conflictClause = ' ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, title = EXCLUDED.title, inventory_total = EXCLUDED.inventory_total;';
   sql += values.join(',\n') + conflictClause;
   fs.writeFileSync(outputPath, sql);
-  console.log('✅ Final SQL Migration ready with Hero Assets and 4311 products.');
+  console.log(`✅ Absolute Price Fix Complete: ${values.length} products synchronized.`);
 } catch (e) {
   console.error(e);
 }

@@ -9,7 +9,7 @@ const LOCAL_ELITE_BRANDS = [
 ];
 
 export default function EliteBrandShowcase() {
-  const [brands, setBrands] = useState<any[]>(LOCAL_ELITE_BRANDS);
+  const [brands, setBrands] = useState<Record<string, any>[]>(LOCAL_ELITE_BRANDS);
 
   useEffect(() => {
     const fetchEliteBrands = async () => {
@@ -64,3 +64,4 @@ export default function EliteBrandShowcase() {
     </section>
   );
 }
+

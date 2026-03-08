@@ -276,3 +276,4 @@ These domains are allowed in the CSP header (`index.html`):
 *   **Project Name:** Asper Beauty Shop
 *   **Project Number:** 147143724210
 *   **Project ID:** gen-lang-client-0019655668
+

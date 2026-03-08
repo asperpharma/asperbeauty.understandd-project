@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+﻿import { lazy, Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -86,21 +86,21 @@ const SectionSkeleton = ({ height = "h-64" }: { height?: string }) => (
 
 // Sample product data for sliders
 const NEW_ARRIVALS = [
-  { id: "1", handle: "lumiere-bio-active-ceramide", title: "Lumière Bio-Active Ceramide · Barrier Repair Serum", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80", tag: "Dermat-Tested" },
-  { id: "2", handle: "botanical-barrier-recovery", title: "Botanical Barrier Recovery · Deep Hydration Cream", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1608248593842-8021c6475a6c?auto=format&fit=crop&w=800&q=80", tag: "Clinical" },
-  { id: "3", handle: "phyto-retinol-elixir", title: "Phyto-Retinol Evening Elixir · Anti-Aging Treatment", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=800&q=80", tag: "Just In" },
-  { id: "4", handle: "niacinamide-clarifying-fluid", title: "Niacinamide 10% Clarifying Fluid · Pore-Refining Serum", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=800&q=80" },
-  { id: "5", handle: "marine-collagen-mask", title: "Marine Collagen Mask · 72-Hour Hydration Treatment", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1615397323758-1f196ebbaeb5?auto=format&fit=crop&w=800&q=80", tag: "Clinical" },
-  { id: "6", handle: "aha-bha-resurfacing-peel", title: "AHA/BHA Resurfacing Peel · Brightening Exfoliant", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=800&q=80" },
+  { id: "1", handle: "lumiere-bio-active-ceramide", title: "LumiÃ¨re Bio-Active Ceramide Â· Barrier Repair Serum", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80", tag: "Dermat-Tested" },
+  { id: "2", handle: "botanical-barrier-recovery", title: "Botanical Barrier Recovery Â· Deep Hydration Cream", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1608248593842-8021c6475a6c?auto=format&fit=crop&w=800&q=80", tag: "Clinical" },
+  { id: "3", handle: "phyto-retinol-elixir", title: "Phyto-Retinol Evening Elixir Â· Anti-Aging Treatment", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=800&q=80", tag: "Just In" },
+  { id: "4", handle: "niacinamide-clarifying-fluid", title: "Niacinamide 10% Clarifying Fluid Â· Pore-Refining Serum", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=800&q=80" },
+  { id: "5", handle: "marine-collagen-mask", title: "Marine Collagen Mask Â· 72-Hour Hydration Treatment", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1615397323758-1f196ebbaeb5?auto=format&fit=crop&w=800&q=80", tag: "Clinical" },
+  { id: "6", handle: "aha-bha-resurfacing-peel", title: "AHA/BHA Resurfacing Peel Â· Brightening Exfoliant", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=800&q=80" },
 ];
 
 const BESTSELLERS = [
-  { id: "7", handle: "hyaluronic-acid-booster", title: "Pure Hyaluronic Acid Booster · Intense Moisture Surge", brand: "La Roche-Posay", image: "https://images.unsplash.com/photo-1629198688000-71f23e745b6e?auto=format&fit=crop&w=800&q=80", tag: "Bestseller" },
-  { id: "8", handle: "lipid-replenishing-balm", title: "Lipid-Replenishing Balm · Daily Barrier Protectant", brand: "CeraVe", image: "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=800&q=80", tag: "Bestseller" },
-  { id: "9", handle: "mineral-uv-shield", title: "Mineral UV Shield SPF 50+ · Broad Spectrum Protection", brand: "Vichy", image: "https://images.unsplash.com/photo-1629532587596-f94dd6d9de4c?auto=format&fit=crop&w=800&q=80" },
-  { id: "10", handle: "peptide-firming-eye", title: "Peptide Firming Eye Concentrate · Dark Circle Treatment", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1599305090598-fe179d501227?auto=format&fit=crop&w=800&q=80", tag: "Bestseller" },
-  { id: "11", handle: "thermal-spring-water", title: "Thermal Spring Water Mist · Soothing Mineral Tonic", brand: "Vichy", image: "https://images.unsplash.com/photo-1556228720-1c27bef8b5e6?auto=format&fit=crop&w=800&q=80" },
-  { id: "12", handle: "soothing-cleansing-milk", title: "Soothing Cleansing Milk · Gentle Daily Purifier", brand: "Eucerin", image: "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=800&q=80", tag: "Bestseller" },
+  { id: "7", handle: "hyaluronic-acid-booster", title: "Pure Hyaluronic Acid Booster Â· Intense Moisture Surge", brand: "La Roche-Posay", image: "https://images.unsplash.com/photo-1629198688000-71f23e745b6e?auto=format&fit=crop&w=800&q=80", tag: "Bestseller" },
+  { id: "8", handle: "lipid-replenishing-balm", title: "Lipid-Replenishing Balm Â· Daily Barrier Protectant", brand: "CeraVe", image: "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=800&q=80", tag: "Bestseller" },
+  { id: "9", handle: "mineral-uv-shield", title: "Mineral UV Shield SPF 50+ Â· Broad Spectrum Protection", brand: "Vichy", image: "https://images.unsplash.com/photo-1629532587596-f94dd6d9de4c?auto=format&fit=crop&w=800&q=80" },
+  { id: "10", handle: "peptide-firming-eye", title: "Peptide Firming Eye Concentrate Â· Dark Circle Treatment", brand: "Asper Clinical", image: "https://images.unsplash.com/photo-1599305090598-fe179d501227?auto=format&fit=crop&w=800&q=80", tag: "Bestseller" },
+  { id: "11", handle: "thermal-spring-water", title: "Thermal Spring Water Mist Â· Soothing Mineral Tonic", brand: "Vichy", image: "https://images.unsplash.com/photo-1556228720-1c27bef8b5e6?auto=format&fit=crop&w=800&q=80" },
+  { id: "12", handle: "soothing-cleansing-milk", title: "Soothing Cleansing Milk Â· Gentle Daily Purifier", brand: "Eucerin", image: "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=800&q=80", tag: "Bestseller" },
 ];
 
 const Index = () => {
@@ -124,7 +124,7 @@ const Index = () => {
           title: p.title,
           brand: p.brand,
           price: p.price ?? 0,
-          image_url: p.image_url || "/placeholder.svg",
+          image_url: p.image_url || "/editorial-showcase-2.jpg",
           category: p.primary_concern,
           tags: [] as string[],
           is_new: true,
@@ -149,7 +149,7 @@ const Index = () => {
           title: p.title,
           brand: p.brand,
           price: p.price ?? 0,
-          image_url: p.image_url || "/placeholder.svg",
+          image_url: p.image_url || "/editorial-showcase-2.jpg",
           category: p.primary_concern,
           is_on_sale: false,
         }));
@@ -174,49 +174,49 @@ const Index = () => {
     <div className="min-h-screen bg-background animate-fade-in">
       <Header />
       <main>
-        {/* ═══ ZONE 1: Split Editorial Hero (Magazine Cover) ═══ */}
+        {/* â•â•â• ZONE 1: Split Editorial Hero (Magazine Cover) â•â•â• */}
         <Hero />
         <ThreeClickOnboarding />
 
-        {/* ═══ DermoBrands Bar — Right below hero ═══ */}
+        {/* â•â•â• DermoBrands Bar â€” Right below hero â•â•â• */}
         <Suspense fallback={<SectionSkeleton height="h-16" />}>
           <DermoBrands />
         </Suspense>
 
-        {/* ═══ Science Meets Style Split Showcase ═══ */}
+        {/* â•â•â• Science Meets Style Split Showcase â•â•â• */}
         <Suspense fallback={<SectionSkeleton height="h-96" />}>
           <ScienceMeetsStyle />
         </Suspense>
 
-        {/* ═══ ZONE 2: Dual-Persona Triage (AI Gatekeeper) ═══ */}
+        {/* â•â•â• ZONE 2: Dual-Persona Triage (AI Gatekeeper) â•â•â• */}
         <DualPersonaTriage />
 
-        {/* ═══ ZONE 3: Shop by Protocol (Editorial Navigation) ═══ */}
+        {/* â•â•â• ZONE 3: Shop by Protocol (Editorial Navigation) â•â•â• */}
         <ShopByProtocol />
 
-        {/* ═══ ZONE 4: Product Sliders (Bestsellers + New Arrivals) ═══ */}
+        {/* â•â•â• ZONE 4: Product Sliders (Bestsellers + New Arrivals) â•â•â• */}
         <ProductSlider
-          title={{ en: "Bestsellers — Niche Approved", ar: "الأكثر مبيعاً — اختيار الخبراء" }}
-          subtitle={{ en: "Most Loved", ar: "الأكثر حباً" }}
+          title={{ en: "Bestsellers â€” Niche Approved", ar: "Ø§Ù„Ø£ÙƒØ«Ø± Ù…Ø¨ÙŠØ¹Ø§Ù‹ â€” Ø§Ø®ØªÙŠØ§Ø± Ø§Ù„Ø®Ø¨Ø±Ø§Ø¡" }}
+          subtitle={{ en: "Most Loved", ar: "Ø§Ù„Ø£ÙƒØ«Ø± Ø­Ø¨Ø§Ù‹" }}
           products={bestsellers.length > 0 ? bestsellers : BESTSELLERS}
         />
         <ProductSlider
-          title={{ en: "Just Landed! What's New", ar: "وصل حديثاً! الجديد لدينا" }}
-          subtitle={{ en: "New Arrivals", ar: "وصل حديثاً" }}
+          title={{ en: "Just Landed! What's New", ar: "ÙˆØµÙ„ Ø­Ø¯ÙŠØ«Ø§Ù‹! Ø§Ù„Ø¬Ø¯ÙŠØ¯ Ù„Ø¯ÙŠÙ†Ø§" }}
+          subtitle={{ en: "New Arrivals", ar: "ÙˆØµÙ„ Ø­Ø¯ÙŠØ«Ø§Ù‹" }}
           products={newArrivals.length > 0 ? newArrivals : NEW_ARRIVALS}
         />
 
-        {/* ═══ ZONE 5: EliteBrandShowcase (Authority) ═══ */}
+        {/* â•â•â• ZONE 5: EliteBrandShowcase (Authority) â•â•â• */}
         <Suspense fallback={<SectionSkeleton height="h-[600px]" />}>
           <EliteBrandShowcase />
         </Suspense>
 
-        {/* ═══ ZONE 6: Clinical Dispatch (Editorial) ═══ */}
+        {/* â•â•â• ZONE 6: Clinical Dispatch (Editorial) â•â•â• */}
         <Suspense fallback={<SectionSkeleton height="h-96" />}>
           <EditorialSpotlight />
         </Suspense>
 
-        {/* ═══ ZONE 7: Clinical Truth + Social Proof ═══ */}
+        {/* â•â•â• ZONE 7: Clinical Truth + Social Proof â•â•â• */}
         <Suspense fallback={<SectionSkeleton height="h-48" />}>
           <ClinicalTruthBanner />
         </Suspense>
@@ -224,7 +224,7 @@ const Index = () => {
           <ContextualSocialProof />
         </Suspense>
 
-        {/* ═══ ZONE 8: Conversion Close ═══ */}
+        {/* â•â•â• ZONE 8: Conversion Close â•â•â• */}
         <Suspense fallback={<SectionSkeleton height="h-96" />}>
           <BrandOfTheWeek />
         </Suspense>

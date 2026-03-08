@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, Shield, Droplets, Zap, Check, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const LUXURY_EASE = [0.19, 1, 0.22, 1] as const;
 
@@ -34,7 +35,8 @@ export default function ThreeClickOnboarding() {
   const [currentStep, setCurrentStep] = useState(0);
   const [selections, setSelections] = useState<Record<string, string>>({});
   const navigate = useNavigate();
-  const isAr = document.documentElement.dir === 'rtl';
+  const { locale } = useLanguage();
+  const isAr = locale === 'ar';
 
   const handleSelect = (optionId: string) => {
     const newSelections = { ...selections, [STEPS[currentStep].id]: optionId };
