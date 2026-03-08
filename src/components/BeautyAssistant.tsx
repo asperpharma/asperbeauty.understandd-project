@@ -91,7 +91,7 @@ export const BeautyAssistant = () => {
                 src="/dr-bot-character.png" 
                 alt="Dr. Sami Mini Character" 
                 className="w-full h-full object-contain object-bottom relative z-10 drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]"
-                style={{ mixBlendMode: "multiply" }}
+                style={DR_SAMI_BLEND_FIX}
               />
               {/* Soft glow behind the character */}
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-polished-gold/30 blur-2xl rounded-[100%] z-0 animate-pulse"></div>
