@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
-import Hero from "@/components/home/AmbientVideoHero";
+import Hero from "@/components/home/MixedMediaHero";
 import ThreeClickOnboarding from "@/components/home/ThreeClickOnboarding";
 import DualPersonaTriage from "@/components/home/DualPersonaTriage";
 import { USPBar } from "@/components/home/USPBar";
