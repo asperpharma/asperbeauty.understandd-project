@@ -35,6 +35,7 @@ import ShopAllOrganized from "./components/ShopAllOrganized";
 import DriverDashboard from "./pages/DriverDashboard";
 import AdminAuditLogs from "./pages/AdminAuditLogs";
 import AsperIntelligence from "./pages/AsperIntelligence";
+import PurgeReview from "./pages/PurgeReview";
 import BrandIntelligenceDashboard from "./pages/BrandIntelligenceDashboard";
 import Health from "./pages/Health";
 import RegimenPortal from "./pages/RegimenPortal";
@@ -119,6 +120,7 @@ const App = () => {
                 <Route path="/consultation" element={<Navigate to="/skin-concerns" replace />} />
                 <Route path="/driver" element={<DriverDashboard />} />
                 <Route path="/admin/audit-logs" element={<AdminAuditLogs />} />
+                <Route path="/admin/purge-review" element={<PurgeReview />} />
                 <Route
                   path="/brand-intelligence"
                   element={
