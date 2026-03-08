@@ -14,7 +14,7 @@ export function ScienceMeetsEleganceSplit() {
       <div className="grid grid-cols-1 md:grid-cols-2 min-h-[70vh]">
         {/* LEFT — Clinical Side */}
         <Link
-          to="/skin-concerns"
+          to="/shop?category=Clinical+Serums+%26+Actives"
           className="group relative flex flex-col justify-center items-center text-center
                      bg-background px-8 md:px-14 py-20 overflow-hidden
                      border-r border-border/20
