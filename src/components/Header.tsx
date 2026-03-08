@@ -113,9 +113,10 @@ export const Header = () => {
         )}
       >
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-20">
-            {/* LEFT: Mobile Menu & Logo */}
-            <div className="flex items-center gap-4">
+          <div className="flex items-center h-20">
+
+            {/* 1. LEFT UTILITY ZONE — flex-1 balances the right zone */}
+            <div className="flex-1 flex items-center justify-start gap-2 md:gap-4">
               <button
                 type="button"
                 className={cn("lg:hidden p-2 transition-colors", iconColor, textColorHover)}
@@ -124,133 +125,137 @@ export const Header = () => {
               >
                 {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
-              <Link to="/" className="flex items-center" dir="ltr">
+
+              {/* Desktop Navigation */}
+              <nav className="hidden lg:flex items-center gap-8 h-full">
+                {/* Brands Mega Menu */}
+                <div
+                  className="group relative h-full flex items-center"
+                  onMouseEnter={() => setActiveMegaMenu("brands")}
+                  onMouseLeave={() => setActiveMegaMenu(null)}
+                >
+                  <Link
+                    to="/brands"
+                    className={cn(
+                      "flex items-center gap-1 font-body text-sm font-medium transition-colors py-8",
+                      textColor, textColorHover
+                    )}
+                  >
+                    {language === "ar" ? "العلامات" : "Brands"}{" "}
+                    <ChevronDown className="h-3 w-3" />
+                  </Link>
+                  {activeMegaMenu === "brands" && (
+                    <div className="absolute top-full left-0 w-[600px] bg-polished-white shadow-xl border-t-2 border-polished-gold p-6 grid grid-cols-2 gap-4 animate-fade-in rounded-b-sm z-50">
+                      {megaMenus.brands.map((brand) => (
+                        <Link
+                          key={brand.name}
+                          to={brand.href}
+                          className="flex items-center justify-between p-3 rounded-md hover:bg-asper-stone group/item transition-colors"
+                        >
+                          <span className="font-display font-medium text-burgundy group-hover/item:text-polished-gold">
+                            {brand.name}
+                          </span>
+                          <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                            {brand.label}
+                          </span>
+                        </Link>
+                      ))}
+                      <div className="col-span-2 mt-2 pt-4 border-t border-rose-clay-light/30 text-center">
+                        <Link
+                          to="/brands"
+                          className="text-xs font-bold text-burgundy hover:underline uppercase tracking-widest"
+                        >
+                          {language === "ar" ? "عرض كل العلامات 50+" : "View All 50+ Brands"}
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Concerns Mega Menu */}
+                <div
+                  className="group relative h-full flex items-center"
+                  onMouseEnter={() => setActiveMegaMenu("concerns")}
+                  onMouseLeave={() => setActiveMegaMenu(null)}
+                >
+                  <Link
+                    to="/skin-concerns"
+                    className={cn(
+                      "flex items-center gap-1 font-body text-sm font-medium transition-colors py-8",
+                      textColor, textColorHover
+                    )}
+                  >
+                    {language === "ar" ? "مشاكل البشرة" : "Skin Concerns"}{" "}
+                    <ChevronDown className="h-3 w-3" />
+                  </Link>
+                  {activeMegaMenu === "concerns" && (
+                    <div className="absolute top-full left-0 min-w-[320px] w-[500px] bg-polished-white shadow-xl border-t-2 border-polished-gold p-6 grid grid-cols-1 gap-2 animate-fade-in rounded-b-sm z-50">
+                      <div className="mb-2 pb-2 border-b border-rose-clay-light/30">
+                        <span className="text-xs font-bold text-burgundy uppercase tracking-widest">
+                          {language === "ar" ? "وضع الاستشارة" : "Consultation Mode"}
+                        </span>
+                      </div>
+                      {megaMenus.concerns.map((concern) => (
+                        <Link
+                          key={concern.name}
+                          to={concern.href}
+                          className="flex items-center gap-3 p-2 rounded-md hover:bg-asper-stone group/item transition-colors"
+                        >
+                          <span className="text-lg">{concern.icon}</span>
+                          <span className="font-display font-medium text-burgundy group-hover/item:text-polished-gold">
+                            {concern.name}
+                          </span>
+                        </Link>
+                      ))}
+                      <div className="mt-2 pt-2 text-center">
+                        <Link
+                          to="/skin-concerns"
+                          className="text-xs font-bold text-polished-gold hover:text-burgundy transition-colors"
+                        >
+                          {language === "ar" ? "ابدأ تحليل البشرة ←" : "Start AI Skin Analysis →"}
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <Link
+                  to="/best-sellers"
+                  className={cn(
+                    "font-body text-sm font-medium transition-colors",
+                    textColor, textColorHover
+                  )}
+                >
+                  {language === "ar" ? "الأكثر مبيعاً" : "Best Sellers"}
+                </Link>
+                <Link
+                  to="/offers"
+                  className={cn(
+                    "font-body text-sm font-medium transition-colors",
+                    textColor, textColorHover
+                  )}
+                >
+                  {language === "ar" ? "العروض" : "Offers"}
+                </Link>
+              </nav>
+            </div>
+
+            {/* 2. CENTER BRAND ZONE — flex-shrink-0 keeps logo untouchable */}
+            <div className="flex-shrink-0 flex items-center justify-center">
+              <Link to="/" className="block transition-transform duration-300 hover:scale-105" dir="ltr">
                 <img
                   src={asperLogoHorizontal}
                   alt="Asper Beauty Shop"
                   className={cn(
-                    "h-14 w-auto object-contain transition-all duration-500",
+                    "h-10 md:h-14 w-auto object-contain transition-all duration-500",
                     isTransparent && "brightness-0 invert"
                   )}
                 />
               </Link>
             </div>
 
-            {/* CENTER: Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-8 h-full">
-              {/* Brands Mega Menu */}
-              <div
-                className="group relative h-full flex items-center"
-                onMouseEnter={() => setActiveMegaMenu("brands")}
-                onMouseLeave={() => setActiveMegaMenu(null)}
-              >
-                <Link
-                  to="/brands"
-                  className={cn(
-                    "flex items-center gap-1 font-body text-sm font-medium transition-colors py-8",
-                    textColor, textColorHover
-                  )}
-                >
-                  {language === "ar" ? "العلامات" : "Brands"}{" "}
-                  <ChevronDown className="h-3 w-3" />
-                </Link>
-                {activeMegaMenu === "brands" && (
-                  <div className="absolute top-full left-0 w-[600px] bg-polished-white shadow-xl border-t-2 border-polished-gold p-6 grid grid-cols-2 gap-4 animate-fade-in rounded-b-sm z-50">
-                    {megaMenus.brands.map((brand) => (
-                      <Link
-                        key={brand.name}
-                        to={brand.href}
-                        className="flex items-center justify-between p-3 rounded-md hover:bg-asper-stone group/item transition-colors"
-                      >
-                        <span className="font-display font-medium text-burgundy group-hover/item:text-polished-gold">
-                          {brand.name}
-                        </span>
-                        <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                          {brand.label}
-                        </span>
-                      </Link>
-                    ))}
-                    <div className="col-span-2 mt-2 pt-4 border-t border-rose-clay-light/30 text-center">
-                      <Link
-                        to="/brands"
-                        className="text-xs font-bold text-burgundy hover:underline uppercase tracking-widest"
-                      >
-                        {language === "ar" ? "عرض كل العلامات 50+" : "View All 50+ Brands"}
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Concerns Mega Menu */}
-              <div
-                className="group relative h-full flex items-center"
-                onMouseEnter={() => setActiveMegaMenu("concerns")}
-                onMouseLeave={() => setActiveMegaMenu(null)}
-              >
-                <Link
-                  to="/skin-concerns"
-                  className={cn(
-                    "flex items-center gap-1 font-body text-sm font-medium transition-colors py-8",
-                    textColor, textColorHover
-                  )}
-                >
-                  {language === "ar" ? "مشاكل البشرة" : "Skin Concerns"}{" "}
-                  <ChevronDown className="h-3 w-3" />
-                </Link>
-                {activeMegaMenu === "concerns" && (
-                  <div className="absolute top-full left-0 min-w-[320px] w-[500px] bg-polished-white shadow-xl border-t-2 border-polished-gold p-6 grid grid-cols-1 gap-2 animate-fade-in rounded-b-sm z-50">
-                    <div className="mb-2 pb-2 border-b border-rose-clay-light/30">
-                      <span className="text-xs font-bold text-burgundy uppercase tracking-widest">
-                        {language === "ar" ? "وضع الاستشارة" : "Consultation Mode"}
-                      </span>
-                    </div>
-                    {megaMenus.concerns.map((concern) => (
-                      <Link
-                        key={concern.name}
-                        to={concern.href}
-                        className="flex items-center gap-3 p-2 rounded-md hover:bg-asper-stone group/item transition-colors"
-                      >
-                        <span className="text-lg">{concern.icon}</span>
-                        <span className="font-display font-medium text-burgundy group-hover/item:text-polished-gold">
-                          {concern.name}
-                        </span>
-                      </Link>
-                    ))}
-                    <div className="mt-2 pt-2 text-center">
-                      <Link
-                        to="/skin-concerns"
-                        className="text-xs font-bold text-polished-gold hover:text-burgundy transition-colors"
-                      >
-                        {language === "ar" ? "ابدأ تحليل البشرة ←" : "Start AI Skin Analysis →"}
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <Link
-                to="/best-sellers"
-                className={cn(
-                  "font-body text-sm font-medium transition-colors",
-                  textColor, textColorHover
-                )}
-              >
-                {language === "ar" ? "الأكثر مبيعاً" : "Best Sellers"}
-              </Link>
-              <Link
-                to="/offers"
-                className={cn(
-                  "font-body text-sm font-medium transition-colors",
-                  textColor, textColorHover
-                )}
-              >
-                {language === "ar" ? "العروض" : "Offers"}
-              </Link>
-            </nav>
-
-            {/* RIGHT: Search, Account, Wishlist, Cart, Language */}
-            <div className="flex items-center gap-2 md:gap-4">
+            {/* 3. RIGHT UTILITY ZONE — flex-1 balances the left zone */}
+            <div className="flex-1 flex items-center justify-end gap-2 md:gap-4">
               {/* Desktop Search */}
               <div
                 className={cn(
@@ -296,7 +301,7 @@ export const Header = () => {
                 type="button"
                 onClick={() => window.dispatchEvent(new CustomEvent("open-beauty-assistant"))}
                 className={cn("hidden md:block p-2 transition-colors", iconColor, textColorHover)}
-                aria-label={language === "ar" ? "Dr.Bot" : "Dr.Bot"}
+                aria-label="Dr.Bot"
               >
                 <MessageCircle className="h-5 w-5" />
               </button>
@@ -333,6 +338,7 @@ export const Header = () => {
               </button>
               <LanguageSwitcher variant="header" />
             </div>
+
           </div>
         </div>
       </div>
