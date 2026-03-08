@@ -115,7 +115,7 @@ export default function ContextualSocialProof() {
               <h3 className="font-display text-lg text-foreground mb-3 leading-tight font-semibold">
                 "{review.title}"
               </h3>
-              <p className="font-sans text-muted-foreground text-sm leading-relaxed mb-8 flex-grow">
+              <p className="font-body text-muted-foreground text-sm leading-relaxed mb-8 flex-grow">
                 {review.content}
               </p>
 
