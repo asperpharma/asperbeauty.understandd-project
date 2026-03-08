@@ -232,7 +232,7 @@ export const Hero = () => {
               animation: "gold-pulse 3s ease-in-out infinite",
             }}
           >
-            {isArabic ? "علم باريسي. أناقة أردنية." : "Parisian Science."}
+            {isArabic ? "مُنتقاة من الصيادلة." : "Curated by Pharmacists."}
           </span>
 
           {/* Main Headline with Gold Underline */}
