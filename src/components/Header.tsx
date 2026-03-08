@@ -124,23 +124,15 @@ export const Header = () => {
               >
                 {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
-              <Link to="/" className="flex flex-col" dir="ltr">
-                <span
+              <Link to="/" className="flex items-center" dir="ltr">
+                <img
+                  src={asperLogoHorizontal}
+                  alt="Asper Beauty Shop"
                   className={cn(
-                    "font-display text-2xl font-bold tracking-tight transition-colors duration-500",
-                    isTransparent ? "text-polished-white" : "text-burgundy"
+                    "h-10 w-auto object-contain transition-all duration-500",
+                    isTransparent && "brightness-0 invert"
                   )}
-                >
-                  ASPER
-                </span>
-                <span
-                  className={cn(
-                    "text-[10px] font-body tracking-[0.2em] uppercase transition-colors duration-500",
-                    isTransparent ? "text-polished-white/70" : "text-burgundy/70"
-                  )}
-                >
-                  {language === "ar" ? "متجر الجمال" : "Beauty Shop"}
-                </span>
+                />
               </Link>
             </div>
 
