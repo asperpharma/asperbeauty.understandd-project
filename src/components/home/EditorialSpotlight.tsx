@@ -21,7 +21,7 @@ export const EditorialSpotlight = () => {
             <div className="lg:col-span-3 relative group">
               <div className="relative overflow-hidden aspect-[4/5] lg:aspect-[3/4] shadow-2xl">
                 <img
-                  src="/editorial-showcase-1.jpg"
+                  src={alchemistHero}
                   alt="Asper Beauty Editorial"
                   className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
                   loading="lazy"
