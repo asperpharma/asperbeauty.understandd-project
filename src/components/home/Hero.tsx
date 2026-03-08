@@ -38,7 +38,7 @@ export default function Hero() {
               >
                 {/* Campaign tag */}
                 <span className="inline-block font-body text-xs uppercase tracking-[0.3em] text-polished-gold mb-4 border border-polished-gold/40 px-4 py-1.5 rounded-full bg-asper-ink/30 backdrop-blur-sm">
-                  {isAr ? "حصري" : "Exclusive Edit"}
+                  {isAr ? "ذكي. أصيل. خالد." : "Intelligent. Authentic. Eternal."}
                 </span>
 
                 <h1
