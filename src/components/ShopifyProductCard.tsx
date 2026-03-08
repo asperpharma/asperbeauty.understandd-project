@@ -160,6 +160,16 @@ export function ShopifyProductCard({ product, enrichment }: Props) {
             </div>
           )}
 
+          {/* Star Rating */}
+          <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-0.5">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star key={star} className={cn("h-3 w-3", star <= 4 ? "fill-accent text-accent" : "fill-accent/30 text-accent/30")} />
+              ))}
+            </div>
+            <span className="text-[10px] text-muted-foreground font-body">4.8</span>
+          </div>
+
           <div className="flex items-center justify-between">
             <span className="text-foreground font-body">
               <span className="text-[10px] align-top font-medium text-muted-foreground">{price.currencyCode}</span>
@@ -180,6 +190,13 @@ export function ShopifyProductCard({ product, enrichment }: Props) {
               )}
             </div>
           </div>
+
+          {/* Clinical Benefit One-Liner */}
+          {enrichment?.pharmacist_note ? null : (
+            <p className="text-[10px] text-accent font-body italic tracking-wide">
+              {enrichment?.clinical_badge ? `✓ ${enrichment.clinical_badge}` : "✓ Dermatologist Approved · Authentic Sourcing"}
+            </p>
+          )}
 
           {/* Enrichment badges */}
           {enrichment && (enrichment.ai_persona_lead || (enrichment.key_ingredients && enrichment.key_ingredients.length > 0)) && (
