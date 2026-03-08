@@ -14,7 +14,8 @@ const KNOWN_BRANDS: string[] = [
   "La Roche-Posay", "La Roche Posay",
   "CeraVe", "Bioderma", "Vichy", "Eucerin", "Sesderma", "COSRX", "SVR",
   "Avene", "Avène", "Uriage", "Ducray", "Noreva", "ACM", "Isdin",
-  "The NewLab", "NewLab",
+  "The NewLab", "NewLab", "Rilastil", "Exuviance", "Cetaphil",
+  "Acnecinamide", "Bio Balance",
   // L'Oréal Group
   "Lancôme", "Lancome", "Kérastase", "Kerastase", "YSL",
   "Yves Saint Laurent", "Giorgio Armani", "Armani",
@@ -25,37 +26,51 @@ const KNOWN_BRANDS: string[] = [
   "Burberry", "Calvin Klein", "Ralph Lauren", "Hugo Boss",
   "Mont Blanc", "Montblanc", "Coach", "Bvlgari", "Bulgari",
   "Narciso Rodriguez", "Jimmy Choo", "Azzaro",
+  "Mancera", "Mercedes-Benz", "Mercedes Benz", "Boucheron",
+  "Paco Rabanne", "Jean Paul Gaultier",
   // Premium Care
   "Clarins", "Guerlain", "Nuxe", "Dior", "Olaplex", "NeoCell",
   "Estée Lauder", "Estee Lauder", "Clinique", "Origins",
+  "Anastasia Beverly Hills",
   // Regional & Jordanian
   "Beesline", "Amina's", "Aminas", "Natalifé", "Natalife",
   // Mid-range
   "Babaria", "Revlon", "Rimmel", "Bourjois", "Max Factor",
-  "Essence", "Catrice", "Seventeen",
+  "Essence", "Catrice", "Seventeen", "Eveline", "Pastel",
   // Baby & Mom
   "Medela", "Chicco", "Mustela", "Bepanthen", "Sudocrem",
-  "Philips Avent", "NUK", "MAM",
+  "Philips Avent", "NUK", "MAM", "Baby Safe",
   // Hair
   "Tresemme", "TRESemmé", "Schwarzkopf", "Wella",
   // Supplements
   "Solgar", "Nature's Bounty", "Centrum", "Vitabiotics",
 ].sort((a, b) => b.length - a.length);
 
+/** Product-type keywords that should NOT be captured as brand names */
+const PRODUCT_TERM_PATTERN = /^(serum|cream|lotion|gel|foam|wash|cleanser|moistur|mask|oil|spray|toner|peel|scrub|sunscreen|spf|balm|mist|essence|ampoule|eye|lip|hand|body|foot|hair|nail|baby|anti|ultra|hydra|aqua|vitamin|retinol|hyaluronic|salicylic|glycolic|niacin|collagen|peptide|ceramide|whitening|brightening|matte|glow|peeling|exfoli)/i;
+
 function extractBrand(title: string, vendor: string): string {
   const titleLower = title.toLowerCase();
+  // 1. Check known brands list (longest match first)
   for (const brand of KNOWN_BRANDS) {
     if (titleLower.startsWith(brand.toLowerCase())) {
       return brand;
     }
   }
-  // Fallback: first word(s) before known product terms
-  const firstWord = title.split(/\s+/).slice(0, 2).join(" ");
-  // If vendor is generic "Asper Beauty", use the extracted first words
-  if (vendor === "Asper Beauty" || !vendor) {
-    return firstWord;
+  // 2. Try first word only — but reject if it looks like a product term
+  const words = title.split(/\s+/);
+  const firstWord = words[0] || "";
+  if (firstWord && !PRODUCT_TERM_PATTERN.test(firstWord) && firstWord.length > 2) {
+    // If vendor is generic "Asper Beauty", use first word as brand
+    if (vendor === "Asper Beauty" || !vendor) {
+      return firstWord;
+    }
   }
-  return vendor;
+  // 3. Use vendor if it's not the generic store name
+  if (vendor && vendor !== "Asper Beauty") {
+    return vendor;
+  }
+  return firstWord || "Unknown";
 }
 
 // ── Brand-tier price normalization ───────────────────────────────────
@@ -63,6 +78,8 @@ function extractBrand(title: string, vendor: string): string {
 /** Budget/mid-range brands whose CSV prices are in fils (÷100 to get JOD) */
 const BUDGET_BRANDS = new Set([
   "essence", "rimmel", "seventeen", "catrice", "bourjois",
+  "acnecinamide", "bio balance", "cetaphil", "eveline",
+  "pastel", "baby safe",
 ]);
 
 /** Mid-range brands: fils if price > 50 */
