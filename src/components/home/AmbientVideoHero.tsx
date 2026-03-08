@@ -50,15 +50,15 @@ export default function AmbientVideoHero() {
           >
             {isAr ? (
               <>
-                هندسة البشرة
+                مُنتقاة من الصيادلة.
                 <br />
-                <span className="italic text-burgundy">الصحية.</span>
+                <span className="italic text-burgundy">مدعومة بالذكاء.</span>
               </>
             ) : (
               <>
-                The Architecture
+                Curated by Pharmacists.
                 <br />
-                of <span className="italic text-burgundy">Healthy Skin.</span>
+                <span className="italic text-burgundy">Powered by Intelligence.</span>
               </>
             )}
           </motion.h1>
