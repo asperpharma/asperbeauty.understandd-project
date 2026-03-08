@@ -159,8 +159,8 @@ export const Footer = () => {
               {isArabic ? "عن آسبر" : "About Asper"}
             </h3>
             <ul className="space-y-3 mb-8">
-              {aboutLinks.map((item) => (
-                <li key={item.href}>
+              {aboutLinks.map((item, index) => (
+                <li key={`about-${item.href}-${index}`}>
                   <Link to={item.href} className="font-body text-sm text-asper-stone-light hover:text-polished-gold transition-colors duration-400">
                     {item.name}
                   </Link>
