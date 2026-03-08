@@ -54,7 +54,7 @@ const REVIEWS: Review[] = [
 
 function ContextTag({ label, value }: { label: string; value: string }) {
   return (
-    <span className="inline-block px-2.5 py-1 bg-card border border-border text-muted-foreground text-xs font-sans tracking-wide">
+    <span className="inline-block px-2.5 py-1 bg-card border border-border text-muted-foreground text-xs font-body tracking-wide">
       {label}: <span className="font-semibold text-foreground">{value}</span>
     </span>
   );
