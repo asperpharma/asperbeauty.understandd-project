@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { AsperWordmark } from "@/components/ui/AsperWordmark";
 
 import { Link, useLocation } from "react-router-dom";
 import {
