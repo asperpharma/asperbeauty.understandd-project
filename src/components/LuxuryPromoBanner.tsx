@@ -31,8 +31,7 @@ export const LuxuryPromoBanner = ({
       subtitle: isAr
         ? "خصم 25% على جميع منتجات العناية بالبشرة المتميزة"
         : "25% Off All Premium Skincare Essentials",
-      image:
-        "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80",
+      image: protocolRadiance,
     },
     secondary: {
       title: isAr ? "وصل حديثاً - مجموعة الربيع" : "New Arrivals — Spring Edit",
