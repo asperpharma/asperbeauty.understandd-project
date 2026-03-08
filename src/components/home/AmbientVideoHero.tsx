@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import luxuryHeroDisplay from "@/assets/luxury-hero-display.png";
 
 const LUXURY_EASE = [0.19, 1, 0.22, 1] as const;
 
@@ -150,8 +151,8 @@ export default function AmbientVideoHero() {
         transition={{ duration: 1.2, delay: 0.3, ease: LUXURY_EASE }}
       >
         <img
-          src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1200&q=80&auto=format&fit=crop"
-          alt="Golden serum texture macro close-up"
+          src={luxuryHeroDisplay}
+          alt="Luxury beauty products on marble display with red silk"
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Subtle gradient overlay for depth */}
