@@ -245,7 +245,7 @@ export const Hero = () => {
                 transition: "transform 0.1s ease-out",
               }}
             >
-              {isArabic ? "المعيار الجديد للجمال" : "Jordanian Elegance."}
+              {isArabic ? "مدعومة بالذكاء." : "Powered by Intelligence."}
             </h1>
             {/* Gold Underline */}
             <div
