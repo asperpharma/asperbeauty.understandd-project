@@ -317,7 +317,7 @@ export default function AsperIntelligence() {
               </span>
             </h1>
             <div className="flex items-center gap-3">
-              <span className="px-2 py-0.5 bg-[#800020]/5 text-[#800020] text-[10px] font-black tracking-widest rounded-sm border border-[#800020]/10 uppercase">
+              <span className="px-2 py-0.5 bg-maroon/5 text-maroon text-[10px] font-black tracking-widest rounded-sm border border-maroon/10 uppercase">
                 Morning Spa Theme Active
               </span>
               <p className="text-gray-400 font-medium tracking-[0.2em] uppercase text-[9px]">
