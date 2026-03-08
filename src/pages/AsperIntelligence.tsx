@@ -496,7 +496,7 @@ export default function AsperIntelligence() {
                       )}
                     </div>
                     <div>
-                      <h3 className="font-serif text-2xl tracking-tight text-[#333333]">
+                      <h3 className="font-serif text-2xl tracking-tight text-dark-charcoal">
                         {isClinical
                           ? "Clinical Hub"
                           : "Aesthetic Concierge"}
