@@ -63,6 +63,8 @@ function extractBrand(title: string, vendor: string): string {
 /** Budget/mid-range brands whose CSV prices are in fils (÷100 to get JOD) */
 const BUDGET_BRANDS = new Set([
   "essence", "rimmel", "seventeen", "catrice", "bourjois",
+  "acnecinamide", "bio balance", "cetaphil", "eveline",
+  "pastel", "baby safe",
 ]);
 
 /** Mid-range brands: fils if price > 50 */
