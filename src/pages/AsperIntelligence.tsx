@@ -582,7 +582,7 @@ export default function AsperIntelligence() {
                     <div className="flex justify-start animate-pulse">
                       <div className="bg-white p-6 rounded-[2rem] rounded-tl-none border border-gray-100 flex items-center gap-4">
                         <Loader2
-                          className="animate-spin text-[#800020]"
+                          className="animate-spin text-maroon"
                           size={18}
                         />
                         <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
