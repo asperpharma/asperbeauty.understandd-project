@@ -944,5 +944,17 @@ body { background-color: hsl(240 100% 99%); color: #333333; }
   animation: clinical-shimmer-sweep 0.8s 400ms cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
+
+/* ─── RTL-Aware Marquee ─── */
+@keyframes marquee-ltr {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes marquee-rtl {
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
 /* postcss rebuild trigger */
 
