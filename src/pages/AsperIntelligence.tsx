@@ -539,8 +539,8 @@ export default function AsperIntelligence() {
                       <div
                         className={`max-w-[80%] p-6 rounded-[2rem] text-sm shadow-2xl shadow-black/5 relative transition-all ${
                           msg.role === "user"
-                            ? "bg-[#333333] text-white rounded-tr-none"
-                            : "bg-white border-l-4 border-[#800020] text-[#333333] rounded-tl-none ring-1 ring-black/5"
+                            ? "bg-dark-charcoal text-white rounded-tr-none"
+                            : "bg-white border-l-4 border-maroon text-dark-charcoal rounded-tl-none ring-1 ring-black/5"
                         }`}
                       >
                         {msg.image && (
