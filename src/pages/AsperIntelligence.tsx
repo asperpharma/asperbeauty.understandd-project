@@ -421,7 +421,7 @@ export default function AsperIntelligence() {
                       className={`p-8 border-2 border-dashed rounded-[2rem] transition-all flex flex-col items-center justify-center text-center ${
                         capturedImage
                           ? "border-green-300 bg-green-50"
-                          : "border-[#C5A028]/20 hover:border-[#C5A028] bg-[#F8F8FF]/50"
+                          : "border-polished-gold/20 hover:border-polished-gold bg-soft-ivory/50"
                       }`}
                     >
                       {capturedImage ? (
