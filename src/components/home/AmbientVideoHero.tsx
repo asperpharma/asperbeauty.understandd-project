@@ -9,9 +9,9 @@ import { useRef, useState, useEffect, useCallback } from "react";
 const LUXURY_EASE = [0.19, 1, 0.22, 1] as const;
 
 const HERO_VIDEOS = [
-  { webm: "/videos/hero-reel-1.webm", mp4: "/videos/hero-reel-1.mp4", id: "reel-1" },
-  { webm: "/videos/hero-reel-2.webm", mp4: "/videos/hero-reel-2.mp4", id: "reel-2" },
-  { webm: "/videos/hero-reel-3.webm", mp4: "/videos/hero-reel-3.mp4", id: "reel-3" },
+  { webm: "/videos/hero-reel-1.webm", mp4: "/videos/hero-reel-1.mp4", poster: "/videos/hero-poster-1.jpg", id: "reel-1" },
+  { webm: "/videos/hero-reel-2.webm", mp4: "/videos/hero-reel-2.mp4", poster: "/videos/hero-poster-2.jpg", id: "reel-2" },
+  { webm: "/videos/hero-reel-3.webm", mp4: "/videos/hero-reel-3.mp4", poster: "/videos/hero-poster-3.jpg", id: "reel-3" },
 ];
 
 const CROSSFADE_DURATION = 1.2; // seconds
