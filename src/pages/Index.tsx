@@ -116,6 +116,7 @@ const BESTSELLERS = [
   { id: "12", handle: "lrp-toleriane-hydrating-wash", title: "Toleriane Hydrating Gentle Face Wash", brand: "La Roche-Posay", image: lrpTolerianewashImg, tag: "Bestseller" },
   { id: "13", handle: "vichy-capital-soleil-uv-age", title: "Capital Soleil UV-Age Daily SPF 50+", brand: "Vichy", image: vichyCapitalSoleilImg },
   { id: "14", handle: "vichy-normaderm-phytosolution", title: "Normaderm Phytosolution Double-Correction Care", brand: "Vichy", image: vichyNormadermImg, tag: "Bestseller" },
+  { id: "15", handle: "aminas-calendula-face-body-cream", title: "Calendula Face & Body Cream", brand: "Amina's Natural Skincare", image: aminasCalendulaImg, tag: "Jordanian Heritage" },
 ];
 
 const Index = () => {
