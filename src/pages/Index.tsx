@@ -77,6 +77,16 @@ const ScienceMeetsStyle = lazy(() =>
     default: m.ScienceMeetsStyle,
   }))
 );
+const DualPersonaBestsellers = lazy(() =>
+  import("@/components/home/DualPersonaBestsellers").then((m) => ({
+    default: m.DualPersonaBestsellers,
+  }))
+);
+const GuidedDiscovery = lazy(() =>
+  import("@/components/home/GuidedDiscovery").then((m) => ({
+    default: m.GuidedDiscovery,
+  }))
+);
 const ClinicalTruthBanner = lazy(() =>
   import("@/components/home/ClinicalTruthBanner")
 );
