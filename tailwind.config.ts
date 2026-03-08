@@ -198,6 +198,7 @@ export default {
         shimmer: "shimmer 1.5s ease-in-out infinite",
         "skeleton-breathe": "skeleton-breathe 2s ease-in-out infinite",
         shake: "shake 0.5s ease-in-out",
+        "marquee-float": "marquee-float 35s linear infinite",
       },
     },
   },
