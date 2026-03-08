@@ -43,6 +43,9 @@ import { RequireAdmin } from "./components/RequireAdmin";
 const BeautyAssistant = lazy(() =>
   import("@/components/BeautyAssistant").then((m) => ({ default: m.BeautyAssistant })),
 );
+const FloatingConciergeWidget = lazy(() =>
+  import("@/components/FloatingConciergeWidget").then((m) => ({ default: m.FloatingConciergeWidget })),
+);
 
 
 const queryClient = new QueryClient();
@@ -73,6 +76,7 @@ const App = () => {
             <BrowserRouter>
               <Suspense fallback={null}>
                 <BeautyAssistant />
+                <FloatingConciergeWidget />
               </Suspense>
               <Routes>
                 <Route path="/" element={<Index />} />
