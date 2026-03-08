@@ -25,6 +25,7 @@ import ceraveMoisturizingCreamImg from "@/assets/products/cerave-moisturizing-cr
 import olaplexNo7Img from "@/assets/products/olaplex-no7-bonding-oil.png";
 import neocellCollagenImg from "@/assets/products/neocell-collagen-c.png";
 import eucerinSunImg from "@/assets/products/eucerin-sun-hydro-spf50.png";
+import aminasCalendulaImg from "@/assets/products/aminas-calendula-cream.png";
 
 // Lazy load below-the-fold components
 const EditorialSpotlight = lazy(() =>
