@@ -66,8 +66,8 @@ export const ConciergeTipCard = ({
   const isArabic = language === "ar";
 
   const signatureText = persona === "dr_sami"
-    ? (isArabic ? "— د. سامي" : "— Dr. Sami")
-    : (isArabic ? "— مس. زين" : "— Ms. Zain");
+    ? (isArabic ? "— د. سامي، دعم أسبر السريري" : "— Dr. Sami, Asper Clinical Support")
+    : (isArabic ? "— مس. زين، خبيرة الجمال" : "— Ms. Zain, Asper Beauty Concierge");
 
   const PersonaIcon = persona === "dr_sami" ? CaduceusIcon : LotusIcon;
 
