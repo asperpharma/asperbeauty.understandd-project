@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom";
 
 const DERMO_BRANDS = [
-  { name: "Eucerin", slug: "Eucerin", logo: "/brands/eucerin.png" },
-  { name: "La Roche-Posay", slug: "La Roche-Posay", logo: "/brands/laroche-posay.png" },
-  { name: "CeraVe", slug: "CeraVe", logo: "/brands/cerave.png" },
-  { name: "Bioderma", slug: "Bioderma", logo: "/brands/bioderma.png" },
-  { name: "Vichy", slug: "Vichy", logo: "/brands/vichy.png" },
-  { name: "Sesderma", slug: "Sesderma", logo: "/brands/sesderma.png" },
-  { name: "COSRX", slug: "COSRX", logo: "/brands/cosrx.png" },
-  { name: "Kérastase", slug: "Kerastase", logo: "/brands/kerastase.png" },
-  { name: "Guerlain", slug: "Guerlain", logo: "/brands/guerlain.png" },
-  { name: "Nuxe", slug: "Nuxe", logo: "/brands/nuxe.png" },
+  { name: "Eucerin", slug: "Eucerin", logo: "/brands/eucerin.svg" },
+  { name: "La Roche-Posay", slug: "La Roche-Posay", logo: "/brands/laroche-posay.svg" },
+  { name: "CeraVe", slug: "CeraVe", logo: "/brands/cerave.svg" },
+  { name: "Bioderma", slug: "Bioderma", logo: "/brands/bioderma.svg" },
+  { name: "Vichy", slug: "Vichy", logo: "/brands/vichy.svg" },
+  { name: "Sesderma", slug: "Sesderma", logo: "/brands/sesderma.svg" },
+  { name: "COSRX", slug: "COSRX", logo: "/brands/cosrx.svg" },
+  { name: "Kérastase", slug: "Kerastase", logo: "/brands/kerastase.svg" },
+  { name: "Guerlain", slug: "Guerlain", logo: "/brands/guerlain.svg" },
+  { name: "Nuxe", slug: "Nuxe", logo: "/brands/nuxe.svg" },
 ];
 
 function LogoGroup() {
