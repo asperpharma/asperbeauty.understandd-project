@@ -349,7 +349,7 @@ export default function AsperIntelligence() {
                 onClick={() => setPersona("clinical")}
                 className={`flex items-center gap-4 px-8 py-3 rounded-2xl transition-all ${
                   isClinical
-                    ? "bg-[#800020] text-white shadow-xl"
+                    ? "bg-maroon text-white shadow-xl"
                     : "text-gray-400 grayscale"
                 }`}
               >
