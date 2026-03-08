@@ -393,7 +393,7 @@ export default function AsperIntelligence() {
                       <Camera size={24} />
                     </div>
                     <div>
-                      <h3 className="text-xs font-black uppercase tracking-widest text-[#333333]">
+                      <h3 className="text-xs font-black uppercase tracking-widest text-dark-charcoal">
                         Multimodal Lens
                       </h3>
                       <p className="text-[10px] text-gray-400">
