@@ -554,11 +554,7 @@ export default function AIConcierge() {
               return (
                 <div key={i} className={cn("mb-3 flex gap-2", isUser && "flex-row-reverse")}>
                   {!isUser && mp && (
-                    <Avatar className="h-7 w-7 shrink-0">
-                      <AvatarFallback className={cn("text-[10px]", mp.bgColor, mp.color)}>
-                        {mp.name.split(" ").map((w) => w[0]).join("")}
-                      </AvatarFallback>
-                    </Avatar>
+                    <mp.avatar size={28} />
                   )}
                   <div
                     className={cn(
