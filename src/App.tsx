@@ -120,6 +120,7 @@ const App = () => {
                 <Route path="/consultation" element={<Navigate to="/skin-concerns" replace />} />
                 <Route path="/driver" element={<DriverDashboard />} />
                 <Route path="/admin/audit-logs" element={<AdminAuditLogs />} />
+                <Route path="/admin/purge-review" element={<PurgeReview />} />
                 <Route
                   path="/brand-intelligence"
                   element={
