@@ -386,10 +386,10 @@ export default function AsperIntelligence() {
           {activeTab === "intelligence" && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
               <div className="lg:col-span-4 space-y-6">
-                <div className="bg-white rounded-[2.5rem] p-8 border border-[#C5A028]/10 shadow-2xl shadow-black/5 relative overflow-hidden group">
-                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#C5A028]/5 rounded-full blur-3xl group-hover:bg-[#C5A028]/10 transition-colors" />
+                <div className="bg-white rounded-[2.5rem] p-8 border border-polished-gold/10 shadow-2xl shadow-black/5 relative overflow-hidden group">
+                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-polished-gold/5 rounded-full blur-3xl group-hover:bg-polished-gold/10 transition-colors" />
                   <div className="flex items-center gap-3 mb-8">
-                    <div className="p-3 bg-[#800020]/5 rounded-2xl text-[#800020]">
+                    <div className="p-3 bg-maroon/5 rounded-2xl text-maroon">
                       <Camera size={24} />
                     </div>
                     <div>
