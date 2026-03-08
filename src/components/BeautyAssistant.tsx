@@ -139,7 +139,7 @@ export const BeautyAssistant = () => {
               {messages.length === 0 && (
                 <div className="text-center py-10">
                   <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-polished-gold/20 to-transparent flex items-center justify-center border border-polished-gold/30">
-                    <img src="/dr-bot-character.png" className="w-16 h-16 object-contain" alt="Dr. Sami Icon" style={DR_SAMI_BLEND_FIX} />
+                    <img src="/dr-bot-character.png" className="w-16 h-16 object-contain" alt="Dr. Sami Icon" />
                   </div>
                   <h4 className="text-asper-ink font-heading text-xl font-bold mb-2">
                     {isAr ? "استشارة مجانية" : "Private Consultation"}
