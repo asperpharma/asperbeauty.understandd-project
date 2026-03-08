@@ -456,9 +456,7 @@ export default function AIConcierge() {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border/50 bg-primary px-4 py-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-foreground/20">
-                <PersonaIcon className="h-4 w-4 text-primary-foreground" />
-              </div>
+              <persona.avatar size={36} />
               <div>
                 <p className="font-heading text-sm font-semibold text-primary-foreground">{persona.name}</p>
                 <p className="text-xs text-primary-foreground/70">{persona.subtitle}</p>
