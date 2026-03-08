@@ -437,17 +437,52 @@ export const Header = () => {
                   </Link>
                 ))}
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent("open-beauty-assistant"));
-                  setIsMobileMenuOpen(false);
-                }}
-                className="flex items-center gap-2 w-full py-2 text-burgundy font-body border-b border-rose-clay-light/20 text-left"
-              >
-                <MessageCircle className="h-4 w-4 text-burgundy" />
-                {language === "ar" ? "Dr.Bot" : "Dr.Bot"}
-              </button>
+              {/* Dual-Persona Consultation Buttons — Mobile */}
+              <div className="space-y-2">
+                <h3 className="font-display text-lg font-bold text-burgundy">
+                  {language === "ar" ? "استشارة ذكية" : "Smart Consultation"}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent("open-beauty-assistant", { detail: { persona: "dr_sami" } }));
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-3 w-full py-3 px-3 rounded-lg bg-polished-gold/5 border border-polished-gold/20 hover:border-polished-gold/40 transition-all"
+                >
+                  <div className="w-8 h-8 rounded-full bg-polished-gold/10 flex items-center justify-center">
+                    <ShieldCheck className="h-4 w-4 text-polished-gold" />
+                  </div>
+                  <div className="text-left">
+                    <span className="block font-body text-sm font-semibold text-burgundy">
+                      {language === "ar" ? "استشر د. سامي" : "Consult Dr. Sami"}
+                    </span>
+                    <span className="block font-body text-[10px] text-polished-gold uppercase tracking-wider">
+                      {language === "ar" ? "عافية · مكملات · استشارة طبية" : "Wellness · Supplements · Clinical"}
+                    </span>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent("open-beauty-assistant", { detail: { persona: "ms_zain" } }));
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-3 w-full py-3 px-3 rounded-lg bg-polished-gold/5 border border-polished-gold/20 hover:border-polished-gold/40 transition-all"
+                >
+                  <div className="w-8 h-8 rounded-full bg-polished-gold/10 flex items-center justify-center">
+                    <Sparkles className="h-4 w-4 text-polished-gold" />
+                  </div>
+                  <div className="text-left">
+                    <span className="block font-body text-sm font-semibold text-burgundy">
+                      {language === "ar" ? "تحدثي مع مس زين" : "Chat with Ms. Zain"}
+                    </span>
+                    <span className="block font-body text-[10px] text-polished-gold uppercase tracking-wider">
+                      {language === "ar" ? "جمال · مكياج · روتين يومي" : "Beauty · Makeup · Routines"}
+                    </span>
+                  </div>
+                </button>
+              </div>
               <div className="pt-4 border-t border-rose-clay-light/30 flex flex-wrap gap-4">
                 <Link
                   to="/best-sellers"
