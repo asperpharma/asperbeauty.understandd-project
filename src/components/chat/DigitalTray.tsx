@@ -133,3 +133,4 @@ export const DigitalTray = ({ products, concern }: DigitalTrayProps) => {
     </motion.div>
   );
 };
+

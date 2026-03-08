@@ -236,3 +236,4 @@ export function ShopifyProductCard({ product, enrichment }: Props) {
     </Link>
   );
 }
+

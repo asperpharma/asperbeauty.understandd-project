@@ -1,4 +1,4 @@
-﻿# Asper Beauty Shop â€” Master Connections & Integration Map
+# Asper Beauty Shop — Master Connections & Integration Map
 
 > Single source of truth for every project ID, URL, handle, endpoint, and integration point.
 > Copy-paste this into any AI tool, CI/CD system, or developer onboarding to fully connect to the project.
@@ -109,11 +109,11 @@ https://qqceibvalkoytafynwoc.supabase.co/functions/v1/beauty-assistant
 
 | Route Parameter | Source | Full URL |
 |---|---|---|
-| `?source=web` | Website frontend | `â€¦/beauty-assistant?source=web` |
-| `?route=manychat` | ManyChat automation | `â€¦/beauty-assistant?route=manychat` |
-| `?source=whatsapp` | WhatsApp Business | `â€¦/beauty-assistant?source=whatsapp` |
-| `?route=gorgias` | Gorgias helpdesk | `â€¦/beauty-assistant?route=gorgias` |
-| `?health=true` | Health probe | `â€¦/beauty-assistant?health=true` |
+| `?source=web` | Website frontend | `…/beauty-assistant?source=web` |
+| `?route=manychat` | ManyChat automation | `…/beauty-assistant?route=manychat` |
+| `?source=whatsapp` | WhatsApp Business | `…/beauty-assistant?source=whatsapp` |
+| `?route=gorgias` | Gorgias helpdesk | `…/beauty-assistant?route=gorgias` |
+| `?health=true` | Health probe | `…/beauty-assistant?health=true` |
 
 ---
 
@@ -154,9 +154,9 @@ https://qqceibvalkoytafynwoc.supabase.co/functions/v1/beauty-assistant
 |---|---|
 | `VITE_SUPABASE_PROJECT_ID` | `qqceibvalkoytafynwoc` |
 | `VITE_SUPABASE_URL` | `https://qqceibvalkoytafynwoc.supabase.co` |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | *(Supabase anon key â€” get from dashboard)* |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | *(Supabase anon key — get from dashboard)* |
 | `VITE_SHOPIFY_STORE_DOMAIN` | `lovable-project-milns.myshopify.com` |
-| `VITE_SHOPIFY_STOREFRONT_TOKEN` | *(Storefront API token â€” get from Shopify)* |
+| `VITE_SHOPIFY_STOREFRONT_TOKEN` | *(Storefront API token — get from Shopify)* |
 | `VITE_SHOPIFY_API_VERSION` | `2025-07` |
 | `VITE_SITE_URL` | `https://www.asperbeautyshop.com/` |
 | `VITE_LOVABLE_URL` | `www.asperbeautyshop.com` |
@@ -165,7 +165,7 @@ https://qqceibvalkoytafynwoc.supabase.co/functions/v1/beauty-assistant
 
 | Variable | Value |
 |---|---|
-| `SHOPIFY_ADMIN_ACCESS_TOKEN` | *(Admin API token â€” never expose client-side)* |
+| `SHOPIFY_ADMIN_ACCESS_TOKEN` | *(Admin API token — never expose client-side)* |
 | `SHOPIFY_STORE_DOMAIN` | `lovable-project-milns.myshopify.com` |
 | `CSV_PATH` | `./data/shopify-import-2.csv` |
 
@@ -261,3 +261,13 @@ These domains are allowed in the CSP header (`index.html`):
 
 *This document is the complete integration map. Hand it to any tool, developer, or AI assistant to achieve full project connectivity.*
 
+
+
+## 10. Connection Health Audit (March 2026)
+- [x] Website (Production): LIVE
+- [x] Dr. Bot (AI Brain): ACTIVE
+- [x] WhatsApp/ManyChat: CONNECTED
+- [x] Instagram/Facebook: CONNECTED
+- [x] Shopify Catalog: SYNCED (4,311 Items)
+- [x] GoDaddy Domain: SECURED
+- [x] Real-Image Lab: ONLINE

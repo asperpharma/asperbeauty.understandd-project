@@ -55,7 +55,7 @@ export const FeaturedCollection = () => {
                     price: product.price ?? 0,
                     original_price: null,
                     discount_percent: null,
-                    image_url: product.image_url || "/placeholder.svg",
+                    image_url: product.image_url || "/editorial-showcase-2.jpg",
                     description: product.pharmacist_note || undefined,
                     volume_ml: undefined,
                     is_new: new Date(product.created_at) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
@@ -70,3 +70,4 @@ export const FeaturedCollection = () => {
 };
 
 export default FeaturedCollection;
+

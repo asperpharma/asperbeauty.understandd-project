@@ -232,3 +232,4 @@ export const AccountDropdown = ({ isScrolled }: { isScrolled: boolean }) => {
 };
 
 export default AccountDropdown;
+

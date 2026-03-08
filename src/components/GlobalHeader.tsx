@@ -239,3 +239,4 @@ export const GlobalHeader = () => {
   );
 };
 export default GlobalHeader;
+

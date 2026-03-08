@@ -18,7 +18,7 @@ const PROTOCOLS = [
     en: "Cellular Repair",
     ar: "إصلاح خلوي",
     ingredients: { en: "Retinol · Peptides · Ceramides", ar: "ريتينول · ببتيدات · سيراميدات" },
-    image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&q=80&auto=format&fit=crop",
+    image: "/editorial-showcase-1.jpg?w=600&q=80&auto=format&fit=crop",
     href: "/concerns/anti-aging",
   },
   {
@@ -138,3 +138,4 @@ export const ShopByProtocol = () => {
     </section>
   );
 };
+

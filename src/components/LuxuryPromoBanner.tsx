@@ -104,3 +104,4 @@ export const LuxuryPromoBanner = ({
 };
 
 export default LuxuryPromoBanner;
+

@@ -357,3 +357,4 @@ export const CartDrawer = () => {
     </Sheet>
   );
 };
+

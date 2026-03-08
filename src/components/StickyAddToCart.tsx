@@ -57,3 +57,4 @@ export const StickyAddToCart = ({ productTitle, price, onAddToCart, triggerRef }
     </div>
   );
 };
+

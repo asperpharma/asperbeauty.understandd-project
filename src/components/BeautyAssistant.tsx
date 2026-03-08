@@ -79,17 +79,17 @@ export const BeautyAssistant = () => {
 
             {/* Mini Doctor Character */}
             <div 
-              className="relative w-32 h-32 sm:w-40 sm:h-40 cursor-pointer overflow-hidden transition-transform duration-300 hover:-translate-y-2 hover:scale-105 filter drop-shadow-[0_10px_15px_rgba(0,0,0,0.2)]"
+              className="relative w-40 h-40 sm:w-56 sm:h-56 cursor-pointer overflow-visible transition-all duration-500 hover:-translate-y-4 hover:scale-110 drop-shadow-[0_20px_35px_rgba(0,0,0,0.3)]"
               onClick={() => setIsOpen(true)}
             >
               {/* Cutout character image (no background) */}
               <img 
                 src="/dr-bot-character.png" 
                 alt="Dr. Sami Mini Character" 
-                className="w-full h-full object-contain object-bottom relative z-10"
+                className="w-full h-full object-contain object-bottom relative z-10 drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]"
               />
               {/* Soft glow behind the character */}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-12 bg-polished-gold/40 blur-xl rounded-full z-0"></div>
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-polished-gold/30 blur-2xl rounded-[100%] z-0 animate-pulse"></div>
             </div>
           </motion.div>
         )}
@@ -200,3 +200,4 @@ export const BeautyAssistant = () => {
     </>
   );
 };
+

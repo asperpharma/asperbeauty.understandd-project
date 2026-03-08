@@ -270,3 +270,4 @@ export const ProductLuxuryView = ({ product }: ProductLuxuryViewProps) => {
     </div>
   );
 };
+

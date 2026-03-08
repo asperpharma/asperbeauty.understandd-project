@@ -23,3 +23,4 @@ export default function AsperLogo({ size = 160, className, animated }: AsperLogo
     />
   );
 }
+
