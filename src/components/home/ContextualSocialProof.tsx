@@ -121,7 +121,7 @@ export default function ContextualSocialProof() {
 
               {/* Clinical Context Footer */}
               <div className="mt-auto pt-5 border-t border-foreground/10">
-                <p className="font-sans text-sm font-semibold text-foreground mb-3">
+                <p className="font-body text-sm font-semibold text-foreground mb-3">
                   {review.author}
                 </p>
                 <div className="flex flex-wrap gap-2">
