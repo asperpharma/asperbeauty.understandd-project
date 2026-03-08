@@ -91,7 +91,6 @@ export const BeautyAssistant = () => {
                   mixBlendMode: "multiply",
                   filter: "drop-shadow(0 20px 35px rgba(0,0,0,0.25)) drop-shadow(0 0 15px rgba(212,175,55,0.4)) brightness(1.08) contrast(1.22) saturate(0.92)",
                 }}
-                style={DR_SAMI_BLEND_FIX}
               />
               {/* Soft glow behind the character */}
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-polished-gold/30 blur-2xl rounded-[100%] z-0 animate-pulse"></div>
