@@ -13,6 +13,10 @@ import { DigitalTray } from "./chat/DigitalTray";
 import { cn } from "@/lib/utils";
 
 const LUXURY_EASE = [0.19, 1, 0.22, 1] as const;
+const DR_SAMI_BLEND_FIX = {
+  mixBlendMode: "multiply" as const,
+  filter: "brightness(1.08) contrast(1.22) saturate(0.92)",
+};
 
 export const BeautyAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
