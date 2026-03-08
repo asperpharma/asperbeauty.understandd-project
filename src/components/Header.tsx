@@ -8,7 +8,9 @@ import {
   Menu,
   MessageCircle,
   Search,
+  ShieldCheck,
   ShoppingBag,
+  Sparkles,
   User,
   X,
 } from "lucide-react";
