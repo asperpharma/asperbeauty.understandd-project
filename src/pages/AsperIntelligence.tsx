@@ -571,7 +571,7 @@ export default function AsperIntelligence() {
                             </button>
                             <BadgeCheck
                               size={16}
-                              className="text-[#C5A028] opacity-50"
+                              className="text-polished-gold opacity-50"
                             />
                           </div>
                         )}
