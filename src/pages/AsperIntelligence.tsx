@@ -481,8 +481,8 @@ export default function AsperIntelligence() {
                 </div>
               </div>
 
-              <div className="lg:col-span-8 bg-white rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-[#C5A028]/5 flex flex-col relative overflow-hidden h-[750px]">
-                <div className="p-8 border-b border-[#F8F8FF] flex justify-between items-center bg-[#F8F8FF]/50 backdrop-blur-md">
+              <div className="lg:col-span-8 bg-white rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-polished-gold/5 flex flex-col relative overflow-hidden h-[750px]">
+                <div className="p-8 border-b border-soft-ivory flex justify-between items-center bg-soft-ivory/50 backdrop-blur-md">
                   <div className="flex items-center gap-4">
                     <div
                       className={`p-3 rounded-2xl ${
