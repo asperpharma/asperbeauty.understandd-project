@@ -9,9 +9,9 @@ import { useRef, useState, useEffect, useCallback } from "react";
 const LUXURY_EASE = [0.19, 1, 0.22, 1] as const;
 
 const HERO_VIDEOS = [
-  { src: "/videos/hero-reel-1.mp4", id: "reel-1" },
-  { src: "/videos/hero-reel-2.mp4", id: "reel-2" },
-  { src: "/videos/hero-reel-3.mp4", id: "reel-3" },
+  { webm: "/videos/hero-reel-1.webm", mp4: "/videos/hero-reel-1.mp4", id: "reel-1" },
+  { webm: "/videos/hero-reel-2.webm", mp4: "/videos/hero-reel-2.mp4", id: "reel-2" },
+  { webm: "/videos/hero-reel-3.webm", mp4: "/videos/hero-reel-3.mp4", id: "reel-3" },
 ];
 
 const CROSSFADE_DURATION = 1.2; // seconds
@@ -143,7 +143,8 @@ export default function AmbientVideoHero() {
               zIndex: activeIndex === i ? 2 : 1,
             }}
           >
-            <source src={video.src} type="video/mp4" />
+            <source src={video.webm} type="video/webm" />
+            <source src={video.mp4} type="video/mp4" />
           </video>
         ))}
 
