@@ -41,13 +41,13 @@ export function DermoBrands() {
             >
               <Link
                 to={`/shop?brand=${encodeURIComponent(brand.slug)}`}
-                className="group relative flex items-center justify-center h-28 md:h-32 transition-all duration-500"
+                className="group flex items-center justify-center p-6 md:p-8 rounded-xl bg-card shadow-sm hover:shadow-xl hover:-translate-y-2 border border-transparent hover:border-accent transition-all duration-500 cursor-pointer"
                 aria-label={brand.name}
               >
                 <img
                   src={brand.logo}
                   alt={`${brand.name} logo`}
-                  className="h-24 md:h-28 w-auto max-w-[90%] object-contain opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500"
+                  className="w-24 md:w-36 h-auto max-h-20 md:max-h-28 object-contain mix-blend-multiply opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
                   loading="lazy"
                 />
               </Link>
