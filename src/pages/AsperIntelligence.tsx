@@ -632,7 +632,7 @@ export default function AsperIntelligence() {
           )}
 
           {activeTab !== "intelligence" && (
-            <div className="p-20 bg-white rounded-[4rem] border border-[#C5A028]/10 shadow-2xl shadow-black/5 flex flex-col items-center justify-center text-center min-h-[500px]">
+            <div className="p-20 bg-white rounded-[4rem] border border-polished-gold/10 shadow-2xl shadow-black/5 flex flex-col items-center justify-center text-center min-h-[500px]">
               <AsperLogo mode={persona} style={logoStyle} size="xl" />
               <h2 className="text-4xl font-serif mt-10 mb-4 text-[#333333]">
                 Strategic Theme Implemented
