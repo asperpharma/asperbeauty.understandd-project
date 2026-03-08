@@ -264,38 +264,24 @@ export default function AsperIntelligence() {
   };
 
   const handleSpeech = async (text: string) => {
-    if (!hasApiKey) return;
     setIsSpeaking(true);
     try {
-      const voiceName = isClinical ? "Puck" : "Aoede";
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${TTS_MODEL}:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text }] }],
-            generationConfig: {
-              responseModalities: ["AUDIO"],
-              speechConfig: {
-                voiceConfig: {
-                  prebuiltVoiceConfig: { voiceName },
-                },
-              },
-            },
-          }),
-        }
-      );
-      const data = await response.json();
-      const part = data.candidates?.[0]?.content?.parts?.[0];
-      if (!part?.inlineData) {
+      const { data, error } = await supabase.functions.invoke("asper-intelligence", {
+        body: {
+          action: "tts",
+          text,
+          persona,
+        },
+      });
+
+      if (error || !data?.audioData) {
         setIsSpeaking(false);
         return;
       }
-      const audioData = part.inlineData.data;
-      const mimeMatch = part.inlineData.mimeType?.match(/rate=(\d+)/);
+
+      const mimeMatch = data.mimeType?.match(/rate=(\d+)/);
       const sampleRate = mimeMatch ? parseInt(mimeMatch[1], 10) : 24000;
-      const bytes = Uint8Array.from(atob(audioData), (c) => c.charCodeAt(0));
+      const bytes = Uint8Array.from(atob(data.audioData), (c) => c.charCodeAt(0));
       const pcmData = new Int16Array(bytes.buffer);
       const wavBlob = pcmToWav(pcmData, sampleRate);
       const audio = new Audio(URL.createObjectURL(wavBlob));
