@@ -78,23 +78,20 @@ export const BeautyAssistant = () => {
               <div className="absolute -bottom-3 right-6 w-0 h-0 border-l-[12px] border-l-transparent border-t-[12px] border-t-polished-white border-r-[12px] border-r-transparent filter drop-shadow-md"></div>
             </motion.div>
 
-            {/* Mini Doctor Character */}
+            {/* Dr. Sami Head Icon */}
             <div 
-              className="relative w-40 h-40 sm:w-56 sm:h-56 cursor-pointer overflow-visible transition-all duration-500 hover:-translate-y-4 hover:scale-110 bg-transparent"
+              className="relative w-20 h-20 sm:w-24 sm:h-24 cursor-pointer overflow-visible transition-all duration-500 hover:-translate-y-2 hover:scale-110"
               onClick={() => setIsOpen(true)}
             >
-              {/* Cutout character image (no background) */}
-              <img 
-                src="/dr-bot-character.png" 
-                alt="Dr. Sami Mini Character" 
-                className="w-full h-full object-contain object-bottom relative z-10"
-                style={{
-                  mixBlendMode: "multiply",
-                  filter: "brightness(1.08) contrast(1.22) saturate(0.92)",
-                }}
-              />
-              {/* Soft glow behind the character */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-polished-gold/30 blur-2xl rounded-[100%] z-0 animate-pulse"></div>
+              <div className="w-full h-full rounded-full border-2 border-polished-gold/60 shadow-[0_8px_30px_-5px_rgba(197,160,40,0.4)] overflow-hidden bg-polished-white">
+                <img 
+                  src="/dr-sami-head.png" 
+                  alt="Dr. Sami" 
+                  className="w-full h-full object-cover object-top"
+                />
+              </div>
+              {/* Pulse ring */}
+              <div className="absolute inset-0 rounded-full border-2 border-polished-gold/30 animate-ping" />
             </div>
           </motion.div>
         )}
