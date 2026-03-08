@@ -596,7 +596,7 @@ export default function AsperIntelligence() {
 
                 <form
                   onSubmit={handleSendMessage}
-                  className="p-6 bg-[#F8F8FF]/80 backdrop-blur-md border-t border-[#C5A028]/10 flex gap-4"
+                  className="p-6 bg-soft-ivory/80 backdrop-blur-md border-t border-polished-gold/10 flex gap-4"
                 >
                   <div className="flex-1 relative flex items-center">
                     <input
