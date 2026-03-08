@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ShieldCheck, Award, CheckCircle, Stethoscope } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
-import asperLogo from "@/assets/asper-logo-burgundy.png";
+import { AsperWordmark } from "@/components/ui/AsperWordmark";
 
 
 // Brand-accurate social media icon components
