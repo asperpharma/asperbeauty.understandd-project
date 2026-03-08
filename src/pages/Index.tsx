@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import Hero from "@/components/home/AmbientVideoHero";
+import ThreeClickOnboarding from "@/components/home/ThreeClickOnboarding";
 import DualPersonaTriage from "@/components/home/DualPersonaTriage";
 import { USPBar } from "@/components/home/USPBar";
 import { ProductSlider } from "@/components/home/ProductSlider";
@@ -175,6 +176,7 @@ const Index = () => {
       <main>
         {/* ═══ ZONE 1: Split Editorial Hero (Magazine Cover) ═══ */}
         <Hero />
+        <ThreeClickOnboarding />
 
         {/* ═══ DermoBrands Bar — Right below hero ═══ */}
         <Suspense fallback={<SectionSkeleton height="h-16" />}>
@@ -266,4 +268,5 @@ const Index = () => {
 };
 
 export default Index;
+
 
