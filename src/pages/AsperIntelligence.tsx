@@ -19,11 +19,7 @@ import {
 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-
-// --- Configuration & Constants ---
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY ?? "";
-const TEXT_MODEL = "gemini-2.5-flash-preview-09-2025";
-const TTS_MODEL = "gemini-2.5-flash-preview-tts";
+import { supabase } from "@/integrations/supabase/client";
 
 // --- Catalog Data (Refined based on uploaded product data) ---
 const ASPER_CATALOG = [
@@ -212,7 +208,7 @@ export default function AsperIntelligence() {
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const isClinical = persona === "clinical";
-  const hasApiKey = Boolean(apiKey);
+  
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -222,51 +218,21 @@ export default function AsperIntelligence() {
     prompt: string,
     image: string | null = null
   ): Promise<string> => {
-    if (!hasApiKey) {
-      return "Configure VITE_GEMINI_API_KEY in .env to enable Asper Intelligence.";
-    }
     try {
-      const inventory = ASPER_CATALOG.map(
-        (p) => `${p.title} (${p.price} JOD)`
-      ).join(", ");
-      const systemInstruction = `
-        You are the Asper AI Protocol. Inventory: ${inventory}.
-        ${
-          isClinical
-            ? "Role: Dr. Sami (Pharmacist). Tone: Clinical, safety-first, authoritative. Jordan market context. Sign: '- Dr. Sami, Asper Clinical'."
-            : "Role: Ms. Zain (Beauty Concierge). Tone: Radiant, high-end, friendly. Focus on rituals. Sign: '- Ms. Zain, Concierge'."
-        }
-        Limit to 3 concise sentences. Priority: Catalog recommendations.
-      `;
-
-      const parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> = [
-        {
-          text: `Context: ${systemInstruction}\n\nUser Query: ${prompt}`,
+      const { data, error } = await supabase.functions.invoke("asper-intelligence", {
+        body: {
+          action: "chat",
+          prompt,
+          image,
+          persona,
+          catalog: ASPER_CATALOG,
         },
-      ];
-      if (image) {
-        const base64 = image.split(",")[1];
-        if (base64) {
-          parts.push({
-            inlineData: { mimeType: "image/png", data: base64 },
-          });
-        }
-      }
+      });
 
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL}:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts }],
-          }),
-        }
-      );
-
-      const data = await response.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text ?? "Intelligence protocol reset required. Please standby.";
+      if (error) throw error;
+      return data?.reply ?? "Intelligence protocol reset required. Please standby.";
     } catch (error) {
+      console.error("Intelligence error:", error);
       return "Intelligence protocol reset required. Please standby.";
     }
   };
@@ -298,38 +264,24 @@ export default function AsperIntelligence() {
   };
 
   const handleSpeech = async (text: string) => {
-    if (!hasApiKey) return;
     setIsSpeaking(true);
     try {
-      const voiceName = isClinical ? "Puck" : "Aoede";
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${TTS_MODEL}:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text }] }],
-            generationConfig: {
-              responseModalities: ["AUDIO"],
-              speechConfig: {
-                voiceConfig: {
-                  prebuiltVoiceConfig: { voiceName },
-                },
-              },
-            },
-          }),
-        }
-      );
-      const data = await response.json();
-      const part = data.candidates?.[0]?.content?.parts?.[0];
-      if (!part?.inlineData) {
+      const { data, error } = await supabase.functions.invoke("asper-intelligence", {
+        body: {
+          action: "tts",
+          text,
+          persona,
+        },
+      });
+
+      if (error || !data?.audioData) {
         setIsSpeaking(false);
         return;
       }
-      const audioData = part.inlineData.data;
-      const mimeMatch = part.inlineData.mimeType?.match(/rate=(\d+)/);
+
+      const mimeMatch = data.mimeType?.match(/rate=(\d+)/);
       const sampleRate = mimeMatch ? parseInt(mimeMatch[1], 10) : 24000;
-      const bytes = Uint8Array.from(atob(audioData), (c) => c.charCodeAt(0));
+      const bytes = Uint8Array.from(atob(data.audioData), (c) => c.charCodeAt(0));
       const pcmData = new Int16Array(bytes.buffer);
       const wavBlob = pcmToWav(pcmData, sampleRate);
       const audio = new Audio(URL.createObjectURL(wavBlob));
@@ -419,22 +371,8 @@ export default function AsperIntelligence() {
             </div>
           </div>
 
-          {!hasApiKey && (
-            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-800 text-sm">
-              Add <code className="font-mono">VITE_GEMINI_API_KEY</code> to your{" "}
-              <code className="font-mono">.env</code> to enable chat and TTS. Get
-              a key at{" "}
-              <a
-                href="https://aistudio.google.com/apikey"
-                target="_blank"
-                rel="noreferrer"
-                className="underline"
-              >
-                Google AI Studio
-              </a>
-              .
-            </div>
-          )}
+
+
 
           {activeTab === "intelligence" && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
