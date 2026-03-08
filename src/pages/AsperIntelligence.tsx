@@ -325,7 +325,7 @@ export default function AsperIntelligence() {
               </p>
             </div>
           </div>
-          <nav className="flex bg-white shadow-xl shadow-black/5 p-1.5 rounded-[1.2rem] border border-[#C5A028]/10">
+          <nav className="flex bg-white shadow-xl shadow-black/5 p-1.5 rounded-[1.2rem] border border-polished-gold/10">
             {["intelligence", "identity", "application"].map((tab) => (
               <button
                 key={tab}
