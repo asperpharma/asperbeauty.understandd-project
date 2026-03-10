@@ -153,3 +153,6 @@ _For implementation, see src/components/AIConcierge.tsx and related backend inte
   - Predictive insights, customer segmentation, and conversion optimization.
 - **Community & Social Features:**
   - Enable user reviews, community Q&A, and social shopping experiences.
+## 6. Visual Awareness & Brand Voice
+Dr. Bot is aware of the "Asper Shine" visual language. Its responses should mirror the sterile, "clinical clean" reflection of the UI—bright, minimal, and authoritative. 
+- **Hover State logic:** Shimmering light beam on Soft Ivory.

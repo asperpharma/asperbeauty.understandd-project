@@ -38,9 +38,9 @@ Lovable builds and deploys; main site updates in a few minutes.
 
 | Site / channel        | URL / config |
 |-----------------------|--------------|
-| **Main site (Lovable)** | https://asperbeautyshop-com.lovable.app/ |
+| **Main site (Lovable)** | https://www.asperbeautyshop.com/ |
 | **Production domain**   | https://www.asperbeautyshop.com (when DNS live) |
-| **Health endpoint**     | https://asperbeautyshop-com.lovable.app/health → 200 |
+| **Health endpoint**     | https://www.asperbeautyshop.com/health → 200 |
 
 Ensure Lovable env has `VITE_SITE_URL` and `VITE_LOVABLE_URL` per [APPLY_TO_MAIN_SITE.md](../APPLY_TO_MAIN_SITE.md). Supabase Auth redirects and `SITE_URL` secret must use the main site URL.
 
@@ -57,13 +57,13 @@ From [BRAIN-CONFIG.md](./BRAIN-CONFIG.md). All POST to Brain **qqceibvalkoytafyn
 | **Bulk upload** | `https://qqceibvalkoytafynwoc.supabase.co/functions/v1/bulk-product-upload` |
 | **Health check** | `https://qqceibvalkoytafynwoc.supabase.co/functions/v1/beauty-assistant?health=true` |
 
-Configure Gorgias and ManyChat so CTAs and links point to **https://asperbeautyshop-com.lovable.app/** (or production domain when live).
+Configure Gorgias and ManyChat so CTAs and links point to **https://www.asperbeautyshop.com/** (or production domain when live).
 
 ---
 
 ## 4. Social media accounts (all point to main site)
 
-Base URL: **https://asperbeautyshop-com.lovable.app/** (or https://www.asperbeautyshop.com when DNS is live).
+Base URL: **https://www.asperbeautyshop.com/** (or https://www.asperbeautyshop.com when DNS is live).
 
 | Platform | What to update |
 |----------|----------------|
@@ -84,7 +84,7 @@ Base URL: **https://asperbeautyshop-com.lovable.app/** (or https://www.asperbeau
 ## 5. Post-deploy verification
 
 1. **Health:** `npm run health` (from repo root).  
-2. **Browser:** Open https://asperbeautyshop-com.lovable.app/ and https://asperbeautyshop-com.lovable.app/health → expect 200.  
+2. **Browser:** Open https://www.asperbeautyshop.com/ and https://www.asperbeautyshop.com/health → expect 200.  
 3. **Smoke:** Home, Products, Cart, Beauty Assistant (chat), Login redirect.  
 4. **Channels:** Confirm Gorgias/ManyChat webhooks still resolve and any CTAs open the main site.
 
@@ -95,10 +95,11 @@ Base URL: **https://asperbeautyshop-com.lovable.app/** (or https://www.asperbeau
 | What | Where |
 |------|--------|
 | Brain ID | `qqceibvalkoytafynwoc` |
-| Main site | https://asperbeautyshop-com.lovable.app/ |
+| Main site | https://www.asperbeautyshop.com/ |
 | Full apply checklist | [APPLY_TO_MAIN_SITE.md](../APPLY_TO_MAIN_SITE.md) |
 | Brain & webhooks | [BRAIN-CONFIG.md](./BRAIN-CONFIG.md) |
 
 ---
 
 *Ensures one deploy applies to the main site and all sites and social media accounts (webhooks + social links).*
+

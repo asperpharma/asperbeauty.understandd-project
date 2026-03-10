@@ -1,4 +1,4 @@
-# Brain & Project Configuration (Official)
+﻿# Brain & Project Configuration (Official)
 
 **Enforced Brain ID:** `qqceibvalkoytafynwoc`  
 **GitHub repo:** [asperpharma/understand-project](https://github.com/asperpharma/understand-project)
@@ -26,8 +26,8 @@ PUBLIC_STOREFRONT_ID="1000093759"
 PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID="5c42cfb6-7c05-49b2-9f02-bd9554a3ced3"
 
 # Routing and Domains
-VITE_SITE_URL="https://asperbeautyshop-com.lovable.app/"
-VITE_LOVABLE_URL="asperbeautyshop-com.lovable.app"
+VITE_SITE_URL="https://www.asperbeautyshop.com/"
+VITE_LOVABLE_URL="www.asperbeautyshop.com"
 ```
 
 ---
@@ -36,7 +36,7 @@ VITE_LOVABLE_URL="asperbeautyshop-com.lovable.app"
 
 **Do not put these in `.env` or commit them to GitHub.**
 
-Store them only in **Supabase Dashboard** → Project **qqceibvalkoytafynwoc** → **Project Settings** → **Edge Functions** → **Secrets**.
+Store them only in **Supabase Dashboard** â†’ Project **qqceibvalkoytafynwoc** â†’ **Project Settings** â†’ **Edge Functions** â†’ **Secrets**.
 
 | Secret | Purpose |
 |--------|--------|
@@ -62,7 +62,7 @@ Store them only in **Supabase Dashboard** → Project **qqceibvalkoytafynwoc** �
 
 ---
 
-## 4. Webhooks (Omnichannel → Dr. Bot)
+## 4. Webhooks (Omnichannel â†’ Dr. Bot)
 
 All endpoints use Brain **qqceibvalkoytafynwoc**. POST only.
 
@@ -82,6 +82,7 @@ All endpoints use Brain **qqceibvalkoytafynwoc**. POST only.
 | GitHub repository | https://github.com/asperpharma/understand-project |
 | GitHub clone (SSH) | `git@github.com:asperpharma/understand-project.git` |
 | Lovable deployment | Project ID: `657fb572-13a5-4a3e-bac9-184d39fdf7e6` |
-| Live staging frontend | https://asperbeautyshop-com.lovable.app/ |
+| Live staging frontend | https://www.asperbeautyshop.com/ |
 | Production domain (pending DNS) | https://www.asperbeautyshop.com |
 | Shopify Admin | https://admin.shopify.com/store/lovable-project-milns |
+

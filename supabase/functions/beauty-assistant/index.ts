@@ -4,9 +4,7 @@
  * Upgraded to "Super Smart" Architecture (March 2026).
  */
 declare const Deno: { env: { get(key: string): string | undefined } };
-// @ts-expect-error — Deno URL imports; resolved at runtime by Supabase Edge
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-// @ts-expect-error — Deno URL imports; resolved at runtime by Supabase Edge
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const CONCERN_MAPPING: Record<string, string[]> = {
@@ -49,7 +47,8 @@ function extractFromGorgias(body: Record<string, unknown>): { message: string } 
 
 function extractFromManyChat(body: Record<string, unknown>): { message: string } {
   const data = body.data as Record<string, unknown> | undefined;
-  return { message: (data?.text as string) || (body as any).message || "" };
+  const msg = (data?.text as string) || (body.message as string) || "";
+  return { message: msg };
 }
 
 function detectConcernSlug(text: string): string | null {
@@ -65,12 +64,14 @@ function detectConcernSlug(text: string): string | null {
   return null;
 }
 
-function formatProduct(p: any): string {
-  return `- **${p.title}** (${p.brand}) | ${p.price} JOD | Step: ${p.regimen_step?.replace("Step_", "")} | Note: ${p.pharmacist_note || "Pharmacist-curated"}`;
+function formatProduct(p: Record<string, unknown>): string {
+  const step = typeof p.regimen_step === "string" ? p.regimen_step.replace("Step_", "") : "";
+  return `- **${p.title}** (${p.brand}) | ${p.price} JOD | Step: ${step} | Note: ${p.pharmacist_note || "Pharmacist-curated"}`;
 }
 
+// deno-lint-ignore no-explicit-any
 async function fetchProductContext(supabase: any, userMessage: string, slug: string | null) {
-  let matched: any[] = [];
+  let matched: Record<string, unknown>[] = [];
   if (slug) {
     const enums = CONCERN_MAPPING[slug] || [];
     const { data } = await supabase.from("products").select("*").in("primary_concern", enums).gt("inventory_total", 0).limit(6);
@@ -92,6 +93,17 @@ You operate in **Controlled AI Mode** as a Digital Dermatologist Assistant.
 ## YOUR DUAL-PERSONA
 1. **DR. SAMI (The Voice of Science)**: Used for clinical, safety, and ingredient queries. Intro: "As your clinical pharmacist..."
 2. **MS. ZAIN (The Voice of Luxury)**: Used for aesthetic, lifestyle, and ritual queries. Intro: "Welcome to your personal beauty ritual..."
+
+## LANGUAGE & MIRRORING
+1. **STRICT MIRRORING**: Always respond in the EXACT language the customer uses. If they speak Arabic, respond in premium Arabic (Tajawal font style). If English, use elegant English.
+2. **BILINGUAL SALES**: Use persuasive marketing terminology native to the chosen language.
+
+## SALES & MARKETING INTELLIGENCE
+You are a high-performance Sales Consultant. Your goal is to maximize Basket Value (AOV) and Conversion.
+1. **THE UPSELL**: Never recommend just one product. Recommend a 3-step Regimen (Cleanser + Treatment + Protection).
+2. **THE CLOSER**: Always end with a call-to-action (CTA). Example: "Would you like me to add this personalized tray to your bag?"
+3. **MARKETING HOOKS**: Mention "Same-day Concierge Delivery in Amman" and "Free Shipping on orders over 50 JOD."
+4. **SCARCITY & TRUST**: Use terms like "Top-rated by our clinical team" and "Highly requested in our Amman boutique."
 
 ## CORE MISSION
 - Increase conversion by providing expert, trustworthy guidance.
@@ -129,7 +141,7 @@ serve(async (req) => {
   try {
     const route = getWebhookRoute(req);
     let userMessage = "";
-    let messages: any[] = [];
+    let messages: Array<{ role: string; content: string }> = [];
 
     if (route) {
       const body = await req.json();
@@ -145,19 +157,43 @@ serve(async (req) => {
     const { context, products } = await fetchProductContext(supabase, userMessage, slug);
     const systemPrompt = buildSystemPrompt(context, slug ? `/products?concern=${slug}` : null);
 
-    const apiKey = Deno.env.get("GEMINI_API_KEY") || Deno.env.get("LOVABLE_API_KEY")!;
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+    const apiKey = Deno.env.get("LOVABLE_API_KEY");
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: "LOVABLE_API_KEY not configured" }), {
+        status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        contents: messages.map(m => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] })),
-        generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
+        model: "google/gemini-2.5-flash",
+        messages: [
+          { role: "system", content: systemPrompt },
+          ...messages.map(m => ({ role: m.role === "assistant" ? "assistant" : "user", content: m.content })),
+        ],
+        temperature: 0.7,
+        max_tokens: 1024,
       }),
     });
 
+    if (res.status === 429) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded, please try again shortly." }), {
+        status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+    if (res.status === 402) {
+      return new Response(JSON.stringify({ error: "AI credits exhausted. Please top up your Lovable workspace." }), {
+        status: 402, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+      });
+    }
+
     const data = await res.json();
-    const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text || "I apologize, I am processing your request. Please wait a moment.";
+    const replyText = data.choices?.[0]?.message?.content || "I apologize, I am processing your request. Please wait a moment.";
 
     if (route === "manychat") {
       return new Response(JSON.stringify({
@@ -173,9 +209,12 @@ serve(async (req) => {
       }), { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
     }
 
-    return new Response(JSON.stringify({ reply: replyText, products: products.map(p => ({ id: p.id, title: p.title, handle: p.handle })) }), { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ reply: replyText, products: products.map((p: Record<string, unknown>) => ({ id: p.id, title: p.title, handle: p.handle })) }), { headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
 
-  } catch (e) {
-    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Unknown error";
+    return new Response(JSON.stringify({ error: message }), { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } });
   }
 });
+
+

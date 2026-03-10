@@ -116,6 +116,42 @@ export type Database = {
         }
         Relationships: []
       }
+      brands: {
+        Row: {
+          created_at: string
+          description: string | null
+          featured: boolean
+          id: string
+          image_url: string
+          logo_image_path: string | null
+          name: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          id?: string
+          image_url: string
+          logo_image_path?: string | null
+          name: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          id?: string
+          image_url?: string
+          logo_image_path?: string | null
+          name?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
       chat_logs: {
         Row: {
           created_at: string | null
@@ -719,9 +755,66 @@ export type Database = {
         }
         Relationships: []
       }
+      product_reviews: {
+        Row: {
+          age_range: string | null
+          body: string | null
+          created_at: string
+          helpful_count: number
+          id: string
+          primary_concern: string | null
+          product_id: string
+          rating: number
+          skin_type: string | null
+          title: string | null
+          updated_at: string
+          user_id: string
+          verified_purchase: boolean
+        }
+        Insert: {
+          age_range?: string | null
+          body?: string | null
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          primary_concern?: string | null
+          product_id: string
+          rating: number
+          skin_type?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id: string
+          verified_purchase?: boolean
+        }
+        Update: {
+          age_range?: string | null
+          body?: string | null
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          primary_concern?: string | null
+          product_id?: string
+          rating?: number
+          skin_type?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+          verified_purchase?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           ai_persona_lead: Database["public"]["Enums"]["persona_type"] | null
+          asper_category: string | null
           availability_status: string | null
           bestseller_rank: number | null
           brand: string | null
@@ -737,6 +830,7 @@ export type Database = {
           inventory_total: number
           is_bestseller: boolean
           is_hero: boolean
+          key_benefit: string | null
           key_ingredients: string[] | null
           mpn: string | null
           pharmacist_note: string | null
@@ -751,6 +845,7 @@ export type Database = {
         }
         Insert: {
           ai_persona_lead?: Database["public"]["Enums"]["persona_type"] | null
+          asper_category?: string | null
           availability_status?: string | null
           bestseller_rank?: number | null
           brand?: string | null
@@ -766,6 +861,7 @@ export type Database = {
           inventory_total?: number
           is_bestseller?: boolean
           is_hero?: boolean
+          key_benefit?: string | null
           key_ingredients?: string[] | null
           mpn?: string | null
           pharmacist_note?: string | null
@@ -780,6 +876,7 @@ export type Database = {
         }
         Update: {
           ai_persona_lead?: Database["public"]["Enums"]["persona_type"] | null
+          asper_category?: string | null
           availability_status?: string | null
           bestseller_rank?: number | null
           brand?: string | null
@@ -795,6 +892,7 @@ export type Database = {
           inventory_total?: number
           is_bestseller?: boolean
           is_hero?: boolean
+          key_benefit?: string | null
           key_ingredients?: string[] | null
           mpn?: string | null
           pharmacist_note?: string | null
@@ -991,6 +1089,62 @@ export type Database = {
         }
         Relationships: []
       }
+      regimen_plans: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      regimen_steps: {
+        Row: {
+          created_at: string
+          id: string
+          instruction: string | null
+          plan_id: string
+          product_id: string | null
+          step_number: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          instruction?: string | null
+          plan_id: string
+          product_id?: string | null
+          step_number: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          instruction?: string | null
+          plan_id?: string
+          product_id?: string | null
+          step_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "regimen_steps_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "regimen_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       "Shopify pub": {
         Row: {
           created_at: string | null
@@ -1059,6 +1213,174 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      ui_check_artifacts: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          meta: Json
+          run_id: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          meta?: Json
+          run_id: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          meta?: Json
+          run_id?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ui_check_artifacts_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "ui_check_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ui_check_runs: {
+        Row: {
+          check_id: string
+          created_at: string
+          diff_url: string | null
+          environment: Json
+          finished_at: string | null
+          id: string
+          message: string | null
+          metrics: Json
+          screenshot_url: string | null
+          started_at: string
+          status: string
+        }
+        Insert: {
+          check_id: string
+          created_at?: string
+          diff_url?: string | null
+          environment?: Json
+          finished_at?: string | null
+          id?: string
+          message?: string | null
+          metrics?: Json
+          screenshot_url?: string | null
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          check_id?: string
+          created_at?: string
+          diff_url?: string | null
+          environment?: Json
+          finished_at?: string | null
+          id?: string
+          message?: string | null
+          metrics?: Json
+          screenshot_url?: string | null
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ui_check_runs_check_id_fkey"
+            columns: ["check_id"]
+            isOneToOne: false
+            referencedRelation: "ui_checks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ui_checks: {
+        Row: {
+          created_at: string
+          device: string
+          id: string
+          is_active: boolean
+          name: string
+          page_url: string
+          selector: string
+          tags: string[]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          device?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          page_url: string
+          selector: string
+          tags?: string[]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          device?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          page_url?: string
+          selector?: string
+          tags?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_profiles: {
+        Row: {
+          skin_concerns: string[] | null
+          skin_type: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          skin_concerns?: string[] | null
+          skin_type?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          skin_concerns?: string[] | null
+          skin_type?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_regimen_choices: {
+        Row: {
+          created_at: string
+          plan_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          plan_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          plan_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_regimen_choices_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "regimen_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -1170,6 +1492,56 @@ export type Database = {
         }
         Relationships: []
       }
+      product_reviews_public: {
+        Row: {
+          age_range: string | null
+          body: string | null
+          created_at: string | null
+          helpful_count: number | null
+          id: string | null
+          primary_concern: string | null
+          product_id: string | null
+          rating: number | null
+          skin_type: string | null
+          title: string | null
+          verified_purchase: boolean | null
+        }
+        Insert: {
+          age_range?: string | null
+          body?: string | null
+          created_at?: string | null
+          helpful_count?: number | null
+          id?: string | null
+          primary_concern?: string | null
+          product_id?: string | null
+          rating?: number | null
+          skin_type?: string | null
+          title?: string | null
+          verified_purchase?: boolean | null
+        }
+        Update: {
+          age_range?: string | null
+          body?: string | null
+          created_at?: string | null
+          helpful_count?: number | null
+          id?: string | null
+          primary_concern?: string | null
+          product_id?: string | null
+          rating?: number | null
+          skin_type?: string | null
+          title?: string | null
+          verified_purchase?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       apply_concierge_brain_rules: {
@@ -1177,6 +1549,8 @@ export type Database = {
         Returns: Json
       }
       build_digital_tray: { Args: { in_concern: string }; Returns: Json }
+      bulk_delete_purged: { Args: { p_ids: string[] }; Returns: number }
+      bulk_restore_purged: { Args: { p_ids: string[] }; Returns: number }
       convert_lead: {
         Args: { lead_id: string; p_order_id: string; p_order_value: number }
         Returns: undefined
@@ -1221,6 +1595,22 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      get_product_reviews: {
+        Args: { p_product_id: string }
+        Returns: {
+          age_range: string
+          body: string
+          created_at: string
+          helpful_count: number
+          id: string
+          primary_concern: string
+          product_id: string
+          rating: number
+          skin_type: string
+          title: string
+          verified_purchase: boolean
+        }[]
       }
       get_tray_by_concern: {
         Args: { concern_tag: Database["public"]["Enums"]["skin_concern"] }
