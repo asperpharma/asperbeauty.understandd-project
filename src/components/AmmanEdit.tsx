@@ -3,11 +3,15 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { AnimatedSection } from "./AnimatedSection";
 import { LazyImage } from "./LazyImage";
 
-// Product images
-import anthelios from "@/assets/products/anthelios-uvmune.webp";
-import olaplex from "@/assets/products/olaplex-no3.webp";
-import eucerin from "@/assets/products/eucerin-dual-serum.webp";
-import diorSauvage from "@/assets/products/dior-sauvage-elixir.webp";
+import antheliosImg from "@/assets/products/lrp-anthelios-uvmune.png";
+import olaplexImg from "@/assets/products/olaplex-no3-perfector.png";
+import eucerinImg from "@/assets/products/eucerin-anti-pigment-serum.png";
+import diorSauvageImg from "@/assets/products/dior-sauvage-elixir.png";
+
+const anthelios = antheliosImg;
+const olaplex = olaplexImg;
+const eucerin = eucerinImg;
+const diorSauvage = diorSauvageImg;
 
 const products = [
   {
@@ -121,3 +125,4 @@ export const AmmanEdit = () => {
     </section>
   );
 };
+

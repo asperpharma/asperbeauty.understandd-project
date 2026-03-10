@@ -1,249 +1,86 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useRef } from "react";
-import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { AnimatedSection } from "./AnimatedSection";
-import { LazyImage } from "./LazyImage";
+import { CLINICAL_AUTHORITY_BRANDS, AESTHETIC_LUXURY_BRANDS } from "@/constants/premiumBrands";
 
-// Brand logos
-import vichyLogo from "@/assets/brands/vichy-logo.webp";
-import eucerinLogo from "@/assets/brands/eucerin-logo.webp";
-import svrLogo from "@/assets/brands/svr-logo.webp";
-import cetaphilLogo from "@/assets/brands/cetaphil-logo.webp";
-import biodermaLogo from "@/assets/brands/bioderma-logo.webp";
-import bourjoisLogo from "@/assets/brands/bourjois-logo.webp";
-import essenceLogo from "@/assets/brands/essence-logo.webp";
-import isadoraLogo from "@/assets/brands/isadora-logo.webp";
+/**
+ * Zone: Clinical Vogue Brand Footer
+ * Monochrome, editorial-spaced brand names — no loud logos.
+ * Opacity 60% → 100% on hover. All text remains charcoal or gold.
+ */
 
-const brands = [
-  {
-    id: "vichy",
-    name: "Vichy",
-    logo: vichyLogo,
-    href: "/brands/vichy",
-  },
-  {
-    id: "eucerin",
-    name: "Eucerin",
-    logo: eucerinLogo,
-    href: "/brands/eucerin",
-  },
-  {
-    id: "svr",
-    name: "SVR",
-    logo: svrLogo,
-    href: "/brands/svr",
-  },
-  {
-    id: "cetaphil",
-    name: "Cetaphil",
-    logo: cetaphilLogo,
-    href: "/brands/cetaphil",
-  },
-  {
-    id: "bioderma",
-    name: "Bioderma",
-    logo: biodermaLogo,
-    href: "/brands/bioderma",
-  },
-  {
-    id: "bourjois",
-    name: "Bourjois",
-    logo: bourjoisLogo,
-    href: "/brands/bourjois",
-  },
-  {
-    id: "essence",
-    name: "Essence",
-    logo: essenceLogo,
-    href: "/brands/essence",
-  },
-  {
-    id: "isadora",
-    name: "IsaDora",
-    logo: isadoraLogo,
-    href: "/brands/isadora",
-  },
+const ALL_FOOTER_BRANDS = [
+  ...CLINICAL_AUTHORITY_BRANDS.map((name) => ({
+    name,
+    slug: name.toLowerCase().replace(/[^a-z0-9]/g, "-"),
+    tier: "clinical" as const,
+  })),
+  ...AESTHETIC_LUXURY_BRANDS.map((name) => ({
+    name,
+    slug: name.toLowerCase().replace(/[^a-z0-9]/g, "-"),
+    tier: "luxury" as const,
+  })),
 ];
 
 export const FeaturedBrands = () => {
   const { language } = useLanguage();
   const isArabic = language === "ar";
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const scrollAmount = 300;
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
 
   return (
-    <section className="py-16 lg:py-20 bg-gradient-to-b from-white via-cream/20 to-white overflow-hidden relative">
-      {/* Top decorative accent */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+    <section className="py-20 lg:py-28 bg-asper-stone relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-polished-gold/30 to-transparent" />
 
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.03)_0%,transparent_50%)] pointer-events-none" />
-
-      <div className="luxury-container relative">
+      <div className="luxury-container">
         {/* Section Header */}
-        <AnimatedSection
-          className="text-center mb-12"
-          animation="slide-up"
-          duration={800}
-        >
-          {/* Icon badge */}
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full 
-            bg-gradient-to-br from-gold/20 via-gold/10 to-transparent 
-            border-2 border-gold/30 mb-4
-            shadow-[0_2px_10px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(255,255,255,0.5)]">
-            <Sparkles className="w-6 h-6 text-gold drop-shadow-[0_2px_4px_rgba(212,175,55,0.4)]" />
-          </div>
-
-          <span className="font-script text-2xl text-gold mb-2 block drop-shadow-[0_1px_2px_rgba(212,175,55,0.3)]">
-            {isArabic ? "علامات تجارية فاخرة" : "Luxury Brands"}
+        <AnimatedSection className="text-center mb-16" animation="fade-up">
+          <span className="font-body text-[10px] uppercase tracking-[0.3em] text-polished-gold mb-3 block">
+            {isArabic ? "شركاء العلامة" : "Our Brand Partners"}
           </span>
-          <h2 className="font-display text-3xl lg:text-4xl text-foreground mb-2">
-            {isArabic ? "العلامات المميزة" : "Featured Brands"}
+          <h2 className="font-heading text-2xl lg:text-3xl text-asper-ink font-bold mb-6">
+            {isArabic ? "علامات مختارة بعناية" : "Curated with Precision"}
           </h2>
-
-          {/* Luxury divider */}
-          <div className="flex items-center justify-center gap-3 mt-4">
-            <div className="w-12 h-px bg-gradient-to-r from-transparent to-gold/60" />
-            <div className="w-2 h-2 rounded-full bg-gold/60 shadow-[0_0_8px_rgba(212,175,55,0.5)]" />
-            <div className="w-12 h-px bg-gradient-to-l from-transparent to-gold/60" />
+          <div className="flex items-center justify-center gap-3">
+            <div className="w-16 h-px bg-gradient-to-r from-transparent to-polished-gold/50" />
+            <div className="w-1.5 h-1.5 rounded-full bg-polished-gold/50" />
+            <div className="w-16 h-px bg-gradient-to-l from-transparent to-polished-gold/50" />
           </div>
         </AnimatedSection>
 
-        {/* Carousel Container */}
-        <AnimatedSection animation="fade-up" delay={200} duration={900}>
-          <div className="relative group">
-            {/* Navigation Arrows - Desktop */}
-            <button
-              onClick={() => scroll("left")}
-              className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 
-                w-12 h-12 rounded-full 
-                bg-gradient-to-br from-white to-cream/80
-                border-2 border-gold/30 hover:border-gold/60
-                items-center justify-center text-burgundy hover:text-gold 
-                transition-all duration-500 
-                opacity-0 group-hover:opacity-100 
-                shadow-[0_4px_15px_rgba(212,175,55,0.15)]
-                hover:shadow-[0_6px_25px_rgba(212,175,55,0.3)]
-                hover:scale-110"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => scroll("right")}
-              className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 
-                w-12 h-12 rounded-full 
-                bg-gradient-to-br from-white to-cream/80
-                border-2 border-gold/30 hover:border-gold/60
-                items-center justify-center text-burgundy hover:text-gold 
-                transition-all duration-500 
-                opacity-0 group-hover:opacity-100 
-                shadow-[0_4px_15px_rgba(212,175,55,0.15)]
-                hover:shadow-[0_6px_25px_rgba(212,175,55,0.3)]
-                hover:scale-110"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-
-            {/* Scrollable Brands */}
-            <div
-              ref={scrollRef}
-              className="flex gap-6 lg:gap-8 overflow-x-auto scrollbar-hide pb-4 scroll-smooth"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
-              {brands.map((brand) => (
-                <Link
-                  key={brand.id}
-                  to={brand.href}
-                  className="group/brand flex-shrink-0"
+        {/* Monochrome Brand Ticker — Extreme Spacing */}
+        <AnimatedSection animation="fade-up" delay={200}>
+          <div className="flex flex-wrap items-center justify-center gap-x-16 lg:gap-x-24 gap-y-8">
+            {ALL_FOOTER_BRANDS.map((brand) => (
+              <Link
+                key={brand.slug}
+                to={`/shop?brand=${encodeURIComponent(brand.name)}`}
+                className="group transition-all duration-500"
+              >
+                <span
+                  className="font-heading text-lg lg:text-xl tracking-[0.08em] opacity-50 group-hover:opacity-100 transition-all duration-500 text-asper-ink group-hover:text-polished-gold"
+                  style={{
+                    /* Monochrome filter effect via text color only — no logo images */
+                  }}
                 >
-                  {/* Brand Card */}
-                  <div className="relative w-40 lg:w-48 rounded-xl p-6 lg:p-8 
-                    bg-gradient-to-br from-white via-cream/30 to-white
-                    border border-gold/20 
-                    transition-all duration-500 
-                    hover:border-gold/50 
-                    hover:bg-gradient-to-br hover:from-white hover:via-gold/5 hover:to-white
-                    shadow-[0_2px_10px_rgba(212,175,55,0.08)]
-                    hover:shadow-[0_8px_30px_rgba(212,175,55,0.2),0_4px_15px_rgba(212,175,55,0.1)]
-                    hover:scale-[1.02]
-                    text-center overflow-hidden">
-                    {/* Shine effect on hover */}
-                    <div className="absolute inset-0 opacity-0 group-hover/brand:opacity-100 transition-opacity duration-700 pointer-events-none">
-                      <div className="absolute inset-0 -translate-x-full group-hover/brand:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-gold/10 to-transparent" />
-                    </div>
-
-                    {/* Top accent line */}
-                    <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent opacity-0 group-hover/brand:opacity-100 transition-opacity duration-500" />
-
-                    {/* Brand Logo */}
-                    <div className="relative h-20 lg:h-24 flex items-center justify-center mb-4">
-                      <LazyImage
-                        src={brand.logo}
-                        alt={brand.name}
-                        className="max-h-full max-w-full object-contain transition-all duration-500 group-hover/brand:scale-110 group-hover/brand:drop-shadow-[0_4px_8px_rgba(212,175,55,0.2)]"
-                        loading="lazy"
-                        width={150}
-                        height={80}
-                        skeletonClassName="rounded"
-                      />
-                    </div>
-
-                    {/* Shop Link - appears on hover */}
-                    <span className="font-body text-xs uppercase tracking-widest text-burgundy/60 
-                      group-hover/brand:text-gold transition-colors duration-500
-                      drop-shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-                      {isArabic ? "تسوق الآن" : "Shop Now"}
-                    </span>
-
-                    {/* Bottom accent */}
-                    <div className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-transparent via-gold/40 to-transparent opacity-0 group-hover/brand:opacity-100 transition-opacity duration-500" />
-                  </div>
-                </Link>
-              ))}
-            </div>
+                  {brand.name}
+                </span>
+              </Link>
+            ))}
           </div>
         </AnimatedSection>
 
-        {/* View All Brands Link */}
-        <AnimatedSection
-          animation="zoom"
-          delay={500}
-          duration={800}
-          className="text-center mt-10"
-        >
+        {/* View All */}
+        <AnimatedSection animation="fade-up" delay={400} className="text-center mt-14">
           <Link
             to="/brands"
-            className="inline-flex items-center gap-2 
-              px-6 py-3 rounded-full
-              font-body text-sm text-burgundy 
-              uppercase tracking-widest 
-              border border-gold/30 hover:border-gold/60
-              bg-gradient-to-r from-transparent via-gold/5 to-transparent
-              hover:bg-gradient-to-r hover:from-gold/10 hover:via-gold/20 hover:to-gold/10
-              hover:text-gold
-              transition-all duration-500 
-              shadow-[0_2px_10px_rgba(212,175,55,0.1)]
-              hover:shadow-[0_4px_20px_rgba(212,175,55,0.25)]
-              group"
+            className="inline-flex items-center gap-2 font-body text-xs uppercase tracking-[0.2em] text-burgundy hover:text-polished-gold border-b border-burgundy/30 hover:border-polished-gold/60 pb-1 transition-all duration-500"
           >
             {isArabic ? "عرض جميع العلامات" : "View All Brands"}
-            <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-500" />
           </Link>
         </AnimatedSection>
       </div>
 
-      {/* Bottom decorative accent */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-polished-gold/30 to-transparent" />
     </section>
   );
 };
+

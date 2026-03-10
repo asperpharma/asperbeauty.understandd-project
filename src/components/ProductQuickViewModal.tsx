@@ -81,6 +81,10 @@ export const ProductQuickViewModal = (
           },
         },
         compareAtPriceRange: {
+          maxVariantPrice: {
+            amount: (product.original_price || product.price).toString(),
+            currencyCode: "JOD",
+          },
           minVariantPrice: {
             amount: (product.original_price || product.price).toString(),
             currencyCode: "JOD",
@@ -307,3 +311,4 @@ export const ProductQuickViewButton = (
 };
 
 export default ProductQuickViewModal;
+

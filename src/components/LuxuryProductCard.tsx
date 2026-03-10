@@ -56,6 +56,10 @@ export const LuxuryProductCard = ({ product }: { product: ProductProps }) => {
           maxVariantPrice: { amount: price.toString(), currencyCode: "JOD" },
         },
         compareAtPriceRange: {
+          maxVariantPrice: {
+            amount: (product.original_price || price).toString(),
+            currencyCode: "JOD",
+          },
           minVariantPrice: {
             amount: (product.original_price || price).toString(),
             currencyCode: "JOD",
@@ -244,3 +248,5 @@ export const LuxuryProductCard = ({ product }: { product: ProductProps }) => {
 };
 
 export default LuxuryProductCard;
+
+

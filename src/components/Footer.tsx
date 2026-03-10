@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { ShieldCheck, Award, CheckCircle, Stethoscope } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
-import asperLogo from "@/assets/asper-logo.jpg";
+import { AsperWordmark } from "@/components/ui/AsperWordmark";
+
 
 // Brand-accurate social media icon components
 const InstagramIcon = ({ className }: { className?: string }) => (
@@ -58,144 +60,69 @@ const PinterestIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const socialIconClass = "w-10 h-10 rounded-full border border-polished-gold flex items-center justify-center text-polished-gold hover:bg-polished-gold hover:border-polished-gold hover:text-burgundy transition-all duration-400";
+
 export const Footer = () => {
   const [email, setEmail] = useState("");
-  const {
-    language,
-  } = useLanguage();
+  const { language } = useLanguage();
   const isArabic = language === "ar";
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle newsletter signup
     setEmail("");
   };
-  const conciergLinks = [{
-    name: isArabic ? "تتبع الطلب" : "Track Order",
-    href: "/track-order",
-  }, {
-    name: isArabic ? "سياسة الشحن" : "Shipping Policy",
-    href: "/contact",
-  }, {
-    name: isArabic ? "الإرجاع والاستبدال" : "Returns & Exchanges",
-    href: "/contact",
-  }, {
-    name: isArabic ? "استشارة البشرة" : "Skin Consultation",
-    href: "/skin-concerns",
-  }];
+  const conciergLinks = [
+    { name: isArabic ? "تتبع الطلب" : "Track Order", href: "/track-order" },
+    { name: isArabic ? "سياسة الشحن" : "Shipping Policy", href: "/contact" },
+    { name: isArabic ? "الإرجاع والاستبدال" : "Returns & Exchanges", href: "/contact" },
+    { name: isArabic ? "استشارة البشرة" : "Skin Consultation", href: "/skin-concerns" },
+  ];
 
-  const aboutLinks = [{
-    name: isArabic ? "فلسفتنا" : "Our Philosophy",
-    href: "/philosophy",
-  }, {
-    name: isArabic ? "اتصل بنا" : "Contact Us",
-    href: "/contact",
-  }];
+  const aboutLinks = [
+    { name: isArabic ? "فلسفتنا" : "Our Philosophy", href: "/philosophy" },
+    { name: isArabic ? "اتصل بنا" : "Contact Us", href: "/contact" },
+  ];
+
   return (
-    <footer
-      className="bg-burgundy"
-      style={{
-        borderTop: "1px solid hsl(var(--gold))",
-      }}
-    >
+    <footer className="bg-burgundy border-t border-polished-gold/40">
       {/* Main Footer Content */}
       <div className="luxury-container py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Column 1 - Brand Identity */}
           <div>
             <Link to="/" className="inline-block mb-6">
-              <img
-                src={asperLogo}
-                alt="Asper Beauty Shop"
-                className="h-16 rounded"
-              />
+              <AsperWordmark size="lg" className="text-polished-white" />
             </Link>
-            <p className="font-body text-cream mb-6">
-              {isArabic
-                ? "إعادة تعريف الجمال في الأردن."
-                : "Redefining Beauty in Jordan."}
+            <p className="font-body text-asper-stone-light mb-6">
+              {isArabic ? "إعادة تعريف الجمال في الأردن." : "Redefining Beauty in Jordan."}
             </p>
 
-            {/* Social Icons - Gold Outlines with Full Platform Coverage */}
+            {/* Social Icons */}
             <div className="flex items-center gap-3 flex-wrap">
-              <a
-                href="https://www.instagram.com/asper.beauty.shop/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#C5A028] hover:border-[#C5A028] hover:text-[#800020] transition-all duration-400"
-                aria-label="Instagram"
-              >
+              <a href="https://www.instagram.com/asper.beauty.shop/" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="Instagram">
                 <InstagramIcon className="w-4 h-4" />
               </a>
-              <a
-                href="https://www.facebook.com/AsperBeautyShop"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#C5A028] hover:border-[#C5A028] hover:text-[#800020] transition-all duration-400"
-                aria-label="Facebook"
-              >
+              <a href="https://www.facebook.com/AsperBeautyShop" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="Facebook">
                 <FacebookIcon className="w-4 h-4" />
               </a>
-              <a
-                href="https://www.tiktok.com/@asper.beauty.shop"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#C5A028] hover:border-[#C5A028] hover:text-[#800020] transition-all duration-400"
-                aria-label="TikTok"
-              >
+              <a href="https://www.tiktok.com/@asper.beauty.shop" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="TikTok">
                 <TikTokIcon className="w-4 h-4" />
               </a>
-              <a
-                href="https://wa.me/962790656666"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#C5A028] hover:border-[#C5A028] hover:text-[#800020] transition-all duration-400"
-                aria-label="WhatsApp"
-              >
+              <a href="https://wa.me/962790656666" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="WhatsApp">
                 <WhatsAppIcon className="w-4 h-4" />
               </a>
-              <a
-                href="https://twitter.com/asperbeautyshop"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#C5A028] hover:border-[#C5A028] hover:text-[#800020] transition-all duration-400"
-                aria-label="X (Twitter)"
-              >
+              <a href="https://x.com/asperbeautyshop" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="X (Twitter)">
                 <XIcon className="w-4 h-4" />
               </a>
-              <a
-                href="https://www.youtube.com/@asperbeautyshop"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#C5A028] hover:border-[#C5A028] hover:text-[#800020] transition-all duration-400"
-                aria-label="YouTube"
-              >
+              <a href="https://www.youtube.com/@asperbeautyshop" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="YouTube">
                 <YouTubeIcon className="w-4 h-4" />
               </a>
-              <a
-                href="https://www.linkedin.com/company/asper-beauty-shop"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#C5A028] hover:border-[#C5A028] hover:text-[#800020] transition-all duration-400"
-                aria-label="LinkedIn"
-              >
+              <a href="https://www.linkedin.com/company/asper-beauty-shop" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="LinkedIn">
                 <LinkedInIcon className="w-4 h-4" />
               </a>
-              <a
-                href="https://www.snapchat.com/add/asperbeautyshop"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#C5A028] hover:border-[#C5A028] hover:text-[#800020] transition-all duration-400"
-                aria-label="Snapchat"
-              >
+              <a href="https://www.snapchat.com/add/asperbeautyshop" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="Snapchat">
                 <SnapchatIcon className="w-4 h-4" />
               </a>
-              <a
-                href="https://www.pinterest.com/asperbeautyshop"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-gold flex items-center justify-center text-gold hover:bg-[#C5A028] hover:border-[#C5A028] hover:text-[#800020] transition-all duration-400"
-                aria-label="Pinterest"
-              >
+              <a href="https://www.pinterest.com/asperbeautyshop" target="_blank" rel="noopener noreferrer" className={socialIconClass} aria-label="Pinterest">
                 <PinterestIcon className="w-4 h-4" />
               </a>
             </div>
@@ -203,7 +130,7 @@ export const Footer = () => {
 
           {/* Column 2 - Concierge */}
           <div>
-            <h3 className="font-display text-lg text-white mb-6">
+            <h3 className="font-display text-lg text-polished-white mb-6">
               {isArabic ? "خدمة العملاء" : "Concierge"}
             </h3>
             <ul className="space-y-3">
@@ -211,17 +138,14 @@ export const Footer = () => {
                 <button
                   type="button"
                   onClick={() => window.dispatchEvent(new CustomEvent("open-beauty-assistant"))}
-                  className="font-body text-sm text-cream hover:text-gold transition-colors duration-400 text-left"
+                  className="font-body text-sm text-asper-stone-light hover:text-polished-gold transition-colors duration-400 text-left"
                 >
-                  {isArabic ? "استشارة رقمية • اسأل الصيدلي" : "Digital Consult • Ask the Pharmacist"}
+                  {isArabic ? "استشارة رقمية • Dr.Bot" : "Digital Consult • Dr.Bot"}
                 </button>
               </li>
-              {conciergLinks.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    to={item.href}
-                    className="font-body text-sm text-cream hover:text-gold transition-colors duration-400"
-                  >
+              {conciergLinks.map((item, index) => (
+                <li key={`${item.href}-${index}`}>
+                  <Link to={item.href} className="font-body text-sm text-asper-stone-light hover:text-polished-gold transition-colors duration-400">
                     {item.name}
                   </Link>
                 </li>
@@ -231,77 +155,279 @@ export const Footer = () => {
 
           {/* Column 3 - About */}
           <div>
-            <h3 className="font-display text-lg text-white mb-6">
+            <h3 className="font-display text-lg text-polished-white mb-6">
               {isArabic ? "عن آسبر" : "About Asper"}
             </h3>
             <ul className="space-y-3 mb-8">
-              {aboutLinks.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    to={item.href}
-                    className="font-body text-sm text-cream hover:text-gold transition-colors duration-400"
-                  >
+              {aboutLinks.map((item, index) => (
+                <li key={`about-${item.href}-${index}`}>
+                  <Link to={item.href} className="font-body text-sm text-asper-stone-light hover:text-polished-gold transition-colors duration-400">
                     {item.name}
                   </Link>
                 </li>
               ))}
             </ul>
 
-            <h4 className="font-display text-sm text-white mb-3">
+            <h4 className="font-display text-sm text-polished-white mb-3">
               {isArabic ? "زورونا" : "Visit Us"}
             </h4>
             <div className="space-y-2">
-              <p className="font-body text-sm text-cream">
+              <p className="font-body text-sm text-asper-stone-light">
                 {isArabic ? "عمّان، الأردن" : "Amman, Jordan"}
               </p>
-              <a
-                href="tel:+962790656666"
-                className="font-body text-sm text-cream hover:text-gold transition-colors duration-400 block"
-              >
+              <a href="tel:+962790656666" className="font-body text-sm text-asper-stone-light hover:text-polished-gold transition-colors duration-400 block">
                 +962 79 065 6666
               </a>
-              <a
-                href="mailto:asperpharma@gmail.com"
-                className="font-body text-sm text-cream hover:text-gold transition-colors duration-400 block"
-              >
+              <a href="mailto:asperpharma@gmail.com" className="font-body text-sm text-asper-stone-light hover:text-polished-gold transition-colors duration-400 block">
                 asperpharma@gmail.com
               </a>
             </div>
           </div>
 
-          {/* Column 4 - VIP Club */}
+          {/* Column 4 - Morning Spa Club */}
           <div>
-            <h3 className="font-display text-lg text-white mb-6">
-              {isArabic ? "اكتشف الحصريات" : "Unlock Exclusives"}
+            <h3 className="font-display text-lg text-polished-white mb-2">
+              {isArabic ? "انضم إلى سبا الصباح" : "Join the Morning Spa"}
             </h3>
+            <p className="font-body text-xs text-asper-stone-light/70 mb-4 leading-relaxed">
+              {isArabic
+                ? "نصائح حصرية من الدكتور سامي والآنسة زين، مع روتينات مخصصة تصل إلى بريدك."
+                : "Exclusive insights from Dr. Sami & Ms. Zain — tailored regimens, clinical tips, and early access delivered to your inbox."}
+            </p>
             <form onSubmit={handleSubmit} className="space-y-3">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={isArabic ? "بريدك الإلكتروني" : "Your email"}
-                className="w-full px-4 py-3 bg-transparent border border-white text-white font-body text-sm placeholder:text-white/50 focus:outline-none focus:border-gold transition-colors duration-400 rounded"
+                className="w-full px-4 py-3 bg-transparent border border-polished-white/40 text-polished-white font-body text-sm placeholder:text-polished-white/50 focus:outline-none focus:border-polished-gold transition-colors duration-400 rounded"
               />
               <button
                 type="submit"
-                className="w-full px-6 py-3 bg-gold text-burgundy font-display text-sm tracking-wider hover:bg-gold-light transition-colors duration-400 rounded"
+                className="w-full px-6 py-3 bg-polished-gold text-burgundy font-display text-sm tracking-wider hover:bg-polished-gold/80 transition-colors duration-400 rounded"
               >
-                {isArabic ? "اشترك" : "Subscribe"}
+                {isArabic ? "انضم الآن" : "Enter the Morning Spa"}
               </button>
             </form>
+            <p className="font-body text-[10px] text-asper-stone-light/40 mt-2">
+              {isArabic ? "🔬 رؤى الصيدلي · ✨ نصائح التجميل · مجاناً" : "🔬 Pharmacist Insights · ✨ Beauty Wisdom · Always Free"}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Copyright Bar */}
-      <div className="border-t border-gold/30">
-        <div className="luxury-container py-6">
-          <p className="font-body text-xs text-cream/50 text-center">
+      {/* SEO Block — Top Brands & Categories */}
+      <div className="border-t border-polished-gold/20">
+        <div className="luxury-container py-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {/* Top Brands */}
+            <div>
+              <h4 className="font-display text-sm text-polished-white mb-4 uppercase tracking-wider">
+                {isArabic ? "أبرز العلامات" : "Top Brands"}
+              </h4>
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+                {[
+                  "Vichy", "Eucerin", "Bioderma", "Cetaphil", "SVR",
+                  "La Roche-Posay", "Bourjois", "Essence", "IsaDora",
+                  "Maybelline", "L'Oréal Paris", "Garnier",
+                ].map((brand) => (
+                  <Link
+                    key={brand}
+                    to={`/brands/${brand.toLowerCase().replace(/['\s]/g, "-")}`}
+                    className="font-body text-xs text-asper-stone-light/50 hover:text-polished-gold transition-colors duration-300"
+                  >
+                    {brand}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Top Categories */}
+            <div>
+              <h4 className="font-display text-sm text-polished-white mb-4 uppercase tracking-wider">
+                {isArabic ? "أبرز الفئات" : "Top Categories"}
+              </h4>
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+                {[
+                  { en: "Skincare", href: "/collections/skincare" },
+                  { en: "Makeup", href: "/collections/makeup" },
+                  { en: "Perfume", href: "/collections/perfume" },
+                  { en: "Hair Care", href: "/collections/hair" },
+                  { en: "Body Care", href: "/collections/body" },
+                  { en: "Sun Protection", href: "/collections/suncare" },
+                  { en: "Anti-Aging", href: "/concerns/anti-aging" },
+                  { en: "Acne Treatment", href: "/concerns/acne" },
+                  { en: "Moisturizers", href: "/collections/moisturizers" },
+                  { en: "Serums", href: "/collections/serums" },
+                ].map((cat) => (
+                  <Link
+                    key={cat.en}
+                    to={cat.href}
+                    className="font-body text-xs text-asper-stone-light/50 hover:text-polished-gold transition-colors duration-300"
+                  >
+                    {cat.en}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Trust & Credentials Bar */}
+      <div className="border-t border-polished-gold/30">
+        <div className="luxury-container py-8">
+          <div className="flex flex-wrap items-center justify-center gap-6 mb-6">
+            <div className="flex items-center gap-2 text-asper-stone-light/70">
+              <ShieldCheck className="w-4 h-4 text-polished-gold" />
+              <span className="text-xs font-body uppercase tracking-wider">
+                {isArabic ? "صيدلية مرخصة" : "Licensed Pharmacy"}
+              </span>
+            </div>
+            <div className="w-px h-4 bg-polished-gold/30 hidden sm:block" />
+            <div className="flex items-center gap-2 text-asper-stone-light/70">
+              <Award className="w-4 h-4 text-polished-gold" />
+              <span className="text-xs font-body uppercase tracking-wider">
+                {isArabic ? "معتمد من JFDA" : "JFDA Certified"}
+              </span>
+            </div>
+            <div className="w-px h-4 bg-polished-gold/30 hidden sm:block" />
+            <div className="flex items-center gap-2 text-asper-stone-light/70">
+              <CheckCircle className="w-4 h-4 text-polished-gold" />
+              <span className="text-xs font-body uppercase tracking-wider">
+                {isArabic ? "أصلي 100%" : "100% Authentic"}
+              </span>
+            </div>
+            <div className="w-px h-4 bg-polished-gold/30 hidden sm:block" />
+            <div className="flex items-center gap-2 text-asper-stone-light/70">
+              <Stethoscope className="w-4 h-4 text-polished-gold" />
+              <span className="text-xs font-body uppercase tracking-wider">
+                {isArabic ? "تمت مراجعته من صيدلي" : "Pharmacist Reviewed"}
+              </span>
+            </div>
+          </div>
+
+          {/* Circular Authenticity Seal — Inline SVG (Caduceus) */}
+          <div className="flex justify-center my-8">
+            <div className="w-20 h-20 rounded-full border-2 border-polished-gold/60 p-1.5 shadow-[0_0_20px_rgba(197,160,40,0.15)] hover:scale-105 transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] cursor-default">
+              <svg
+                viewBox="0 0 200 200"
+                className="w-full h-full"
+                aria-label="Asper Certified — Authentic Quality — Pharmacist Curated"
+                role="img"
+              >
+                {/* Outer rings */}
+                <circle cx="100" cy="100" r="96" fill="none" stroke="#C5A028" strokeWidth="2" />
+                <circle cx="100" cy="100" r="88" fill="none" stroke="#C5A028" strokeWidth="0.6" opacity="0.4" />
+
+                {/* Caduceus — medical staff with wings */}
+                <g transform="translate(100,90)" fill="none" stroke="#C5A028" strokeWidth="2" strokeLinecap="round">
+                  {/* Central staff */}
+                  <line x1="0" y1="-38" x2="0" y2="22" />
+                  {/* Staff top ornament */}
+                  <circle cx="0" cy="-42" r="4" fill="#C5A028" />
+                  {/* Left wing */}
+                  <path d="M-4,-32 Q-18,-40 -22,-28 Q-20,-22 -8,-26" fill="#C5A028" fillOpacity="0.15" stroke="#C5A028" strokeWidth="1.5" />
+                  <path d="M-8,-26 Q-22,-18 -20,-12" stroke="#C5A028" strokeWidth="1" opacity="0.6" />
+                  {/* Right wing */}
+                  <path d="M4,-32 Q18,-40 22,-28 Q20,-22 8,-26" fill="#C5A028" fillOpacity="0.15" stroke="#C5A028" strokeWidth="1.5" />
+                  <path d="M8,-26 Q22,-18 20,-12" stroke="#C5A028" strokeWidth="1" opacity="0.6" />
+                  {/* Left serpent */}
+                  <path d="M0,-24 Q-12,-18 -10,-10 Q-8,-2 0,0 Q8,2 10,10 Q12,18 0,22" stroke="#C5A028" strokeWidth="1.8" fill="none" />
+                  {/* Right serpent */}
+                  <path d="M0,-24 Q12,-18 10,-10 Q8,-2 0,0 Q-8,2 -10,10 Q-12,18 0,22" stroke="#C5A028" strokeWidth="1.8" fill="none" />
+                </g>
+
+                {/* Circular text */}
+                <defs>
+                  <path id="sealTopArc" d="M 25,100 a 75,75 0 0,1 150,0" fill="none" />
+                  <path id="sealBottomArc" d="M 175,100 a 75,75 0 0,1 -150,0" fill="none" />
+                </defs>
+                <text fill="#C5A028" fontSize="9.5" fontFamily="'Montserrat', sans-serif" letterSpacing="2.5" fontWeight="600">
+                  <textPath href="#sealTopArc" startOffset="50%" textAnchor="middle">ASPER CERTIFIED</textPath>
+                </text>
+                <text fill="#C5A028" fontSize="7.5" fontFamily="'Montserrat', sans-serif" letterSpacing="2" fontWeight="500">
+                  <textPath href="#sealBottomArc" startOffset="50%" textAnchor="middle">AUTHENTIC QUALITY • PHARMACIST CURATED</textPath>
+                </text>
+
+                {/* Decorative separator dots */}
+                <circle cx="25" cy="100" r="2" fill="#C5A028" />
+                <circle cx="175" cy="100" r="2" fill="#C5A028" />
+              </svg>
+            </div>
+          </div>
+          <p className="text-center text-[10px] text-asper-stone-light/40 font-body max-w-2xl mx-auto mb-4">
+            {isArabic
+              ? "قد يختلف تصميم العبوة عن الصورة المعروضة بسبب تحديثات الشركة المصنعة. المنتج والمكونات تبقى كما هي."
+              : "Packaging design may vary from images shown due to manufacturer updates. Product formulation and ingredients remain unchanged."}
+          </p>
+          <p className="font-body text-xs text-asper-stone-light/50 text-center">
             © 2026 Asper Beauty Shop.{" "}
             {isArabic ? "جميع الحقوق محفوظة." : "All Rights Reserved."}
           </p>
         </div>
       </div>
+
+      {/* SEO Block - Top Brands & Categories */}
+      <div className="border-t border-polished-gold/20 bg-burgundy-light/30">
+        <div className="luxury-container py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {/* Top Brands */}
+            <div>
+              <h3 className="font-heading text-lg text-polished-gold mb-4">
+                {isArabic ? "أفضل العلامات التجارية" : "Top Brands"}
+              </h3>
+              <div className="flex flex-wrap gap-x-4 gap-y-2">
+                {[
+                  "Vichy", "La Roche-Posay", "Maybelline", "L'Oréal Paris", "Garnier",
+                  "Neutrogena", "CeraVe", "Eucerin", "Bioderma", "Avène",
+                  "The Ordinary", "Paula's Choice", "Diptyque", "Byredo", "Augustinus Bader"
+                ].map((brand) => (
+                  <Link
+                    key={brand}
+                    to={`/brands?brand=${encodeURIComponent(brand)}`}
+                    className="text-xs text-asper-stone-light/60 hover:text-polished-gold transition-colors duration-300 font-body"
+                  >
+                    {brand}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Top Categories */}
+            <div>
+              <h3 className="font-heading text-lg text-polished-gold mb-4">
+                {isArabic ? "الفئات الأكثر طلباً" : "Top Categories"}
+              </h3>
+              <div className="flex flex-wrap gap-x-4 gap-y-2">
+                {[
+                  { name: "Skincare", nameAr: "العناية بالبشرة", link: "/collections/skincare" },
+                  { name: "Makeup", nameAr: "المكياج", link: "/collections/makeup" },
+                  { name: "Perfume", nameAr: "العطور", link: "/collections/fragrance" },
+                  { name: "Hair Care", nameAr: "العناية بالشعر", link: "/collections/hair" },
+                  { name: "Anti-Aging", nameAr: "مكافحة الشيخوخة", link: "/concerns/anti-aging" },
+                  { name: "Acne Treatment", nameAr: "علاج حب الشباب", link: "/concerns/acne" },
+                  { name: "Hydration", nameAr: "ترطيب", link: "/concerns/hydration" },
+                  { name: "Sun Protection", nameAr: "حماية من الشمس", link: "/concerns/sun-protection" },
+                  { name: "Brightening", nameAr: "إشراق", link: "/concerns/brightening" },
+                  { name: "Sensitive Skin", nameAr: "البشرة الحساسة", link: "/concerns/sensitivity" },
+                ].map((category) => (
+                  <Link
+                    key={category.link}
+                    to={category.link}
+                    className="text-xs text-asper-stone-light/60 hover:text-polished-gold transition-colors duration-300 font-body"
+                  >
+                    {isArabic ? category.nameAr : category.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </footer>
   );
 };
+
+
+
