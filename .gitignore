@@ -1,0 +1,15 @@
+node_modules
+.env
+dist
+.understand
+.cursor
+.claudefesii
+Orgnized Products
+Supabase_files
+*.csv
+*.sql
+*.ipynb
+*.xlsx
+*.tsv
+*.crt
+*.docx
