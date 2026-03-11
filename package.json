@@ -22,7 +22,9 @@
     "sync": "tsx scripts/sync-shopify-catalog.ts",
     "sync:supabase": "tsx scripts/reorganize-catalog.js",
     "sync:dry": "tsx scripts/sync-shopify-catalog.ts --dry-run",
-    "sync:publish": "tsx scripts/sync-shopify-catalog.ts --publish"
+    "sync:publish": "tsx scripts/sync-shopify-catalog.ts --publish",
+    "health": "node scripts/health-check.js",
+    "test:brain": "node scripts/test-brain.js"
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^2.0.2",
