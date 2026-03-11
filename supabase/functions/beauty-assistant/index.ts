@@ -381,30 +381,30 @@ serve(async (req) => {
         });
       }
 
-      // 3. HMAC verification (required when secret is set)
+      // 3. MANDATORY HMAC verification for production safety
       const gorgiasSecret = Deno.env.get("GORGIAS_WEBHOOK_SECRET");
       const manychatSecret = Deno.env.get("MANYCHAT_WEBHOOK_SECRET");
+      
+      if (!gorgiasSecret && !manychatSecret) {
+        console.warn("CRITICAL: Webhook secrets not configured. Rejecting webhook for security.");
+        return new Response(JSON.stringify({ error: "Service configuration error" }), {
+          status: 503, headers: { ...corsWebhook(req), "Content-Type": "application/json" },
+        });
+      }
+
       if (route === "gorgias") {
-        if (gorgiasSecret) {
-          const sig = req.headers.get("x-gorgias-signature");
-          const valid = await verifyGorgiasSignature(rawBody, sig, gorgiasSecret);
-          if (!valid) {
-            return new Response(JSON.stringify({ error: "Invalid signature" }), {
-              status: 401,
-              headers: { ...corsWebhook(req), "Content-Type": "application/json" },
-            });
-          }
+        const sig = req.headers.get("x-gorgias-signature");
+        if (!sig || !(await verifyGorgiasSignature(rawBody, sig, gorgiasSecret))) {
+          return new Response(JSON.stringify({ error: "Unauthorized: Invalid Gorgias signature" }), {
+            status: 401, headers: { ...corsWebhook(req), "Content-Type": "application/json" },
+          });
         }
-      } else {
-        if (manychatSecret) {
-          const sig = req.headers.get("x-hub-signature-256");
-          const valid = await verifyManyChatSignature(rawBody, sig, manychatSecret);
-          if (!valid) {
-            return new Response(JSON.stringify({ error: "Invalid signature" }), {
-              status: 401,
-              headers: { ...corsWebhook(req), "Content-Type": "application/json" },
-            });
-          }
+      } else if (route === "manychat") {
+        const sig = req.headers.get("x-hub-signature-256");
+        if (!sig || !(await verifyManyChatSignature(rawBody, sig, manychatSecret))) {
+          return new Response(JSON.stringify({ error: "Unauthorized: Invalid ManyChat signature" }), {
+            status: 401, headers: { ...corsWebhook(req), "Content-Type": "application/json" },
+          });
         }
       }
 
