@@ -541,18 +541,22 @@ serve(async (req) => {
     const context = body.context && typeof body.context === "object" ? body.context as Record<string, unknown> : {};
     const contextConcern = typeof context.current_concern === "string" ? context.current_concern : undefined;
 
+    // Same key resolution as webhook: allow GEMINI_API_KEY or LOVABLE_API_KEY
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    const geminiKey = Deno.env.get("GEMINI_API_KEY");
+    const apiKey = geminiKey ?? LOVABLE_API_KEY;
+    if (!apiKey) {
+      throw new Error("LOVABLE_API_KEY or GEMINI_API_KEY must be configured");
     }
+    const useLovableGateway = !!LOVABLE_API_KEY && !geminiKey;
 
-    // Log campaign source and session for attribution/tracing
+    // Log campaign source and session for attribution/tracing (await to avoid race / silent failure)
     if (campaignSource || sessionId) {
       const adminClient = createClient(
         Deno.env.get("SUPABASE_URL")!,
         Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
       );
-      adminClient.from("telemetry_events").insert({
+      const { error: telemetryError } = await adminClient.from("telemetry_events").insert({
         user_id: userId,
         event: "ai_concierge_request",
         source: "beauty_assistant",
@@ -561,9 +565,8 @@ serve(async (req) => {
           campaign_source: campaignSource ?? null,
           has_context_concern: !!contextConcern,
         },
-      }).then(({ error }) => {
-        if (error) console.error("Telemetry insert error:", error.message);
       });
+      if (telemetryError) console.error("Telemetry insert error:", telemetryError.message);
     }
 
     // Extract last user message for product matching
@@ -577,7 +580,7 @@ serve(async (req) => {
     // Prefer context.current_concern from UI (e.g. "Dark Circles" tab) then fall back to message-based detection
     const concernFromContext = concernLabelToSlug(contextConcern);
     const concernFromMessage = detectConcernSlug(lastText);
-    const detectedConcernSlug = concernFromMessage ?? concernFromContext;
+    const detectedConcernSlug = concernFromContext ?? concernFromMessage;
     const shopRoutinePath = detectedConcernSlug ? `/products?concern=${detectedConcernSlug}` : null;
 
     // Fetch product context
@@ -593,30 +596,6 @@ serve(async (req) => {
         : undefined;
     const systemPrompt = buildSystemPrompt(productContext, shopRoutinePath, uiContext);
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [{ role: "system", content: systemPrompt }, ...messages],
-        stream: true,
-      }),
-    });
-
-    if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again." }), {
-          status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-        });
-      }
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
-      return new Response(JSON.stringify({ error: "Failed to get response" }), {
-        status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
-      });
-    }
-
-    // Stream response with persona header and product data events
     const encoder = new TextEncoder();
     const recommendEvent = shopRoutinePath
       ? `data: ${JSON.stringify({ type: "recommend", detected_concern: detectedConcernSlug, shop_routine_path: shopRoutinePath })}\n\n`
@@ -625,19 +604,84 @@ serve(async (req) => {
       ? `data: ${JSON.stringify({ type: "products", products: matchedProducts.map(p => ({ id: p.id, title: p.title, brand: p.brand, price: p.price, handle: p.handle, image_url: p.image_url })) })}\n\n`
       : "";
 
-    const combinedStream = new ReadableStream({
-      async start(controller) {
-        if (recommendEvent) controller.enqueue(encoder.encode(recommendEvent));
-        if (productDataEvent) controller.enqueue(encoder.encode(productDataEvent));
-        const reader = response.body!.getReader();
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          controller.enqueue(value);
+    let combinedStream: ReadableStream<Uint8Array>;
+
+    if (useLovableGateway) {
+      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "google/gemini-3-flash-preview",
+          messages: [{ role: "system", content: systemPrompt }, ...messages],
+          stream: true,
+        }),
+      });
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again." }), {
+            status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+          });
         }
-        controller.close();
-      },
-    });
+        const errorText = await response.text();
+        console.error("AI gateway error:", response.status, errorText);
+        return new Response(JSON.stringify({ error: "Failed to get response" }), {
+          status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+        });
+      }
+
+      combinedStream = new ReadableStream({
+        async start(controller) {
+          if (recommendEvent) controller.enqueue(encoder.encode(recommendEvent));
+          if (productDataEvent) controller.enqueue(encoder.encode(productDataEvent));
+          const reader = response.body!.getReader();
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            controller.enqueue(value);
+          }
+          controller.close();
+        },
+      });
+    } else {
+      // Gemini direct (same key resolution as webhook)
+      const model = Deno.env.get("GEMINI_MODEL") ?? "gemini-2.0-flash";
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+            contents: [{ role: "user", parts: [{ text: lastText || "" }] }],
+            generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
+          }),
+        }
+      );
+      if (!res.ok) {
+        if (res.status === 429) {
+          return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again." }), {
+            status: 429, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+          });
+        }
+        const errorText = await res.text();
+        console.error("Gemini error:", res.status, errorText);
+        return new Response(JSON.stringify({ error: "Failed to get response" }), {
+          status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" },
+        });
+      }
+      const data = await res.json();
+      const replyText = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+
+      combinedStream = new ReadableStream({
+        async start(controller) {
+          if (recommendEvent) controller.enqueue(encoder.encode(recommendEvent));
+          if (productDataEvent) controller.enqueue(encoder.encode(productDataEvent));
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ choices: [{ delta: { content: replyText } }] })}\n\n`));
+          controller.close();
+        },
+      });
+    }
 
     return new Response(combinedStream, {
       headers: {
