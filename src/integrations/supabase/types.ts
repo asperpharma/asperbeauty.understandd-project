@@ -1104,8 +1104,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          id?: string
           description?: string | null
+          id?: string
           title?: string
         }
         Relationships: []
